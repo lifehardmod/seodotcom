@@ -1,5 +1,7 @@
 export default function hello() {
   return (
-    <div className="text-center text-lg font-medium">나 어바웃 입니다.</div>
+    <div className="text-center font-medium text-2xl">
+      나 hello 박성문 입니다.
+    </div>
   );
 }
