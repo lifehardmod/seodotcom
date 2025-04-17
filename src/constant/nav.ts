@@ -1,5 +1,11 @@
 export const NAV_ITEMS = [
   {
+    to: "/",
+    label: "Home",
+    activeLabel: "home",
+  },
+
+  {
     to: "/ux",
     label: "UX",
     activeLabel: "ux",
@@ -12,7 +18,7 @@ export const NAV_ITEMS = [
   },
   {
     to: "/etc",
-    label: "기타",
+    label: "etc",
     activeLabel: "etc",
   },
 ];
