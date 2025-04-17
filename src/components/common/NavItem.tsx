@@ -12,7 +12,7 @@ const NavItem = ({ to, children, isActive }: NavItemProps) => {
     <Link
       href={to}
       className={cn(
-        "flex justify-center items-center text-nowrap min-w-[48px] min-h-[48px] flex-col gap-0 md:gap-1 ",
+        "flex justify-center items-center text-nowrap min-w-[100px] min-h-[48px] flex-col gap-0 md:gap-1  rounded-md",
         "hover:text-green-400 group",
         "text-lg  md:text-2xl",
         isActive
@@ -20,7 +20,10 @@ const NavItem = ({ to, children, isActive }: NavItemProps) => {
           : "text-gray-200 border-transparent  font-light"
       )}
     >
-      {children}
+      <span className="relative">
+        {children}
+        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-green-400 transition-all duration-300 group-hover:w-full" />
+      </span>
     </Link>
   );
 };

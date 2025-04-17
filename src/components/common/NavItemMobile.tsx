@@ -12,10 +12,10 @@ const MobileNavItem = ({ to, children, isActive }: NavItemMobileProps) => {
     <Link
       href={to}
       className={cn(
-        "box-content flex w-full flex-col items-center justify-center gap-2 bg-gray-900 pt-4 pb-3 text-sm",
-        "border-t-2",
+        "box-content flex w-full flex-col items-center justify-center gap-2 bg-gray-900 pt-3 pb-5 text-lg",
+        "border-t-3",
         isActive
-          ? "border-gray-200 text-white"
+          ? "border-green-400 text-white font-semibold"
           : "border-transparent text-gray-200 hover:border-white"
       )}
     >
