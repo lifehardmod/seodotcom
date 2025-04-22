@@ -12,12 +12,12 @@ const NavItem = ({ to, children, isActive }: NavItemProps) => {
     <Link
       href={to}
       className={cn(
-        "flex justify-center items-center text-nowrap min-w-[100px] min-h-[48px] flex-col gap-0 md:gap-1  rounded-md",
+        "flex justify-center items-center text-nowrap min-w-[100px] min-h-[48px] flex-col gap-0 md:gap-1",
         "hover:text-green-400 group",
         "text-lg  md:text-2xl",
         isActive
-          ? "border-blue-600 text-white font-semibold"
-          : "text-gray-200 border-transparent  font-light"
+          ? "text-green-400 font-semibold"
+          : "text-gray-200 border-transparent font-light"
       )}
     >
       <span className="relative">
