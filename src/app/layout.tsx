@@ -19,7 +19,7 @@ export default function RootLayout({
         <div className="hidden md:flex justify-center fixed top-0 left-0 right-0 z-50">
           <Header />
         </div>
-        <main className="flex-1 h-fit px-4 py-4 min-h-[2200px] max-w-[1440px] mx-auto mt-0 md:mt-28">
+        <main className="flex-1 h-fit px-4 py-4 min-h-[2200px] max-w-[1440px] mx-auto mt-0 md:mt-36">
           {children}
         </main>
         <div className="block md:hidden fixed bottom-0 left-0 right-0 z-50">
