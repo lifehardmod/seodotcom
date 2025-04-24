@@ -6,7 +6,7 @@ const Ux = () => {
       <MovieLayout
         movieLink="/movies/UX_Title.webm"
         text={
-          <div className="flex flex-row md:gap-3 sm:gap-2 font-bold sm:text-3xl py-1 px-2 bg-black/20 text-base md:text-4xl lg:text-5xl gap-1 lg:gap-4 items-center whitespace-nowrap flex-wrap ">
+          <div className="flex flex-row md:gap-3 sm:gap-2 font-bold sm:text-3xl py-1 px-2 text-base md:text-4xl lg:text-5xl gap-1 lg:gap-4 items-center whitespace-nowrap flex-wrap ">
             {[
               { bold: "개발", normal: "과" },
               { bold: "디자인", normal: "의" },

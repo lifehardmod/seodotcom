@@ -15,12 +15,12 @@ const MovieLayout = ({ movieLink, text }: MovieLayoutProps) => {
     offset: ["start start", "end start"],
   });
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const videoOpacity = useTransform(scrollYProgress, [0, 0.5], [0.4, 0]);
+  const videoOpacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 0]);
 
   return (
     <div
       ref={containerRef}
-      className="w-full max-h-[450px] overflow-hidden relative"
+      className="w-[100vw] overflow-hidden relative left-[50%] right-[50%] -mx-[50vw] border-gradient"
     >
       <motion.video
         src={movieLink}
@@ -29,7 +29,7 @@ const MovieLayout = ({ movieLink, text }: MovieLayoutProps) => {
         loop
         className="w-full object-cover max-h-[500px]"
         initial={{ opacity: 0, scale: 1.2 }}
-        whileInView={{ opacity: 0.6, scale: 1 }}
+        whileInView={{ opacity: 0.3, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.2, ease: "easeOut" }}
         style={{ opacity: videoOpacity }}
