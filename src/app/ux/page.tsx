@@ -1,5 +1,6 @@
+import Card from "@/components/common/Card";
 import MovieLayout from "@/components/common/MovieLayout";
-
+import UXlist from "@/constant/UXlist";
 const Ux = () => {
   return (
     <div>
@@ -25,6 +26,15 @@ const Ux = () => {
           </div>
         }
       />
+      <article className="flex flex-col gap-4">
+        <ul className=" flex flex-wrap gap-4 ">
+          {UXlist.map((item) => (
+            <li key={item.id}>
+              <Card {...item} />
+            </li>
+          ))}
+        </ul>
+      </article>
     </div>
   );
 };
