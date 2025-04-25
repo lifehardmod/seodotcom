@@ -20,7 +20,7 @@ const MovieLayout = ({ movieLink, text }: MovieLayoutProps) => {
   return (
     <div
       ref={containerRef}
-      className="w-[100vw] overflow-hidden relative left-[50%] right-[50%] -mx-[50vw] border-gradient"
+      className="relative left-1/2 w-screen -translate-x-1/2"
     >
       <motion.video
         src={movieLink}
