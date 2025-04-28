@@ -27,7 +27,7 @@ const Ux = () => {
           </div>
         }
       />
-      <article className="flex flex-col gap-4 mt-6">
+      <article className="flex flex-col gap-4 mt-10">
         <PortfolioList />
       </article>
     </div>

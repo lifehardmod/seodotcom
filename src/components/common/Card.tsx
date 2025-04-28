@@ -29,6 +29,7 @@ const Card = ({ title, description, to, image }: CardProps) => {
           </p>
         </div>
       </div>
+      
     </Link>
   );
 };

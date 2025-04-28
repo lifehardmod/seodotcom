@@ -10,7 +10,7 @@ const UXlist = [
   {
     id: 2,
     title: "Assembly 프로젝트",
-    description: "NFT기반 차용증 거래 서비스 RABBIT",
+    description: "나에게 가장 잘 맞는 데스크탑 조립 서비스",
     to: "/ux/assembly",
     image: "/thumbnail/assembly.png",
   },
