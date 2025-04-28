@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import HomeMain from "@/components/home/HomeMain";
 const Home = () => {
   return (
