@@ -24,10 +24,19 @@ const Rabbit = () => {
           ],
           component: (
             <RabbitCarousel
-              images={Array.from(
-                { length: 11 },
-                (_, i) => `/ppt/rabbit/${i + 1}.webp`
-              )}
+              images={[
+                "/ppt/rabbit/1.webp",
+                "/ppt/rabbit/2.webp",
+                "/ppt/rabbit/3.webp",
+                "/ppt/rabbit/4.webp",
+                "/ppt/rabbit/5.webp",
+                "/ppt/rabbit/6.webp",
+                "/ppt/rabbit/7.webp",
+                "/ppt/rabbit/8.webp",
+                "/ppt/rabbit/9.webp",
+                "/ppt/rabbit/10.webp",
+                "/ppt/rabbit/11.webp",
+              ]}
               enableScroll={false}
             />
           ),
