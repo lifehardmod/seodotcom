@@ -25,17 +25,17 @@ const Rabbit = () => {
           component: (
             <RabbitCarousel
               images={[
-                "/ppt/rabbit/1.webp",
-                "/ppt/rabbit/2.webp",
-                "/ppt/rabbit/3.webp",
-                "/ppt/rabbit/4.webp",
-                "/ppt/rabbit/5.webp",
-                "/ppt/rabbit/6.webp",
-                "/ppt/rabbit/7.webp",
-                "/ppt/rabbit/8.webp",
-                "/ppt/rabbit/9.webp",
-                "/ppt/rabbit/10.webp",
-                "/ppt/rabbit/11.webp",
+                "/PPT/Rabbit/1.webp",
+                "/PPT/Rabbit/2.webp",
+                "/PPT/Rabbit/3.webp",
+                "/PPT/Rabbit/4.webp",
+                "/PPT/Rabbit/5.webp",
+                "/PPT/Rabbit/6.webp",
+                "/PPT/Rabbit/7.webp",
+                "/PPT/Rabbit/8.webp",
+                "/PPT/Rabbit/9.webp",
+                "/PPT/Rabbit/10.webp",
+                "/PPT/Rabbit/11.webp",
               ]}
               enableScroll={false}
             />
