@@ -5,7 +5,7 @@ import { useRef } from "react";
 
 interface MovieLayoutProps {
   movieLink: string;
-  text: React.ReactNode;
+  text?: React.ReactNode;
 }
 
 const MovieLayout = ({ movieLink, text }: MovieLayoutProps) => {
@@ -29,7 +29,7 @@ const MovieLayout = ({ movieLink, text }: MovieLayoutProps) => {
         loop
         className="w-full object-cover max-h-[500px]"
         initial={{ opacity: 0, scale: 1.2 }}
-        whileInView={{ opacity: 0.3, scale: 1 }}
+        whileInView={{ opacity: 0.2, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.2, ease: "easeOut" }}
         style={{ opacity: videoOpacity }}

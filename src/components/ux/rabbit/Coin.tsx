@@ -1,10 +1,11 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Group, Mesh, Vector3, DoubleSide } from "three";
-import createSleekGridTexture from "./createSleekGridTexture";
-import createSleekGridBackTexture from "./createSleekGridBackTexture";
-import createLogoAlphaMap from "./createLogoAlphaMap";
+
 import { CanvasTexture } from "three";
+import createLogoAlphaMap from "./createLogoAlphaMap";
+import createSleekGridBackTexture from "./createSleekGridBackTexture";
+import createSleekGridTexture from "./createSleekGridTexture";
 
 interface CoinProps {
   position?: [number, number, number];

@@ -1,8 +1,44 @@
 /* Pretendard Variable 폰트 */
+/* DNF Bit Bit v2 폰트 */
+@font-face {
+  font-family: "DNFBitBit";
+  src: url("/fonts/DNFBitBitv2.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Partial Sans KR 폰트 */
+@font-face {
+  font-family: "PartialSansKR";
+  src: url("/fonts/PartialSansKR-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Pixel-Regular 폰트 */
+@font-face {
+  font-family: "Pixel-Regular";
+  src: url("/fonts/Pixel-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* DungGeunMo 폰트 */
+@font-face {
+  font-family: "DungGeunMo";
+  src: url("/fonts/DungGeunMo.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
-  font-weight: 100 900;
+  font-weight: 45 920;
   font-style: normal;
   font-display: swap;
 }
@@ -76,12 +112,33 @@
 }
 
 @layer base {
+  .font-pretendard {
+    font-family: var(--font-pretendard);
+  }
+
+  .font-bit {
+    font-family: var(--font-bit);
+  }
+
+  .font-partial {
+    font-family: var(--font-partial);
+  }
+
+  .font-pixel {
+    font-family: var(--font-pixel);
+    position: relative;
+    top: 1.5px; /* 아래로 1.5px 이동 */
+  }
+
+  .font-dunggeunmo {
+    font-family: var(--font-dunggeunmo);
+  }
   html,
   body {
-    min-height: 100vh;
     font-family: "Pretendard", sans-serif;
     background-color: #000000 !important;
     color: #ffffff !important;
+    overflow-x: hidden;
   }
 
   * {
@@ -143,7 +200,10 @@
 @theme {
   /* 폰트 관련 변수 추가 */
   --font-pretendard: "Pretendard", sans-serif;
-
+  --font-bit: "DNFBitBit", sans-serif;
+  --font-partial: "PartialSansKR", sans-serif;
+  --font-pixel: "Pixel-Regular", sans-serif;
+  --font-dunggeunmo: "DungGeunMo", sans-serif;
   /* 일반 색상 */
   --color-white: #fff;
   --color-gray-900: #1a1a1a;

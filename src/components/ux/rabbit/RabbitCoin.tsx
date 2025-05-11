@@ -1,11 +1,12 @@
-import Coin from "./Coin";
-import Lights from "./Lights";
+"use client";
+
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-
+import Coin from "./Coin";
+import Lights from "./Lights";
 // 코인 컨테이너 컴포넌트
 const CoinContainer = () => {
   const { mouse, viewport } = useThree();
@@ -64,7 +65,7 @@ const RabbitCoin = () => {
         <CoinContainer />
         <OrbitControls
           enablePan={false}
-          enableZoom={true}
+          enableZoom={false}
           minDistance={10}
           maxDistance={30}
           autoRotate={false}
