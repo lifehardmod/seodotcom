@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-
 interface Tab {
   id: number;
   label: string;
@@ -20,15 +19,7 @@ const ResponsiveTabsWithScroll = ({ tabs }: ResponsiveTabsWithScrollProps) => {
 
   const handleTabClick = (tabId: number) => {
     setActiveTab(tabId);
-    const element = topRef.current;
-    if (element) {
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - 150;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -49,12 +40,13 @@ const ResponsiveTabsWithScroll = ({ tabs }: ResponsiveTabsWithScrollProps) => {
         ))}
       </div>
       <div className="w-full aspect-video overflow-auto bg-black/20 rounded-lg">
-        <div className="relative w-full h-full min-h-[400px] p-4">
+        <div className="w-full h-full min-h-[400px] p-4">
           <Image
             src={tabs[activeTab].imageUrl}
             alt={`${tabs[activeTab].label} 예시`}
-            fill
-            className="object-cover rounded-lg"
+            className="w-full h-auto object-cover rounded-lg"
+            width={1920}
+            height={1080}
           />
         </div>
       </div>

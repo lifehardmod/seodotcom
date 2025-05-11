@@ -6,7 +6,7 @@ interface CommonProps {
 
 const Common = ({ images }: CommonProps) => {
   const ImageList = images.map((image) => (
-    <div key={image} className="relative w-[378px] aspect-[9/16]">
+    <div key={image} className="relative w-[378px] aspect-[9/17]">
       <Image src={image} alt="image" fill className="object-cover" />
     </div>
   ));
