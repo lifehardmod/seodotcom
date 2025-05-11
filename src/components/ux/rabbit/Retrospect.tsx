@@ -16,12 +16,13 @@ const Retrospect = () => {
     <div className={STYLES.container}>
       <section>
         <h3 className={STYLES.title}>Jira를 통한 프로젝트 일정 관리</h3>
-        <div className="relative w-full aspect-video">
+        <div className="relative w-full">
           <Image
             src="/Rabbit/Jira.webp"
             alt="Jira"
-            fill
-            className="object-cover"
+            width={1567}
+            height={535}
+            className="w-full h-auto"
           />
         </div>
         <div className={STYLES.contentContainer}>
@@ -83,12 +84,13 @@ const Retrospect = () => {
       </section>
       <section>
         <h3 className={STYLES.title}>개발과 디자인의 균형</h3>
-        <div className="relative w-full aspect-video">
+        <div className="relative w-full">
           <Image
             src="/Rabbit/seporia.webp"
             alt="Seporia"
-            fill
-            className="object-cover"
+            width={1127}
+            height={381}
+            className="w-full h-auto"
           />
         </div>
         <div className={STYLES.contentContainer}>
