@@ -18,7 +18,7 @@ const Retrospect = () => {
         <h3 className={STYLES.title}>Jira를 통한 프로젝트 일정 관리</h3>
         <div className="relative w-full aspect-video">
           <Image
-            src="/Rabbit/jira.webp"
+            src="/Rabbit/Jira.webp"
             alt="Jira"
             fill
             className="object-cover"
