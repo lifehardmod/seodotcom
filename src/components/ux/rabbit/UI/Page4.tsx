@@ -1,6 +1,5 @@
 "use client";
 
-import RabbitCarousel from "../RabbitCarousel";
 import Auction from "./detail/Auction";
 import Detail from "./detail/detail";
 import Home from "./detail/Home";
@@ -9,11 +8,6 @@ import Sell from "./detail/Sell";
 import Write from "./detail/Write";
 import PageTitle from "./PageTitle";
 import ResponsiveTabsWithScroll from "./ResponsiveTabsWithScroll";
-
-const TEXT_STYLES = {
-  highlight: "text-blue-400 font-semibold",
-  normal: "font-light",
-};
 
 const Page4 = () => {
   const tabs = [

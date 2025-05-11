@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useState } from "react";
+import Image from "next/image";
 
 interface ContentItem {
   title?: string;
@@ -57,11 +58,12 @@ const RabbitAccordion = ({ sections }: RabbitAccordionProps) => {
                 </p>
               )}
               {item.image && (
-                <div className="my-4">
-                  <img
+                <div className="relative my-4 aspect-video">
+                  <Image
                     src={item.image}
                     alt={item.title || ""}
-                    className="rounded-lg w-full"
+                    fill
+                    className="rounded-lg object-cover"
                   />
                 </div>
               )}

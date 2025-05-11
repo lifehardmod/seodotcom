@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 
 interface Tab {
   id: number;
@@ -48,11 +49,12 @@ const ResponsiveTabsWithScroll = ({ tabs }: ResponsiveTabsWithScrollProps) => {
         ))}
       </div>
       <div className="w-full aspect-video overflow-auto bg-black/20 rounded-lg">
-        <div className="w-full h-full min-h-[400px] p-4">
-          <img
+        <div className="relative w-full h-full min-h-[400px] p-4">
+          <Image
             src={tabs[activeTab].imageUrl}
             alt={`${tabs[activeTab].label} 예시`}
-            className="w-full h-auto object-cover rounded-lg"
+            fill
+            className="object-cover rounded-lg"
           />
         </div>
       </div>

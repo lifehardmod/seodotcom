@@ -1,7 +1,5 @@
-import Card from "@/components/common/Card";
 import MovieLayout from "@/components/common/MovieLayout";
 import PortfolioList from "@/components/shared/ui/PortfolioList";
-import UXlist from "@/constant/UXlist";
 const Ux = () => {
   return (
     <div>

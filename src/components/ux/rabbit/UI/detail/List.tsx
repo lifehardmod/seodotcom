@@ -8,7 +8,7 @@ const List = () => {
   return (
     <div className="w-full">
       <Common
-        Image={[
+        images={[
           "/Rabbit/phone/5.webp",
           "/Rabbit/phone/6.webp",
           "/Rabbit/phone/6-1.webp",

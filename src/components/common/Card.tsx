@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import Image from "next/image";
 interface CardProps {
   title: string;
   description: string;
@@ -18,7 +18,13 @@ const Card = ({
 }: CardProps) => {
   const cardContent = (
     <div className="flex flex-col gap-2">
-      <img src={image} alt={title} className="w-full h-auto" />
+      <Image
+        src={image}
+        width={644}
+        height={416}
+        alt={title}
+        className="w-full h-auto"
+      />
       <div className="w-full px-2">
         <p className="text-[clamp(1rem,2.5vw,1.5rem)] font-semibold pt-2">
           {title}
