@@ -1,7 +1,9 @@
-import { Suspense } from "react";
+import { Suspense, ComponentType } from "react";
 
-export const withLazyComponent = (importFunc: () => Promise<any>) => {
-  const LazyComponent = (props: any) => (
+export function withLazyComponent<T extends object>(
+  importFunc: () => Promise<{ default: ComponentType<T> }>
+) {
+  const LazyComponent = (props: T) => (
     <Suspense fallback={<div>Loading...</div>}>
       {importFunc().then((mod) => {
         const Component = mod.default;
@@ -10,4 +12,4 @@ export const withLazyComponent = (importFunc: () => Promise<any>) => {
     </Suspense>
   );
   return LazyComponent;
-};
+}

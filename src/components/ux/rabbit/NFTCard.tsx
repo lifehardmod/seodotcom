@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 type DummyNFTData = {
   auctionId: string;
@@ -54,7 +55,6 @@ function useCountdown(endDate: string): string {
       const hours = Math.floor(
         (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
       return `${String(days).padStart(2, "0")}일 ${String(hours).padStart(
@@ -90,15 +90,15 @@ export const NFTCard = ({ item = dummyData }: NFTCardProps) => {
           {!isImageLoaded && (
             <div className="absolute inset-0 animate-pulse bg-gray-700" />
           )}
-          <img
-            loading="lazy"
-            onLoad={() => setIsImageLoaded(true)}
+          <Image
             src={item.nftImageUrl}
             alt="NFT"
+            fill
             className={cn(
-              "h-full w-full object-cover transition-opacity duration-500",
+              "object-cover transition-opacity duration-500",
               isImageLoaded ? "opacity-100" : "opacity-0"
             )}
+            onLoad={() => setIsImageLoaded(true)}
           />
         </div>
       </div>

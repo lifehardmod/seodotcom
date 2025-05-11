@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 
 interface Tab {
   id: number;
@@ -46,11 +47,12 @@ const ResponsiveTabs = ({ tabs }: ResponsiveTabsProps) => {
         ))}
       </div>
       <div className="mt-6 w-full h-[800px] overflow-hidden flex items-center justify-center">
-        <div className="w-[1200px] h-full">
-          <img
+        <div className="relative w-[1200px] h-full">
+          <Image
             src={`/Rabbit/반응형${activeTab + 1}.gif`}
             alt={`반응형 ${activeTab + 1} 예시`}
-            className="w-full h-full object-contain rounded-lg transform scale-140"
+            fill
+            className="object-contain rounded-lg transform scale-140"
           />
         </div>
       </div>

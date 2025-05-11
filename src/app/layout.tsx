@@ -1,4 +1,4 @@
-import Footer from "@/components/common/Footer";
+// import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
 import "@/styles/globals.css";
 import MobileNav from "@/components/common/MobileNav";

@@ -1,11 +1,13 @@
+import Image from "next/image";
+
 interface CommonProps {
-  Image: string[];
+  images: string[];
 }
 
-const Common = ({ Image }: CommonProps) => {
-  const ImageList = Image.map((image) => (
-    <div key={image} className="w-[378px] h-auto">
-      <img src={image} alt="image" />
+const Common = ({ images }: CommonProps) => {
+  const ImageList = images.map((image) => (
+    <div key={image} className="relative w-[378px] aspect-[9/16]">
+      <Image src={image} alt="image" fill className="object-cover" />
     </div>
   ));
   return (

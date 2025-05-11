@@ -14,7 +14,6 @@ const TEXT_STYLES = {
 const Page3 = () => {
   const { startLoading } = useLoading();
   const [isLoading1, setIsLoading1] = useState(false);
-  const [isLoading2, setIsLoading2] = useState(false);
 
   const handleStartLoading = () => {
     startLoading([
@@ -28,11 +27,6 @@ const Page3 = () => {
   const handleLoading1 = () => {
     setIsLoading1(true);
     setTimeout(() => setIsLoading1(false), 3000);
-  };
-
-  const handleLoading2 = () => {
-    setIsLoading2(true);
-    setTimeout(() => setIsLoading2(false), 3000);
   };
 
   return (

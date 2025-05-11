@@ -1,6 +1,5 @@
 "use client";
 
-import RabbitCarousel from "../RabbitCarousel";
 import PageTitle from "./PageTitle";
 import ResponsiveTabs from "./ResponsiveTabs";
 

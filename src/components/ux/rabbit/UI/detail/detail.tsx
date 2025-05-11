@@ -7,7 +7,7 @@ const Detail = () => {
   };
   return (
     <div className="w-full">
-      <Common Image={["/Rabbit/phone/10.webp", "/Rabbit/phone/10-1.webp"]} />
+      <Common images={["/Rabbit/phone/10.webp", "/Rabbit/phone/10-1.webp"]} />
       <div className="space-y-8 w-full">
         <div className="bg-black/40 p-8 rounded-xl">
           <h4 className="text-2xl font-semibold mb-6 text-white flex items-center">

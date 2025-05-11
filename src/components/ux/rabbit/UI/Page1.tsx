@@ -40,7 +40,7 @@ const Page1 = () => {
                 <p className={`text-lg leading-relaxed ${TEXT_STYLES.normal}`}>
                   인터뷰를 통해 도출된 핵심 과제는{" "}
                   <span className={TEXT_STYLES.highlight}>
-                    "대출자를 어떻게 모을 것인가"
+                    &ldquo;대출자를 어떻게 모을 것인가&rdquo;
                   </span>
                   였습니다.
                 </p>

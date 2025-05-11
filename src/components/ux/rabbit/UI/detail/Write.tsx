@@ -8,7 +8,7 @@ const Write = () => {
   return (
     <div className="w-full">
       <Common
-        Image={[
+        images={[
           "/Rabbit/phone/2.webp",
           "/Rabbit/phone/3.webp",
           "/Rabbit/phone/4.webp",

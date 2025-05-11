@@ -8,7 +8,7 @@ const Sell = () => {
   return (
     <div className="w-full">
       <Common
-        Image={[
+        images={[
           "/Rabbit/phone/9.webp",
           "/Rabbit/phone/9-1.webp",
           "/Rabbit/phone/9-2.webp",

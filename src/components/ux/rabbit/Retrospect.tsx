@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const STYLES = {
   container: "w-full flex-col flex gap-16",
   title: "text-2xl font-semibold mb-8",
@@ -14,7 +16,14 @@ const Retrospect = () => {
     <div className={STYLES.container}>
       <section>
         <h3 className={STYLES.title}>Jira를 통한 프로젝트 일정 관리</h3>
-        <img src="/Rabbit/jira.webp" alt="Jira" className={STYLES.image} />
+        <div className="relative w-full aspect-video">
+          <Image
+            src="/Rabbit/jira.webp"
+            alt="Jira"
+            fill
+            className="object-cover"
+          />
+        </div>
         <div className={STYLES.contentContainer}>
           <div className={STYLES.section}>
             <h4 className={STYLES.sectionTitle}>프로젝트 일정 관리 방식</h4>
@@ -74,7 +83,14 @@ const Retrospect = () => {
       </section>
       <section>
         <h3 className={STYLES.title}>개발과 디자인의 균형</h3>
-        <img src="/Rabbit/seporia.webp" alt="Jira" className={STYLES.image} />
+        <div className="relative w-full aspect-video">
+          <Image
+            src="/Rabbit/seporia.webp"
+            alt="Seporia"
+            fill
+            className="object-cover"
+          />
+        </div>
         <div className={STYLES.contentContainer}>
           <div className={STYLES.section}>
             <h4 className={STYLES.sectionTitle}>

@@ -178,7 +178,7 @@ const Coin = ({ position = [0, 0, 0], scale = 1 }: CoinProps) => {
           side={DoubleSide}
         />
       </mesh>
-      // 테두리 링도 함께 수정
+      {/* 테두리 링도 함께 수정 */}
       {/* 얇은 테두리 링 (상단) */}
       <mesh position={[0, 0.26, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[9.9, 10.2, 64]} />
