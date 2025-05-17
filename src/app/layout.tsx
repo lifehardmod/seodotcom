@@ -2,7 +2,7 @@
 import Header from "@/components/common/Header";
 import "@/styles/globals.css";
 import MobileNav from "@/components/common/MobileNav";
-
+import { Analytics } from "@vercel/analytics/next";
 export const metadata = {
   title: "SeoJuWon",
   description: "서주원 포트폴리오입니다.",
@@ -25,6 +25,7 @@ export default function RootLayout({
         <div className="block md:hidden fixed bottom-0 left-0 right-0 z-50">
           <MobileNav />
         </div>
+        <Analytics />
         {/* <Footer /> */}
       </body>
     </html>
