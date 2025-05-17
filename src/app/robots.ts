@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://seojuwon.com/sitemap.xml", // 실제 도메인으로 변경해주세요
+    sitemap: "https://seodotcom.vercel.app/sitemap.xml",
   };
 }
