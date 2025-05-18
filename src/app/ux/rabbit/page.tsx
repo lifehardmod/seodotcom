@@ -9,6 +9,7 @@ import Page3 from "@/components/ux/rabbit/UI/Page3";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import Page4 from "@/components/ux/rabbit/UI/Page4";
 import Retrospect from "@/components/ux/rabbit/Retrospect";
+import Image from "next/image";
 const Rabbit = () => {
   const accordionSections = [
     {
@@ -120,8 +121,17 @@ const Rabbit = () => {
           }
         />
         <div className="relative flex min-h-screen w-full flex-col items-center overflow-hidden mt-8">
-          <div className="h-[400px] w-full mb-16">
-            <RabbitCoin />
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-[400px] w-full">
+              <RabbitCoin />
+            </div>
+            <Image
+              src="/logo.svg"
+              alt="rabbit_logo"
+              width={500}
+              height={250}
+              className="pb-36"
+            />
           </div>
           <RabbitAccordion sections={accordionSections} />
         </div>
