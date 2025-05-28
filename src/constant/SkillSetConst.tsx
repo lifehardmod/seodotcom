@@ -4,7 +4,6 @@ import {
   SiReact,
   SiJavascript,
   SiTypescript,
-  SiHtml5,
   SiGit,
   SiJira,
   SiFigma,
