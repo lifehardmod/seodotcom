@@ -45,20 +45,7 @@ const HomeMain = () => {
 
   return (
     <>
-      <div className="fixed inset-0 w-screen h-screen overflow-hidden">
-        {/* 배경 비디오 */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-          style={{ opacity: 0.13 }}
-        >
-          <source src="/movies/Mainvideo.webm" type="video/webm" />
-        </video>
-      </div>
-      <div className="relative flex flex-col items-center w-full mt-10 md:px-10 xl:gap-0 gap-7 overflow-hidden">
+      <div className="relative flex flex-col items-center w-full mt-10 xl:gap-0 overflow-hidden">
         {/* 타이핑 효과 */}
         <span
           className="w-full text-[7vw] font-semibold -mb-4 caret-transparent text-brand-primary"
@@ -66,7 +53,7 @@ const HomeMain = () => {
         >
           {displayText}
           <span
-            className={cn("inline-block ml-2 align-baseline", {
+            className={cn("inline-block align-baseline", {
               "animate-blink":
                 !isDeleting && displayText === texts[currentIndex],
             })}
