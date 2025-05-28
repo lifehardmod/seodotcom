@@ -1,14 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+
+const texts = ["UX/UI Designer", "FrontEnd Developer"];
 
 const HomeMain = () => {
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const texts = useMemo(() => ["UX/UI Designer", "FrontEnd Developer"], []);
   const typingSpeed = 150;
   const deletingSpeed = 50;
   const pauseTime = 1000;
@@ -41,16 +41,13 @@ const HomeMain = () => {
     );
 
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, currentIndex, texts]);
+  }, [displayText, isDeleting, currentIndex]);
 
   return (
     <>
       <div className="relative flex flex-col items-center w-full mt-10 xl:gap-0 overflow-hidden">
         {/* 타이핑 효과 */}
-        <span
-          className="w-full text-[7vw] font-semibold -mb-4 caret-transparent text-brand-primary"
-          style={{ fontSize: "clamp(30px, 6vw, 80px)" }}
-        >
+        <span className="w-full text-[clamp(30px,6vw,80px)] font-semibold -mb-4 caret-transparent text-brand-primary">
           {displayText}
           <span
             className={cn("inline-block align-baseline", {
@@ -66,8 +63,7 @@ const HomeMain = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full text-[7vw] font-bold -mb-4 caret-transparent"
-          style={{ fontSize: "clamp(40px, 7vw, 80px)" }}
+          className="w-full text-[clamp(40px,7vw,80px)] font-bold -mb-4 caret-transparent"
         >
           서주원
         </motion.span>
@@ -75,8 +71,7 @@ const HomeMain = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="w-full text-[7vw] font-bold caret-transparent"
-          style={{ fontSize: "clamp(40px, 7vw, 80px)" }}
+          className="w-full text-[clamp(40px,7vw,80px)] font-bold caret-transparent"
         >
           포트폴리오입니다.
         </motion.span>
