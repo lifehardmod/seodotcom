@@ -2,7 +2,7 @@ import React from "react";
 import { cva } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "inline-flex bg-white/10 hover:bg-white/20 active:translate-y-[1px] transition-all cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[4px] text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex bg-white/10 hover:bg-white/20 active:translate-y-[1px] transition-all cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[4px] text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-[invalid=true]:ring-destructive/20 dark:data-[invalid=true]:ring-destructive/40 data-[invalid=true]:border-destructive",
   {
     variants: {
       variant: {
@@ -87,7 +87,7 @@ const DesignSystem = () => {
                 <button className={buttonVariants({ variant: "outline" })}>
                   Outline
                 </button>
-                <button className="inline-flex bg-brand-primary text-black shadow-xs hover:bg-brand-primary/80 active:translate-y-[1px] transition-all cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[4px] text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 px-4 py-2 has-[>svg]:px-3">
+                <button className={buttonVariants({ variant: "primary" })}>
                   Primary
                 </button>
               </div>
@@ -128,7 +128,7 @@ const DesignSystem = () => {
                 <button className={buttonVariants()} disabled>
                   Disabled
                 </button>
-                <button className={buttonVariants()} aria-invalid>
+                <button className={buttonVariants()} data-invalid>
                   Invalid
                 </button>
                 <button className={buttonVariants()} data-state="hover">

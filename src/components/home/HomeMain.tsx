@@ -1,13 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
+
 const HomeMain = () => {
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const texts = ["UX/UI Designer", "FrontEnd Developer"];
+  const texts = useMemo(() => ["UX/UI Designer", "FrontEnd Developer"], []);
   const typingSpeed = 150;
   const deletingSpeed = 50;
   const pauseTime = 1000;
@@ -45,6 +46,7 @@ const HomeMain = () => {
   return (
     <>
       <div className="fixed inset-0 w-screen h-screen overflow-hidden">
+        {/* 배경 비디오 */}
         <video
           autoPlay
           loop
@@ -57,6 +59,7 @@ const HomeMain = () => {
         </video>
       </div>
       <div className="relative flex flex-col items-center w-full mt-10 md:px-10 xl:gap-0 gap-7 overflow-hidden">
+        {/* 타이핑 효과 */}
         <span
           className="w-full text-[7vw] font-semibold -mb-4 caret-transparent text-brand-primary"
           style={{ fontSize: "clamp(30px, 6vw, 80px)" }}
