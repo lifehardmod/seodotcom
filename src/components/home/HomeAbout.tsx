@@ -1,5 +1,4 @@
 import { ExternalLink } from "lucide-react";
-import SkillSet from "./SkillSet";
 const HomeAbout = () => {
   return (
     <section className="container flex justify-start w-full flex-col gap-5 text-lg md:text-xl font-light">
