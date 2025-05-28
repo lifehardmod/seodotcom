@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 정적 라우트
   const routes = ["", "/ux", "/video", "/etc", "/programming"].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date(),
+    lastModified: new Date().toISOString(),
     changeFrequency: "daily" as const,
     priority: route === "" ? 1 : 0.8,
   }));
