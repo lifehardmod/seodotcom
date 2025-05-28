@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import MobileNav from "@/components/common/MobileNav";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/common/Footer";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 export const metadata = {
   title: "SeoJuWon",
   description: "서주원 포트폴리오입니다.",
@@ -62,6 +63,7 @@ export default function RootLayout({
           <MobileNav />
         </div>
         <Analytics />
+        <SpeedInsights />
         <Footer />
       </body>
     </html>
