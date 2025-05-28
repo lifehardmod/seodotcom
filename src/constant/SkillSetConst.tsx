@@ -26,20 +26,21 @@ const skillList: Skill[] = [
     icon: <DiJava size={size} />,
   },
   {
-    name: "MySQL",
-    icon: <SiMysql size={size} />,
+    name: "JavaScript",
+    icon: <SiJavascript size={size} />,
   },
   {
     name: "React",
     icon: <SiReact size={size} />,
   },
-  {
-    name: "JavaScript",
-    icon: <SiJavascript size={size} />,
-  },
+
   {
     name: "TypeScript",
     icon: <SiTypescript size={size} />,
+  },
+  {
+    name: "MySQL",
+    icon: <SiMysql size={size} />,
   },
 ];
 
