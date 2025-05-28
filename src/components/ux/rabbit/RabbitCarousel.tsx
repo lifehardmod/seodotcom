@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 interface RabbitCarouselProps {
@@ -14,10 +14,8 @@ const RabbitCarousel = ({
 }: RabbitCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    scrollToCarousel();
-  }, [currentIndex]);
-  const scrollToCarousel = () => {
+
+  const scrollToCarousel = useCallback(() => {
     if (!enableScroll || !carouselRef.current) return;
 
     const rect = carouselRef.current.getBoundingClientRect();
@@ -27,7 +25,11 @@ const RabbitCarousel = ({
       top: targetPosition,
       behavior: "smooth",
     });
-  };
+  }, [enableScroll]);
+
+  useEffect(() => {
+    scrollToCarousel();
+  }, [currentIndex, scrollToCarousel]);
 
   const nextSlide = () => {
     if (currentIndex === images.length - 1) {
