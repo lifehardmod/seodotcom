@@ -9,15 +9,24 @@ interface CardProps {
   isExternal?: boolean;
 }
 
+const TagList = ({ tag }: { tag: string }) => {
+  return (
+    <div className="text-[clamp(0.875rem,2.5vw,1.25rem)] font-normal border border-gray-300 rounded-sm px-4 py-1 mt-2">
+      {tag}
+    </div>
+  );
+};
+
 const Card = ({
   title,
   description,
   to,
   image,
+  Tag,
   isExternal = false,
 }: CardProps) => {
   const cardContent = (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1">
       <Image
         src={image}
         width={644}
@@ -25,6 +34,11 @@ const Card = ({
         alt={title}
         className="w-full h-auto"
       />
+      <div className="flex flex-wrap gap-2">
+        {Tag.map((tag) => (
+          <TagList key={tag} tag={tag} />
+        ))}
+      </div>
       <div className="w-full px-2">
         <p className="text-[clamp(1rem,2.5vw,1.5rem)] font-semibold pt-2">
           {title}
