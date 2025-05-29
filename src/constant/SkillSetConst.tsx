@@ -11,6 +11,8 @@ import {
   SiAdobephotoshop,
   SiAdobeaftereffects,
   SiAdobepremierepro,
+  SiHtml5,
+  SiSpringboot,
 } from "react-icons/si";
 import { DiJava } from "react-icons/di";
 
@@ -24,6 +26,10 @@ const skillList: Skill[] = [
   {
     name: "Java",
     icon: <DiJava size={size} />,
+  },
+  {
+    name: "Springboot",
+    icon: <SiSpringboot size={size} />,
   },
   {
     name: "JavaScript",
@@ -41,6 +47,10 @@ const skillList: Skill[] = [
   {
     name: "MySQL",
     icon: <SiMysql size={size} />,
+  },
+  {
+    name: "HTML",
+    icon: <SiHtml5 size={size} />,
   },
 ];
 
