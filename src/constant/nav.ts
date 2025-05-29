@@ -10,11 +10,7 @@ export const NAV_ITEMS = [
     label: "UX/UI",
     activeLabel: "ux",
   },
-  {
-    to: "/video",
-    label: "영상",
-    activeLabel: "video",
-  },
+
   {
     to: "/programming",
     label: "개발",
@@ -22,7 +18,12 @@ export const NAV_ITEMS = [
   },
   {
     to: "/etc",
-    label: "etc",
+    label: "기타",
     activeLabel: "etc",
+  },
+  {
+    to: "/resume",
+    label: "Resume",
+    activeLabel: "Resume",
   },
 ];

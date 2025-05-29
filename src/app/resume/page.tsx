@@ -1,4 +1,4 @@
-export default function video() {
+const Etc = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center ">
       <div className="text-center space-y-4">
@@ -8,7 +8,7 @@ export default function video() {
         </div>
         <div className="mt-8">
           <a
-            href="https://seojw.myportfolio.com/16540dd23563a6"
+            href="https://seojw.myportfolio.com/work"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-400 hover:text-blue-300 underline transition-colors"
@@ -19,4 +19,6 @@ export default function video() {
       </div>
     </div>
   );
-}
+};
+
+export default Etc;
