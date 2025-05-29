@@ -1,88 +1,77 @@
-import React from "react";
-import {
-  SiMysql,
-  SiReact,
-  SiJavascript,
-  SiTypescript,
-  SiGit,
-  SiJira,
-  SiFigma,
-  SiAdobeillustrator,
-  SiAdobephotoshop,
-  SiAdobeaftereffects,
-  SiAdobepremierepro,
-  SiHtml5,
-  SiSpringboot,
-} from "react-icons/si";
-import { DiJava } from "react-icons/di";
-
-interface Skill {
+export interface Skill {
   name: string;
-  icon: React.ReactElement;
+  icon: string;
 }
 
-const size = 60;
-const skillList: Skill[] = [
+const BackendList: Skill[] = [
   {
     name: "Java",
-    icon: <DiJava size={size} />,
+    icon: "/Icon/SkillSet/Java.svg",
   },
   {
     name: "Springboot",
-    icon: <SiSpringboot size={size} />,
+    icon: "/Icon/SkillSet/Spring.svg",
   },
+
+  {
+    name: "MySQL",
+    icon: "/Icon/SkillSet/MySQL.svg",
+  },
+];
+const FrontendList: Skill[] = [
   {
     name: "JavaScript",
-    icon: <SiJavascript size={size} />,
+    icon: "/Icon/SkillSet/JavaScript.svg",
   },
   {
     name: "React",
-    icon: <SiReact size={size} />,
+    icon: "/Icon/SkillSet/React.svg",
   },
-
   {
     name: "TypeScript",
-    icon: <SiTypescript size={size} />,
-  },
-  {
-    name: "MySQL",
-    icon: <SiMysql size={size} />,
+    icon: "/Icon/SkillSet/TypeScript.svg",
   },
   {
     name: "HTML",
-    icon: <SiHtml5 size={size} />,
+    icon: "/Icon/SkillSet/HTML.svg",
+  },
+  {
+    name: "CSS",
+    icon: "/Icon/SkillSet/CSS.svg",
   },
 ];
 
-const ToolList: Skill[] = [
+const DevToolList: Skill[] = [
   {
     name: "Git",
-    icon: <SiGit size={size} />,
+    icon: "/Icon/SkillSet/Git.svg",
   },
   {
     name: "Jira",
-    icon: <SiJira size={size} />,
-  },
-  {
-    name: "Figma",
-    icon: <SiFigma size={size} />,
-  },
-  {
-    name: "Illustrator",
-    icon: <SiAdobeillustrator size={size} />,
-  },
-  {
-    name: "Photoshop",
-    icon: <SiAdobephotoshop size={size} />,
-  },
-  {
-    name: "AfterEffect",
-    icon: <SiAdobeaftereffects size={size} />,
-  },
-  {
-    name: "PremierePro",
-    icon: <SiAdobepremierepro size={size} />,
+    icon: "/Icon/SkillSet/Jira.svg",
   },
 ];
 
-export { skillList, ToolList };
+const DesignToolList: Skill[] = [
+  {
+    name: "Figma",
+    icon: "/Icon/SkillSet/Figma.svg",
+  },
+  {
+    name: "Illustrator",
+    icon: "/Icon/SkillSet/Illustrator.svg",
+  },
+  {
+    name: "Photoshop",
+    icon: "/Icon/SkillSet/Photoshop.svg",
+  },
+  {
+    name: "AfterEffect",
+    icon: "/Icon/SkillSet/Aftereffect.svg",
+  },
+  {
+    name: "PremierePro",
+    icon: "/Icon/SkillSet/Premiere.svg",
+  },
+];
+export { BackendList, FrontendList, DevToolList, DesignToolList };

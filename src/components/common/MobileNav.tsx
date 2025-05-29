@@ -7,7 +7,7 @@ const MobileNav = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="flex w-full items-center ">
+    <nav className="flex md:hidden fixed bottom-0 left-0 right-0 z-50 w-full items-center ">
       {NAV_ITEMS.map((item) => (
         <div key={item.to} className="w-full">
           <MobileNavItem

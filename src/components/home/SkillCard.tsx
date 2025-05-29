@@ -2,14 +2,14 @@ import React from "react";
 
 interface Skill {
   name: string;
-  icon: React.ReactElement;
+  icon: string;
 }
 
 const SkillCard = ({ name, icon }: Skill) => {
   return (
-    <div className="flex items-center flex-col gap-1 w-[120px] h-[120px] bg-black border-1 justify-center rounded-md pt-2">
-      <div>{icon}</div>
-      <p className="font-semibold">{name}</p>
+    <div className="flex items-center flex-col gap-3 w-[130px] h-[130px] bg-black border-1 justify-center rounded-md pt-2">
+      <img src={icon} alt={name} />
+      <p className="text-sm">{name}</p>
     </div>
   );
 };

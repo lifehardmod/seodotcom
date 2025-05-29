@@ -44,39 +44,36 @@ const HomeMain = () => {
   }, [displayText, isDeleting, currentIndex]);
 
   return (
-    <>
-      <div className="relative flex flex-col items-center w-full mt-10 xl:gap-0 overflow-hidden">
-        {/* 타이핑 효과 */}
-        <span className="w-full text-[clamp(30px,6vw,80px)] font-semibold -mb-4 caret-transparent text-brand-primary">
-          {displayText}
-          <span
-            className={cn("inline-block align-baseline", {
-              "animate-blink":
-                !isDeleting && displayText === texts[currentIndex],
-            })}
-            style={{ color: "currentColor" }}
-          >
-            |
-          </span>
+    <section className="relative flex flex-col items-center w-full mt-10 xl:gap-0 overflow-hidden">
+      {/* 타이핑 효과 */}
+      <span className="w-full text-[clamp(30px,6vw,80px)] font-semibold -mb-4 caret-transparent text-brand-primary">
+        {displayText}
+        <span
+          className={cn("inline-block align-baseline", {
+            "animate-blink": !isDeleting && displayText === texts[currentIndex],
+          })}
+          style={{ color: "currentColor" }}
+        >
+          |
         </span>
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full text-[clamp(40px,7vw,80px)] font-bold -mb-4 caret-transparent"
-        >
-          서주원
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="w-full text-[clamp(40px,7vw,80px)] font-bold caret-transparent"
-        >
-          포트폴리오입니다.
-        </motion.span>
-      </div>
-    </>
+      </span>
+      <motion.span
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="w-full text-[clamp(40px,7vw,80px)] font-bold -mb-4 caret-transparent"
+      >
+        서주원
+      </motion.span>
+      <motion.span
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="w-full text-[clamp(40px,7vw,80px)] font-bold caret-transparent"
+      >
+        포트폴리오입니다.
+      </motion.span>
+    </section>
   );
 };
 export default HomeMain;

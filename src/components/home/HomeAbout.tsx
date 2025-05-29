@@ -1,4 +1,6 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, FileText } from "lucide-react";
+import Link from "next/link";
+
 const HomeAbout = () => {
   return (
     <section className="container flex justify-start w-full flex-col gap-5 text-lg md:text-xl font-light">
@@ -30,6 +32,19 @@ const HomeAbout = () => {
             <ExternalLink size={16} />
           </a>
           에서 웹 개발을 익혔습니다.
+        </p>
+      </div>{" "}
+      <div className="flex flex-col gap-1">
+        <p>
+          자세한 내용은{" "}
+          <Link
+            href="/resume"
+            className="font-semibold cursor-pointer inline-flex items-center gap-1 text-green-400 hover:text-green-700 transition-colors"
+          >
+            이력서
+            <FileText size={16} />
+          </Link>
+          를 참고해주세요.
         </p>
       </div>
     </section>
