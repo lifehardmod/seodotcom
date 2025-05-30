@@ -1,4 +1,5 @@
 import Resume from "@/components/resume/Resume";
+import SkillDetail from "@/components/resume/SkillDetail";
 
 const ResumePage = () => {
   return (

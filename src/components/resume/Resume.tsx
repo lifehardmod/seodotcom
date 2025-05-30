@@ -7,7 +7,7 @@ const Resume = () => {
     <section className="bg-white w-full max-w-4xl h-full py-8 px-12 pb-20 text-black">
       <h1 className="text-black text-center font-bold text-3xl">이력서</h1>
       {/* 본문 감싸기*/}
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-16">
         {/* 상단임 이름, 프로필 이미지, 소개, 연락처 */}
         <div className="flex flex-row justify-between">
           {/* 이름, 프로필 이미지, 소개 (왼쪽)*/}
@@ -18,14 +18,14 @@ const Resume = () => {
               className="rounded-full w-40 h-40"
             />
             <div className="flex flex-col items-start justify-center">
-              <span className="text-black text-center font-bold text-3xl">
+              <span className="text-black text-center font-bold text-2xl">
                 서주원
               </span>
               <div className="flex flex-col text-gray-900 pt-1">
-                <span className="text-xl font-medium">
+                <span className="text-lg font-medium">
                   UX/UI 디자이너, 프론트엔드 개발자
                 </span>
-                <span className="text-lg text-gray-600">
+                <span className="text-lg font-light text-gray-600 -mt-1">
                   1998.02.07 (만 27세)
                 </span>
               </div>
@@ -80,7 +80,7 @@ const Resume = () => {
                 title="삼성 청년 SW 아카데미 프로젝트 우수상"
                 date="2024.11.29"
                 content="생성형 AI를 이용한 운동 및 식단 자동 추천 서비스"
-                extra="기관 삼성전자주식회사"
+                extra="수여기관 삼성전자주식회사"
               />
             </ResumeCategory>
             {/* 교내 활동 */}

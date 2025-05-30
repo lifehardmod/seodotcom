@@ -7,6 +7,7 @@ const Home = () => {
     <section className="flex flex-col md:px-10 px-2 gap-16">
       <HomeMain />
       <HomeAbout />
+
       <SkillSet />
       <div className="fixed inset-0 w-screen h-screen z-0 pointer-events-none">
         <video

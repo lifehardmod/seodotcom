@@ -46,7 +46,6 @@ const HomeAbout = () => {
           </Link>
           를 참고해주세요.
         </p>
-        <p>Skill에 대한 자세한 정보도 이력서에 명시되어 있습니다.</p>
       </div>
     </section>
   );
