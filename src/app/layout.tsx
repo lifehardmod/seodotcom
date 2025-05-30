@@ -28,6 +28,14 @@ export const metadata = {
     type: "website",
     locale: "ko_KR",
     siteName: "SeoJuWon",
+    images: [
+      {
+        url: "https://seodotcom.vercel.app/og-image.png", // 또는 실제 이미지 URL
+        width: 1200,
+        height: 630,
+        alt: "SeoJuWon Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
