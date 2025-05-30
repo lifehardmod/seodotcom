@@ -1,7 +1,7 @@
 import { FaEnvelope, FaGithub, FaPhone } from "react-icons/fa";
 import ResumeItem from "./ResumeItem";
 import ResumeCategory from "./ResumeCategory";
-
+import Image from "next/image";
 const Resume = () => {
   return (
     <section className="bg-white w-full max-w-4xl h-full py-8 px-12 pb-20 text-black">
@@ -12,10 +12,12 @@ const Resume = () => {
         <div className="flex flex-row justify-between">
           {/* 이름, 프로필 이미지, 소개 (왼쪽)*/}
           <div className="flex flex-row justify-start items-end gap-2 -ml-5">
-            <img
+            <Image
               src="/profile.webp"
               alt="profile"
               className="rounded-full w-40 h-40"
+              width={500}
+              height={500}
             />
             <div className="flex flex-col items-start justify-center">
               <span className="text-black text-center font-bold text-2xl">
