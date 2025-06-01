@@ -12,7 +12,7 @@ const SkillSection = ({
       <h3 className="text-xl font-bold mb-4 text-white border-b border-gray-700/50 pb-2">
         {title}
       </h3>
-      <div className="space-y-2 font-light leading-relaxed text-lg text-gray-50">
+      <div className="space-y-2 font-extralight leading-relaxed text-lg text-gray-50">
         {children}
       </div>
     </div>
