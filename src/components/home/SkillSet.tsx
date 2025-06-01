@@ -5,9 +5,30 @@ import FrontendSkillSet from "./FrontendSkillSet";
 import DevToolSkillSet from "./DevToolSkillSet";
 import BackendSkillSet from "./BackendSkillSet";
 import DesignSkillSet from "./DesignSkillSet";
-
+import {
+  BackendList,
+  FrontendList,
+  DesignToolList,
+  DevToolList,
+} from "@/constant/SkillSetConst";
 const SkillSet = () => {
   const [activeTab, setActiveTab] = useState("design");
+
+  const preloadImages = {
+    frontend: FrontendList.map((skill) => skill.icon),
+    backend: BackendList.map((skill) => skill.icon),
+    design: DesignToolList.map((skill) => skill.icon),
+    tools: DevToolList.map((skill) => skill.icon),
+  };
+
+  const handleMouseEnter = (tabId: string) => {
+    preloadImages[tabId as keyof typeof preloadImages]?.forEach(
+      (src: string) => {
+        const img = new window.Image();
+        img.src = src;
+      }
+    );
+  };
 
   const tabs = [
     { id: "design", label: "디자인" },
@@ -42,6 +63,7 @@ const SkillSet = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
+              onMouseEnter={() => handleMouseEnter(tab.id)}
               className={`px-4 py-1 text-lg font-semibold transition-colors rounded-sm ${
                 activeTab === tab.id
                   ? "border-2 "
