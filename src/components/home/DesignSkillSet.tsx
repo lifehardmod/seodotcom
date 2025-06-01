@@ -1,7 +1,6 @@
 import { DesignToolList } from "@/constant/SkillSetConst";
 import SkillCardList from "./SkillCardList";
 import SkillSection from "../resume/SkillSection";
-import Image from "next/image";
 import ImageCarousel from "../common/ImageCarousel";
 
 const DesignSkillSet = () => {
