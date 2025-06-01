@@ -6,11 +6,11 @@ interface ImageType {
 }
 
 const interviewImages: ImageType[] = [
-  { src: "/Interview/interview1.webp", alt: "research" },
-  { src: "/Interview/interview2.webp", alt: "research" },
-  { src: "/Interview/interview3.webp", alt: "research" },
-  { src: "/Interview/interview4.webp", alt: "research" },
-  { src: "/Interview/interview5.webp", alt: "research" },
+  { src: "/Interview/Interview1.webp", alt: "research1" },
+  { src: "/Interview/Interview2.webp", alt: "research2" },
+  { src: "/Interview/Interview3.webp", alt: "research3" },
+  { src: "/Interview/Interview4.webp", alt: "research4" },
+  { src: "/Interview/Interview5.webp", alt: "research5" },
 ];
 
 const ImageCarousel = () => {
