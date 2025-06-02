@@ -1,12 +1,22 @@
 import Card from "@/components/common/Card";
 
-import UXlist from "@/constant/UXlist";
+interface PortfolioListProps {
+  list: {
+    id: number;
+    title: string;
+    description: string;
+    to: string;
+    image: string;
+    Tag: string[];
+    isExternal: boolean;
+  }[];
+}
 
-const PortfolioList = () => {
+const PortfolioList = ({ list }: PortfolioListProps) => {
   return (
     <div>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-20">
-        {UXlist.map((item) => (
+        {list.map((item) => (
           <li key={item.id}>
             <Card {...item} Tag={item.Tag || []} isExternal={item.isExternal} />
           </li>

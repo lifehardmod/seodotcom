@@ -17,9 +17,9 @@ export const NAV_ITEMS = [
     activeLabel: "programming",
   },
   {
-    to: "/etc",
-    label: "기타",
-    activeLabel: "etc",
+    to: "/blog",
+    label: "Blog",
+    activeLabel: "blog",
   },
   {
     to: "/resume",

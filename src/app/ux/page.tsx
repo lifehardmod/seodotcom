@@ -1,5 +1,6 @@
 import MovieLayout from "@/components/common/MovieLayout";
 import PortfolioList from "@/components/shared/ui/PortfolioList";
+import UXlist from "@/constant/UXlist";
 const Ux = () => {
   return (
     <div>
@@ -26,7 +27,7 @@ const Ux = () => {
         }
       />
       <article className="flex flex-col gap-4 mt-20">
-        <PortfolioList />
+        <PortfolioList list={UXlist} />
       </article>
     </div>
   );
