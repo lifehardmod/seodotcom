@@ -1,7 +1,6 @@
 import MovieLayout from "@/components/common/MovieLayout";
 import PortfolioList from "@/components/shared/ui/PortfolioList";
 import ProgrammingList from "@/constant/ProgrammingList";
-import UXlist from "@/constant/UXlist";
 
 const Programming = () => {
   return (
