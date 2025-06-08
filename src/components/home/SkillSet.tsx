@@ -12,7 +12,7 @@ import {
   DevToolList,
 } from "@/constant/SkillSetConst";
 const SkillSet = () => {
-  const [activeTab, setActiveTab] = useState("design");
+  const [activeTab, setActiveTab] = useState("frontend");
 
   const preloadImages = {
     frontend: FrontendList.map((skill) => skill.icon),
@@ -31,8 +31,8 @@ const SkillSet = () => {
   };
 
   const tabs = [
-    { id: "design", label: "디자인" },
     { id: "frontend", label: "프론트엔드" },
+    { id: "design", label: "디자인" },
     { id: "backend", label: "백엔드" },
     { id: "tools", label: "프로젝트 툴" },
   ];

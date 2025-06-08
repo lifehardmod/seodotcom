@@ -35,6 +35,7 @@
   font-display: swap;
 }
 
+/* Pretendard 폰트 */
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");

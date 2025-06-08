@@ -12,10 +12,10 @@ const ProgrammingList = [
     id: 2,
     title: "모임을 쉽고 간편하게 MIMO",
     description: "모임을 쉽고 간편하게 운영할 수 있는 서비스",
-    to: "https://seojw.myportfolio.com/mimo",
+    to: "/programming/mimo",
     image: "/thumbnail/mimo.webp",
     Tag: ["Frontend 개발", "UX/UI 디자인", "Web"],
-    isExternal: true,
+    isExternal: false,
   },
   {
     id: 3,

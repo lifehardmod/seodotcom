@@ -6,15 +6,14 @@ export const NAV_ITEMS = [
   },
 
   {
-    to: "/ux",
-    label: "UX/UI",
-    activeLabel: "ux",
-  },
-
-  {
     to: "/programming",
     label: "개발",
     activeLabel: "programming",
+  },
+  {
+    to: "/ux",
+    label: "UX/UI",
+    activeLabel: "ux",
   },
   {
     to: "/blog",
