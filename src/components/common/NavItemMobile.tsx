@@ -1,4 +1,4 @@
-import { cn } from "@/components/shared/lib/utils";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface NavItemMobileProps {

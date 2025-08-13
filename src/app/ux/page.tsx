@@ -1,5 +1,5 @@
 import MovieLayout from "@/components/common/MovieLayout";
-import PortfolioList from "@/components/shared/ui/PortfolioList";
+import PortfolioList from "@/components/shared/PortfolioList";
 import UXlist from "@/constant/UXlist";
 const Ux = () => {
   return (
