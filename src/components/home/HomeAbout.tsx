@@ -47,6 +47,9 @@ const HomeAbout = () => {
           를 참고해주세요.
         </p>
       </div>
+      <span className="text-gray-200">
+        <p>해당 포트폴리오 사이트는 웹에 최적화되어 있습니다.</p>
+      </span>
     </section>
   );
 };

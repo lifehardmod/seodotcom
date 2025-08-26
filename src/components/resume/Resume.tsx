@@ -1,8 +1,23 @@
+"use client";
+
 import { FaEnvelope, FaGithub, FaPhone } from "react-icons/fa";
 import ResumeItem from "./ResumeItem";
 import ResumeCategory from "./ResumeCategory";
 import Image from "next/image";
+import { useState } from "react";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+
 const Resume = () => {
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+  const profileImage = {
+    src: "/profile.webp",
+    alt: "프로필 이미지",
+    width: 800,
+    height: 1000,
+  };
+
   return (
     <section className="bg-white w-full max-w-4xl h-full py-8 px-12 pb-20 text-black">
       <h1 className="text-black text-center font-bold text-3xl">이력서</h1>
@@ -11,21 +26,26 @@ const Resume = () => {
         {/* 상단임 이름, 프로필 이미지, 소개, 연락처 */}
         <div className="flex flex-row justify-between">
           {/* 이름, 프로필 이미지, 소개 (왼쪽)*/}
-          <div className="flex flex-row justify-start items-end gap-2 -ml-5">
-            <Image
-              src="/profile.webp"
-              alt="profile"
-              className="rounded-full w-40 h-40"
-              width={500}
-              height={500}
-            />
+          <div className="flex flex-row justify-start items-end gap-4 -ml-5">
+            <div
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => setIsLightboxOpen(true)}
+            >
+              <Image
+                src={profileImage.src}
+                alt={profileImage.alt}
+                className="ml-5 w-40 h-45 object-cover rounded-lg"
+                width={profileImage.width}
+                height={profileImage.height}
+              />
+            </div>
             <div className="flex flex-col items-start justify-center">
               <span className="text-black text-center font-bold text-2xl">
                 서주원
               </span>
               <div className="flex flex-col text-gray-900 pt-1">
                 <span className="text-lg font-medium">
-                  UX/UI 디자이너, 프론트엔드 개발자
+                  프론트엔드 개발자, UX/UI 디자이너
                 </span>
                 <span className="text-lg font-light text-gray-600 -mt-1">
                   1998.02.07 (만 27세)
@@ -74,6 +94,11 @@ const Resume = () => {
             {/* 수상 및 자격 */}
             <ResumeCategory title="수상 및 자격 사항">
               <ResumeItem
+                title="2025 블레이버스 MVP 개발 해커톤: 시즌2 우수상"
+                date="2025.08"
+                content="수여기관 강동구 청년해냄센터, 블레이버스"
+              />
+              <ResumeItem
                 title="SQL Developer"
                 date="2024.12"
                 content="한국데이터산업진흥원"
@@ -88,6 +113,16 @@ const Resume = () => {
             {/* 교내 활동 */}
             <ResumeCategory title="교내 활동">
               <ResumeItem
+                title="중앙대학교 시각디자인 전공 졸업 전시"
+                date="2023.11"
+                content="데스크탑 구매를 어려워하는 사용자의 온라인 데스크탑 구매를 돕기 위한 서비스 Assembly를 기획, 디자인하여 전시하였습니다."
+              />
+              <ResumeItem
+                title="브랜딩 디자인 온라인 전시"
+                date="2022.12"
+                content="온라인 전시 사이트 KUNSTAMATRIX를 이용하여 탄소 제로 상점 SUM:0를 브랜딩하여 전시하였습니다."
+              />
+              <ResumeItem
                 title="학과 영상 동아리 '5501' 활동"
                 date="2018.03 - 2022.07"
                 content="중앙대학교 시각디자인 전공 재학 중, 학과 영상 동아리 활동에 참여하여 모션 그래픽 작업물을 공유하고 상호 피드백을 주고받으며 인사이트를 쌓았습니다. 이후에는 후배들을 대상으로 모션 그래픽 교육을 진행하였습니다."
@@ -95,7 +130,7 @@ const Resume = () => {
               <ResumeItem
                 title="중앙대학교 디자인 봉사단"
                 date="2021.09 - 2021.12"
-                content="봉사 활동의 일환으로 학교 프로그램 및 각종 홍보물 제작에 참여하였습니다. 중앙대학교 사회봉사단 로고 및 식당 메뉴판 등을 디자인 하였습니다."
+                content="봉사 활동의 일환으로 학교 프로그램 및 각종 홍보물 제작에 참여하였습니다. 중앙대학교 사회봉사단 로고 및 식당 메뉴판 등을 디자인하였습니다."
               />
             </ResumeCategory>
           </div>
@@ -111,6 +146,16 @@ const Resume = () => {
             </ResumeCategory>
             {/* 대외 활동 */}
             <ResumeCategory title="대외 활동">
+              <ResumeItem
+                title="모바일 신분증을 활용한 2025 블록체인&AI 해커톤"
+                date="2025.07"
+                content="모바일 신분증을 활용한 아이디어로 참가하여 전국 예선 20개 팀에 선정되었습니다. 서비스 기획과 UI/UX 디자인, 개발까지 직접 수행하며 블록체인 기술 적용 가능성을 검토하고 협업 경험을 쌓았습니다."
+              />
+              <ResumeItem
+                title="카카오뱅크 Finnect 챌린지"
+                date="2025.07"
+                content="금융사회 안전망 구축을 위한 아이디어 공모전「핀테크 챌린지」에 참가하여 서울권 예선 8개 팀에 선정되었습니다. 서비스 디자인과 프로토타입 개발을 직접 수행하며 도전정신을 기르고, 팀 단위 협업과 핀테크 분야에 대한 이해를 넓혔습니다."
+              />
               <ResumeItem
                 title="광명시 청년 위원회 2기 위원, 3기 위원장 위촉"
                 date="2021.07.03 ~ 2025.07.02"
@@ -135,6 +180,17 @@ const Resume = () => {
           </div>
         </div>
       </div>
+
+      {/* 라이트박스 */}
+      <Lightbox
+        open={isLightboxOpen}
+        close={() => setIsLightboxOpen(false)}
+        slides={[profileImage]}
+        render={{
+          buttonPrev: () => null,
+          buttonNext: () => null,
+        }}
+      />
     </section>
   );
 };
