@@ -2,7 +2,6 @@ import MovieLayout from "@/components/common/MovieLayout";
 import RabbitCoin from "@/components/ux/rabbit/RabbitCoin";
 import RabbitAccordion from "@/components/ux/rabbit/RabbitAccordion";
 import RabbitCarousel from "@/components/ux/rabbit/RabbitCarousel";
-import DesignSystem from "@/components/ux/rabbit/DesignSystem";
 import Page1 from "@/components/ux/rabbit/UI/Page1";
 import Page2 from "@/components/ux/rabbit/UI/Page2";
 import Page3 from "@/components/ux/rabbit/UI/Page3";
