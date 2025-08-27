@@ -7,29 +7,12 @@ const Assembly = () => {
       <MovieLayout
         movieLink="/Assembly/Assembly_Title.webm"
         text={
-          <div className="flex flex-col items-center gap-4">
-            <h1 className="text-[clamp(28px,5vw,48px)] font-bold">
-              NFT 기반 차용증 거래 서비스 RABBIT
-            </h1>
-            <div className="flex flex-col items-center gap-2 max-w-[800px] px-4">
-              <p className="text-[clamp(16px,2vw,28px)] text-center leading-relaxed font-light">
-                <span className="font-semibold text-brand-primary">
-                  블록체인
-                </span>{" "}
-                기반의{" "}
-                <span className="font-semibold text-brand-primary">
-                  차용증 거래
-                </span>{" "}
-                서비스로,
-                <br className="hidden sm:block" />
-                투명하고 안전한{" "}
-                <span className="font-semibold text-brand-primary">
-                  P2P 대출
-                </span>
-                서비스를 제공합니다.
-              </p>
-            </div>
-          </div>
+          <h1 className="text-[clamp(28px,5vw,48px)] font-bold flex flex-col items-center">
+            <span className="font-semibold">
+              사용자에게 가장 잘 맞는 데스크탑 추천 서비스
+            </span>
+            <span> Assembly</span>
+          </h1>
         }
       />
       <div className="relative flex min-h-screen w-full flex-col items-center overflow-hidden mt-8">

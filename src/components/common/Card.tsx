@@ -32,7 +32,7 @@ const Card = ({
         width={644}
         height={416}
         alt={title}
-        className="w-full h-auto"
+        className="flex-1 h-auto"
       />
       <div className="flex flex-wrap gap-2">
         {Tag.map((tag) => (

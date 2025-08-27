@@ -21,9 +21,9 @@ const ProgrammingList = [
   {
     id: 3,
     title: "ClassOn",
-    description: "모임을 쉽고 간편하게 운영할 수 있는 서비스",
-    to: "https://seojw.myportfolio.com/mimo",
-    image: "/thumbnail/mimo.webp",
+    description: "교사를 위한 학생 관리 서비스",
+    to: "/programming/classon",
+    image: "/개발중.webp",
     Tag: ["Frontend 개발", "Web", "React", "WebSocket", "나홀로 프론트"],
     isExternal: true,
   },
