@@ -58,13 +58,13 @@ const SkillSet = () => {
         <span className="tracking-tight text-[clamp(40px,7vw,120px)] font-bold">
           SKILLS
         </span>
-        <div className="flex gap-4 border-gray-200">
+        <div className="flex gap-2 border-gray-200 overflow-x-auto scrollbar-hidden">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               onMouseEnter={() => handleMouseEnter(tab.id)}
-              className={`px-4 py-1 text-lg font-semibold transition-colors rounded-sm ${
+              className={`px-4 py-1 text-lg font-semibold transition-colors rounded-sm whitespace-nowrap ${
                 activeTab === tab.id
                   ? "border-2 "
                   : "text-gray-200 hover:text-gray-300 border-2 border-gray-600"

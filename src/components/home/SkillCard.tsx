@@ -7,9 +7,15 @@ interface Skill {
 
 const SkillCard = ({ name, icon }: Skill) => {
   return (
-    <div className="flex items-center flex-col gap-3 w-[130px] h-[130px] bg-black border-1 justify-center rounded-md pt-2">
-      <Image src={icon} alt={name} width={60} height={60} />
-      <p className="text-sm">{name}</p>
+    <div className="flex items-center flex-col gap-3 size-[clamp(95px,14vw,130px)] bg-black border justify-center rounded-md pt-2">
+      <Image
+        src={icon}
+        alt={name}
+        width={60}
+        height={60}
+        className="size-[clamp(36px,7vw,70px)]"
+      />
+      <p className="text-sm sm:text-base ">{name}</p>
     </div>
   );
 };

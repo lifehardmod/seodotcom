@@ -31,21 +31,26 @@ export default function HomeMain() {
       }, 0);
     } else {
       // 타이핑/삭제 진행
-      timer = window.setTimeout(() => {
-        setDisplayText((prev) =>
-          isDeleting ? prev.slice(0, -1) : currentText.slice(0, prev.length + 1)
-        );
-      }, isDeleting ? deletingSpeed : typingSpeed);
+      timer = window.setTimeout(
+        () => {
+          setDisplayText((prev) =>
+            isDeleting
+              ? prev.slice(0, -1)
+              : currentText.slice(0, prev.length + 1)
+          );
+        },
+        isDeleting ? deletingSpeed : typingSpeed
+      );
     }
 
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, currentIndex]);
 
   return (
-    <section className="relative flex flex-col items-center w-full mt-10 xl:gap-0 overflow-hidden">
+    <section className="relative flex flex-col items-center w-full mt-10 xl:gap-0 gap-2 overflow-hidden">
       {/* 타이핑 효과 영역 */}
       <h2
-        className="w-full text-[clamp(30px,6vw,80px)] font-semibold -mb-4 caret-transparent text-brand-primary"
+        className="w-full text-[clamp(32px,6vw,80px)] font-semibold -mb-4 caret-transparent text-brand-primary"
         aria-live="polite"
       >
         {displayText}
@@ -62,7 +67,7 @@ export default function HomeMain() {
         initial={{ opacity: 0, y: reduce ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduce ? 0 : 0.5, delay: 0.2 }}
-        className="w-full text-[clamp(40px,7vw,80px)] font-bold -mb-4 caret-transparent"
+        className="w-full text-[clamp(36px,7vw,80px)] font-bold -mb-4 caret-transparent"
       >
         서주원
       </motion.h1>
@@ -71,7 +76,7 @@ export default function HomeMain() {
         initial={{ opacity: 0, y: reduce ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduce ? 0 : 0.5, delay: 0.4 }}
-        className="w-full text-[clamp(40px,7vw,80px)] font-bold caret-transparent"
+        className="w-full text-[clamp(36px,7vw,80px)] font-bold caret-transparent"
       >
         포트폴리오입니다.
       </motion.h2>

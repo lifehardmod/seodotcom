@@ -3,25 +3,28 @@ import Link from "next/link";
 
 const HomeAbout = () => {
   return (
-    <section className="container flex justify-start w-full flex-col gap-5 text-lg md:text-xl font-light">
+    <section className="container max-w-3xl w-full flex flex-col gap-5 text-base md:text-xl font-light">
       <div className="flex flex-col gap-1">
         <p className="font-semibold">안녕하세요!</p>
-        <p>
+        <p className="whitespace-normal break-normal">
           사용자의 흐름을 이해하고, 직접 구현하는{" "}
-          <span className="font-bold text-green-400">프론트엔드 개발자</span>
-          이자 <span className="font-bold text-green-400">
+          <span className="font-bold text-green-400 inline-block">
+            프론트엔드 개발자
+          </span>
+          이자{" "}
+          <span className="font-bold text-green-400 inline-block">
             UX/UI 디자이너
           </span>{" "}
-          <span className="font-bold">서주원</span>
-          입니다.
+          <span className="font-bold inline-block">서주원</span>입니다.
         </p>
       </div>
+
       <div className="flex flex-col gap-1">
-        <p>
+        <p className="whitespace-normal break-normal">
           <span className="font-semibold">Visual Communication Design</span>을
           전공하였고
         </p>
-        <p>
+        <p className="whitespace-normal break-normal">
           <a
             href="https://www.ssafy.com"
             target="_blank"
@@ -30,12 +33,13 @@ const HomeAbout = () => {
           >
             삼성 청년 SW 아카데미
             <ExternalLink size={16} />
-          </a>
+          </a>{" "}
           에서 웹 개발을 익혔습니다.
         </p>
-      </div>{" "}
+      </div>
+
       <div className="flex flex-col gap-1">
-        <p>
+        <p className="whitespace-normal break-normal">
           자세한 내용은{" "}
           <Link
             href="/resume"
@@ -43,13 +47,10 @@ const HomeAbout = () => {
           >
             이력서
             <FileText size={16} />
-          </Link>
+          </Link>{" "}
           를 참고해주세요.
         </p>
       </div>
-      <span className="text-gray-200">
-        <p>해당 포트폴리오 사이트는 웹에 최적화되어 있습니다.</p>
-      </span>
     </section>
   );
 };

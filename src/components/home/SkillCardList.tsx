@@ -10,7 +10,7 @@ const SkillCardList = ({
 }) => {
   return (
     <div>
-      <ul className="flex flex-wrap gap-4">
+      <ul className="flex flex-wrap gap-4 sm:justify-start justify-center">
         {skills.map((skill: Skill) => (
           <li key={skill.name}>
             <SkillCard name={skill.name} icon={skill.icon} />
