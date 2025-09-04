@@ -23,6 +23,6 @@ export const NAV_ITEMS = [
   {
     to: "/resume",
     label: "Resume",
-    activeLabel: "Resume",
+    activeLabel: "resume",
   },
 ];

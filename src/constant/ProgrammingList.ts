@@ -5,7 +5,7 @@ const ProgrammingList = [
     description: "NFT기반 차용증 거래 서비스 RABBIT",
     to: "/programming/rabbit",
     image: "/thumbnail/RabbitThumbNail.png",
-    Tag: ["Frontend 개발", "React", "Web", "Mobile", "반응형 디자인"],
+    Tag: ["Frontend", "React", "Web", "Mobile", "반응형 디자인", "MSW"],
     isExternal: false,
   },
 
@@ -15,7 +15,7 @@ const ProgrammingList = [
     description: "모임을 쉽고 간편하게 운영할 수 있는 서비스",
     to: "/programming/mimo",
     image: "/thumbnail/mimo.webp",
-    Tag: ["Frontend 개발", "React", "VAC 패턴", "StoryBook", "Web"],
+    Tag: ["Frontend", "React", "VAC 패턴", "StoryBook", "Web"],
     isExternal: false,
   },
   {
@@ -24,7 +24,7 @@ const ProgrammingList = [
     description: "교사를 위한 학생 관리 서비스",
     to: "/programming/classon",
     image: "/개발중.webp",
-    Tag: ["Frontend 개발", "Web", "React", "WebSocket", "나홀로 프론트"],
+    Tag: ["Frontend", "Web", "React", "WebSocket", "나홀로 프론트"],
     isExternal: true,
   },
 ];

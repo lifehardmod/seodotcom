@@ -1,3 +1,7 @@
+/* Tailwind와 나머지 CSS */
+@import "tailwindcss";
+@import "tw-animate-css";
+
 /* Pretendard Variable 폰트 */
 /* DNF Bit Bit v2 폰트 */
 @font-face {
@@ -43,10 +47,6 @@
   font-style: normal;
   font-display: swap;
 }
-
-/* Tailwind와 나머지 CSS */
-@import "tailwindcss";
-@import "tw-animate-css";
 
 @keyframes cardEntrance {
   0% {
@@ -217,6 +217,8 @@
 }
 
 @theme {
+  /* 커스텀 브레이크포인트 */
+  --breakpoint-xs: 420px;
   /* 폰트 관련 변수 추가 */
   --font-pretendard: "Pretendard", sans-serif;
   --font-bit: "DNFBitBit", sans-serif;

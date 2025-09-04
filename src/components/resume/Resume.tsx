@@ -19,22 +19,22 @@ const Resume = () => {
   };
 
   return (
-    <section className="bg-white w-full max-w-4xl h-full py-8 px-12 pb-20 text-black">
+    <section className="bg-white w-full max-w-4xl h-full py-8 px-[clamp(20px,5vw,80px)] pb-20 text-black">
       <h1 className="text-black text-center font-bold text-3xl">이력서</h1>
       {/* 본문 감싸기*/}
       <div className="flex flex-col gap-16">
         {/* 상단임 이름, 프로필 이미지, 소개, 연락처 */}
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-col md:flex-row justify-between">
           {/* 이름, 프로필 이미지, 소개 (왼쪽)*/}
-          <div className="flex flex-row justify-start items-end gap-4 -ml-5">
+          <div className="flex flex-col md:flex-row justify-start w-full gap-4 md:-ml-5 md:items-end">
             <div
-              className="cursor-pointer hover:opacity-80 transition-opacity"
+              className="cursor-pointer hover:opacity-80 transition-opacity  justify-center items-center flex"
               onClick={() => setIsLightboxOpen(true)}
             >
               <Image
                 src={profileImage.src}
                 alt={profileImage.alt}
-                className="ml-5 w-40 h-45 object-cover rounded-lg"
+                className="md:ml-5 mt-5 sm:mt-0 w-40 h-45 object-cover rounded-lg"
                 width={profileImage.width}
                 height={profileImage.height}
               />
@@ -54,7 +54,7 @@ const Resume = () => {
             </div>
           </div>
           {/* 연락처 및 소셜 미디어 (오른쪽) */}
-          <div className="flex flex-col items-end justify-end text-gray-600">
+          <div className="flex flex-col md:items-end items-start justify-end mt-4 md:mt-0 text-gray-600">
             <a
               href="https://github.com/lifehardmod"
               target="_blank"
@@ -75,7 +75,7 @@ const Resume = () => {
           </div>
         </div>
         {/* 중단 진입부임 경력사항, 학력, 자격사항, 프로젝트 */}
-        <div className="flex flex-row items-start justify-center gap-12">
+        <div className="flex flex-col md:flex-row items-start justify-center gap-12">
           {/*왼쪽 부분*/}
           <div className="flex flex-col gap-12 flex-1">
             {/* 학력 */}
