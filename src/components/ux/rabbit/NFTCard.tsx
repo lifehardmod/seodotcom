@@ -94,6 +94,7 @@ export const NFTCard = ({ item = dummyData }: NFTCardProps) => {
             src={item.nftImageUrl}
             alt="NFT"
             fill
+            sizes="40vw"
             className={cn(
               "object-cover transition-opacity duration-500",
               isImageLoaded ? "opacity-100" : "opacity-0"

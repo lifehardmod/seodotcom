@@ -3,7 +3,7 @@
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 import Coin from "./Coin";
 import Lights from "./Lights";
@@ -11,26 +11,26 @@ import Lights from "./Lights";
 const CoinContainer = () => {
   const { mouse, viewport } = useThree();
   const groupRef = useRef<THREE.Group>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const scaleRef = useRef(1);
 
   useFrame(() => {
     if (!groupRef.current) return;
 
-    // 마우스 위치를 -1에서 1 사이의 값으로 정규화
+    // 뷰포트에 맞는 동적 스케일 계산 (코인 지름: 20 단위)
+    const fitScale = (Math.min(viewport.width, viewport.height) * 0.8) / 20;
+    // 부드럽게 스케일 보간 및 안정적 범위 클램프
+    const clampedTarget = THREE.MathUtils.clamp(fitScale, 0.2, 1.2);
+    scaleRef.current = THREE.MathUtils.lerp(
+      scaleRef.current,
+      clampedTarget,
+      0.1
+    );
+    groupRef.current.scale.setScalar(scaleRef.current);
+
+    // 마우스 위치를 -1에서 1 사이의 값으로 정규화하여 약한 시차 회전
     const x = (mouse.x * viewport.width) / 2;
     const y = (mouse.y * viewport.height) / 2;
 
-    // 부드러운 회전을 위한 보간
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
       x * 0.05,
@@ -45,7 +45,7 @@ const CoinContainer = () => {
 
   return (
     <group ref={groupRef}>
-      <Coin scale={isMobile ? 1.5 : 1.5} />
+      <Coin scale={1} />
     </group>
   );
 };
@@ -57,8 +57,8 @@ const RabbitCoin = () => {
       <Canvas
         shadows
         camera={{
-          position: [0, 10, 25],
-          // fov: 60,
+          position: [0, 8, 28],
+          fov: 70,
         }}
       >
         <Lights />

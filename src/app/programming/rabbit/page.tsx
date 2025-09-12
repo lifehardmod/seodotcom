@@ -97,11 +97,11 @@ const Rabbit = () => {
           movieLink="/movies/Rabbit_Title.webm"
           text={
             <div className="flex flex-col items-center gap-4">
-              <h1 className="text-[clamp(28px,5vw,48px)] font-bold">
+              <h1 className="text-[clamp(24px,5vw,48px)] font-bold text-center">
                 NFT 기반 차용증 거래 서비스 RABBIT
               </h1>
               <div className="flex flex-col items-center gap-2 max-w-[800px] px-4">
-                <p className="text-[clamp(16px,2vw,28px)] text-center leading-relaxed font-light">
+                <p className="text-[clamp(16px,2vw,21px)] text-center leading-relaxed font-light">
                   <span className="font-semibold text-brand-primary">
                     블록체인
                   </span>{" "}
@@ -109,8 +109,7 @@ const Rabbit = () => {
                   <span className="font-semibold text-brand-primary">
                     차용증 거래
                   </span>{" "}
-                  서비스로,
-                  <br className="hidden sm:block" />
+                  서비스로, <br className=" sm:hidden" />
                   투명하고 안전한{" "}
                   <span className="font-semibold text-brand-primary">
                     P2P 대출
@@ -123,7 +122,7 @@ const Rabbit = () => {
         />
         <div className="relative flex min-h-screen w-full flex-col items-center overflow-hidden mt-8">
           <div className="flex flex-col items-center gap-4">
-            <div className="h-[400px] w-full">
+            <div className="w-[clamp(300px,50vw,600px)] h-auto aspect-square">
               <RabbitCoin />
             </div>
             <Image
@@ -131,7 +130,7 @@ const Rabbit = () => {
               alt="rabbit_logo"
               width={500}
               height={250}
-              className="pb-36"
+              className="pb-36 px-4"
             />
           </div>
           <RabbitAccordion sections={accordionSections} />

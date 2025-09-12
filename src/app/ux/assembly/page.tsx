@@ -25,12 +25,14 @@ const Assembly = () => {
             className="py-30"
           />
         </div>
-        <Image
-          src="/Assembly/Assembly.webp"
-          alt="assembly"
-          width={1000}
-          height={1000}
-        />
+        <div className=" items-center flex px-20 justify-center">
+          <Image
+            src="/Assembly/Assembly.webp"
+            alt="assembly"
+            width={1958}
+            height={15189}
+          />
+        </div>
       </div>
     </section>
   );
