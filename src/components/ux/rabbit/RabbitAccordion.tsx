@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import Image from "next/image";
 
 interface ContentItem {
   title?: string;
