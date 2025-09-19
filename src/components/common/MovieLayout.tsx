@@ -18,7 +18,7 @@ const MovieLayout = ({ movieLink, text }: MovieLayoutProps) => {
   const videoOpacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 0]);
 
   return (
-    <div
+    <section
       ref={containerRef}
       className="relative left-1/2 w-screen -translate-x-1/2"
     >
@@ -44,7 +44,7 @@ const MovieLayout = ({ movieLink, text }: MovieLayoutProps) => {
       >
         <div>{text}</div>
       </motion.div>
-    </div>
+    </section>
   );
 };
 
