@@ -1,7 +1,20 @@
 import { DesignToolList } from "@/constant/SkillSetConst";
 import SkillCardList from "./SkillCardList";
 import SkillSection from "../resume/SkillSection";
-import ImageCarousel from "../common/ImageCarousel";
+import Image from "next/image";
+
+export interface ImageType {
+  src: string;
+  alt: string;
+}
+
+const interviewImages: ImageType[] = [
+  { src: "/Interview/Interview1.webp", alt: "research1" },
+  { src: "/Interview/Interview2.webp", alt: "research2" },
+  { src: "/Interview/Interview3.webp", alt: "research3" },
+  { src: "/Interview/Interview4.webp", alt: "research4" },
+  { src: "/Interview/Interview5.webp", alt: "research5" },
+];
 
 const DesignSkillSet = () => {
   return (
@@ -52,8 +65,20 @@ const DesignSkillSet = () => {
           이를 통해 웹에서 사용자의 실제 행동 패턴을 파악하고, UI 제작 시 실제
           사용 흐름에 근거한 의사결정을 도출할 수 있습니다.
         </p>
-        <div className="w-full mt-5">
-          <ImageCarousel />
+        <div className="mt-5">
+          <div className="w-full flex gap-2 border-gray-200 overflow-x-scroll scrollbar-hidden">
+            {interviewImages.map((image, index) => (
+              <div key={index} className="flex-shrink-0 w-fit">
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={200}
+                  height={200}
+                  className="w-[200px] h-auto object-cover opacity-50 blur-[2px] hover:blur-none transition-all duration-300"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </SkillSection>
 

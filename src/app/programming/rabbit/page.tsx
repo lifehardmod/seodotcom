@@ -9,6 +9,8 @@ import Retrospect from "@/components/ux/rabbit/Retrospect";
 import Image from "next/image";
 import DesignSystemWithCss from "@/components/programming/rabbit/DesignSyetemWithCss";
 import ProjectOverview from "@/components/programming/ProjectOverview";
+import PlanningSection from "@/components/shared/PlanningSection";
+import { PPTImages } from "@/constant/ImageDir";
 
 const Rabbit = () => {
   const accordionSections = [
@@ -132,12 +134,12 @@ const Rabbit = () => {
             className="pb-36 px-4"
           />
         </section>
-        <div className="flex flex-col gap-8">
+        <div className="flex w-full flex-col gap-8">
           <ProjectOverview
             title="프로젝트 개요"
             list={[
               "기간 : 2025.03 - 2024.04, 6주",
-              "역할 : Front-end 개발 50%",
+              "역할 : Front-end 개발 50%, UX/UI 디자인 100%",
               "구현 정도 : 웹 배포 후 실 사용 테스트 및 최적화",
               "성과 : 디지털인증협회 블록체인 & AI 해커톤 예선 진출 (전국 20팀), 카카오뱅크 Finnect 챌린지 예선 진출 (서울권 8팀)",
             ]}
@@ -145,15 +147,14 @@ const Rabbit = () => {
           <ProjectOverview
             title="기술 스택"
             list={[
-              "React, TypeScript",
-              "번들러 : Vite",
+              "React, TypeScript, Vite",
               "스타일링 : Tailwind CSS",
               "상태관리 : Zustand",
               "서버 상태/캐싱 : React Query",
-              "로깅/모니터링 : Sentry",
               "테스트 및 API 모킹 : MSW",
             ]}
           />
+          <PlanningSection title="기획" Images={PPTImages} />
         </div>
       </div>
     </>

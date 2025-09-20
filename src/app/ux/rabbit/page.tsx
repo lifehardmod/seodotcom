@@ -10,6 +10,8 @@ import { LoadingProvider } from "@/contexts/LoadingContext";
 import Page4 from "@/components/ux/rabbit/UI/Page4";
 import Retrospect from "@/components/ux/rabbit/Retrospect";
 import Image from "next/image";
+import { PPTImages } from "@/constant/ImageDir";
+
 const Rabbit = () => {
   const accordionSections = [
     {
@@ -23,24 +25,7 @@ const Rabbit = () => {
             "구현 정도: 웹 배포 후 실 사용 테스트 및 최적화",
             "사용 툴: Figma, Jira, React, Sentry",
           ],
-          component: (
-            <RabbitCarousel
-              images={[
-                "/PPT/Rabbit/1.webp",
-                "/PPT/Rabbit/2.webp",
-                "/PPT/Rabbit/3.webp",
-                "/PPT/Rabbit/4.webp",
-                "/PPT/Rabbit/5.webp",
-                "/PPT/Rabbit/6.webp",
-                "/PPT/Rabbit/7.webp",
-                "/PPT/Rabbit/8.webp",
-                "/PPT/Rabbit/9.webp",
-                "/PPT/Rabbit/10.webp",
-                "/PPT/Rabbit/11.webp",
-              ]}
-              enableScroll={false}
-            />
-          ),
+          component: <RabbitCarousel images={PPTImages} enableScroll={false} />,
         },
       ],
     },
