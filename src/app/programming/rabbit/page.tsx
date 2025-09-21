@@ -4,14 +4,17 @@ import Image from "next/image";
 import ProjectOverview from "@/components/programming/ProjectOverview";
 import PlanningSection from "@/components/shared/PlanningSection";
 import { PPTImages } from "@/constant/ImageDir";
-import MSW from "@/components/programming/rabbit/MSW";
-import Responsive from "@/components/programming/rabbit/Responsive";
-import Zustand from "@/components/programming/rabbit/Zustand";
-import CodeSplitting from "@/components/programming/rabbit/CodeSplitting";
-import Tailwind from "@/components/programming/rabbit/Tailwind";
+import {
+  MSW,
+  Responsive,
+  CodeSplitting,
+  Zustand,
+  Tailwind,
+  UXImprorve,
+  RabbitRetrospect,
+} from "@/components/programming/rabbit";
 import Devider from "@/components/common/Devider";
-import UXImprorve from "@/components/programming/rabbit/UXImprorve";
-import RabbitRetrospect from "@/components/programming/rabbit/RabbitRetrospect";
+
 const Rabbit = () => {
   return (
     <>
