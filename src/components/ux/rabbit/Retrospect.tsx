@@ -105,7 +105,7 @@ const Retrospect = () => {
         </div>
       </section>
       <section>
-        <h3 className={STYLES.title}>개발과 디자인의 균형</h3>
+        <h3 className={STYLES.title}>상호 이해의 중요성</h3>
         <div className="relative w-full">
           <Image
             src="/Rabbit/seporia.webp"
@@ -124,15 +124,15 @@ const Retrospect = () => {
               <span className={STYLES.highlight}>
                 세포리아 테스트넷에 실제 코인을 발행하여 프로젝트를
                 진행하였습니다.
-              </span>
+              </span>{" "}
               <span>
                 블록체인 네트워크에 데이터를 저장하고 트랜잭션을 처리하는
                 과정에서 예상치 못한 문제가 발생했습니다.
-              </span>
+              </span>{" "}
               <span>
                 특히, 블록체인의 특성상 트랜잭션 처리 속도를 기술적으로 줄이는
                 것이 불가능하다는 현실을 마주했습니다.
-              </span>
+              </span>{" "}
               <span>
                 평균 10초 이상 소요되는 트랜잭션 처리 시간은 사용자 경험
                 측면에서 큰 문제로 다가왔습니다.
@@ -145,7 +145,7 @@ const Retrospect = () => {
               <span className={STYLES.highlight}>
                 처음에는 기술적으로 문제를 해결하려 했지만, 블록체인 특성상 처리
                 시간을 줄이는 것은 사실상 불가능했습니다.
-              </span>
+              </span>{" "}
               <span>
                 따라서 UI/UX 측면에서 문제를 완화하기 위해 스켈레톤 화면과
                 플로우 안내 메시지를 추가하여, 사용자가 로딩 중에도 진행 상황을
@@ -158,17 +158,17 @@ const Retrospect = () => {
             </p>
           </div>
           <div className={STYLES.section}>
-            <h4 className={STYLES.sectionTitle}>기술과 디자인의 조화</h4>
+            <h4 className={STYLES.sectionTitle}>상호 이해의 중요성</h4>
             <p className={STYLES.paragraph}>
               <span className={STYLES.highlight}>
                 프로젝트를 진행하며, 내가 맡은 분야가 아니더라도 이해해야 한다는
                 점을 배웠습니다.
-              </span>
+              </span>{" "}
               <span>
                 블록체인을 구현하는 역할은 아니였지만 블록체인 트랜잭션 발행이나
                 데이터 조회 같은 기술적인 내용을 깊이 파악하지 못하면, 화면을
                 만드는 것도 어려운 일이 될 수 있다고 느꼈습니다.
-              </span>
+              </span>{" "}
               <span>
                 직접 담당하지 않는 기술 분야라도, 프로젝트의 전체 맥락에서 어떤
                 영향을 줄 수 있는지 충분히 이해해야 한다고 생각했습니다.

@@ -84,7 +84,7 @@ export const useMediaQuery = (
 export default useMediaQuery;
 `}
       </SyntaxHighlighter>
-      <div className="bg-black/40 pt-4 pb-16 rounded-xl space-y-8 w-full">
+      <div className="bg-black/40 py-8 mb-12 rounded-xl space-y-8 w-full px-8">
         <ul className="space-y-4">
           <li className="flex items-start">
             <span className="text-blue-400 mr-3 text-xl">•</span>
@@ -128,7 +128,7 @@ const AuctionBidHistory = ({ data }: AuctionBidHistoryProps) => {
 };
 
 `}</SyntaxHighlighter>
-      <div className="bg-black/40 pt-4 pb-16 rounded-xl space-y-8 w-full">
+      <div className="bg-black/40 py-8 mb-12 rounded-xl space-y-8 w-full px-8">
         <ul className="space-y-4">
           <li className="flex items-start">
             <span className="text-blue-400 mr-3 text-xl">•</span>
@@ -147,7 +147,7 @@ const AuctionBidHistory = ({ data }: AuctionBidHistoryProps) => {
     <div className="text font-medium whitespace-nowrap text-white sm:text-xl">
 
 `}</SyntaxHighlighter>
-      <div className="bg-black/40 pt-4 pb-16 rounded-xl space-y-8 w-full">
+      <div className="bg-black/40 py-8 mb-12 rounded-xl space-y-8 w-full px-8">
         <ul className="space-y-4">
           <li className="flex items-start">
             <span className="text-blue-400 mr-3 text-xl">•</span>
