@@ -15,7 +15,7 @@ interface PlanningSectionProps {
 
 const PlanningSection = ({ title, Images }: PlanningSectionProps) => {
   return (
-    <section className="w-full not-last:px-4 bg-white/5 backdrop-blur-sm rounded-lg p-4 sm:px-8 sm:py-4">
+    <section className="w-full bg-white/5 backdrop-blur-sm rounded-lg p-4 sm:px-8 sm:py-4">
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger className="h-fit">

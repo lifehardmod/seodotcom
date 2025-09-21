@@ -15,7 +15,7 @@
     "incremental": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["node"],
+    "types": ["node", "react-syntax-highlighter"],
     "plugins": [
       {
         "name": "next"

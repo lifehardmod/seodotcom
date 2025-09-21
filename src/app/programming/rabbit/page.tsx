@@ -7,10 +7,11 @@ import Page3 from "@/components/ux/rabbit/UI/Page3";
 import Page4 from "@/components/ux/rabbit/UI/Page4";
 import Retrospect from "@/components/ux/rabbit/Retrospect";
 import Image from "next/image";
-import DesignSystemWithCss from "@/components/programming/rabbit/DesignSyetemWithCss";
 import ProjectOverview from "@/components/programming/ProjectOverview";
 import PlanningSection from "@/components/shared/PlanningSection";
 import { PPTImages } from "@/constant/ImageDir";
+import MSW from "@/components/programming/rabbit/MSW";
+import Responsive from "@/components/programming/rabbit/Responsive";
 
 const Rabbit = () => {
   const accordionSections = [
@@ -54,7 +55,7 @@ const Rabbit = () => {
           title: "디자인 시스템",
           description:
             "일관된 사용자 경험을 위한 디자인 시스템을 구축했습니다.",
-          component: <DesignSystemWithCss />,
+          // component: <DesignSystemWithCss />,
         },
       ],
     },
@@ -155,6 +156,8 @@ const Rabbit = () => {
             ]}
           />
           <PlanningSection title="기획" Images={PPTImages} />
+          <MSW />
+          <Responsive />
         </div>
       </div>
     </>
