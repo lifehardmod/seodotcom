@@ -6,7 +6,7 @@ const ProgrammingList = [
     to: "/programming/rabbit",
     image: "/thumbnail/RabbitThumbNail.png",
     Tag: ["Frontend", "React", "Web", "Mobile", "반응형 웹", "MSW"],
-    isExternal: false,
+    isUpdated: true,
   },
 
   {
@@ -16,7 +16,7 @@ const ProgrammingList = [
     to: "/programming/mimo",
     image: "/thumbnail/mimo.webp",
     Tag: ["Frontend", "React", "VAC 패턴", "StoryBook", "Web"],
-    isExternal: false,
+    isUpdated: false,
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ const ProgrammingList = [
     to: "/programming/classon",
     image: "/개발중.webp",
     Tag: ["Frontend", "Web", "React", "WebSocket", "나홀로 프론트"],
-    isExternal: true,
+    isUpdated: false,
   },
 ];
 

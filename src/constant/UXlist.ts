@@ -6,7 +6,7 @@ const UXlist = [
     to: "/ux/rabbit",
     image: "/thumbnail/RabbitThumbNail.png",
     Tag: ["UX/UI 디자인", "Frontend 개발", "Web", "Mobile"],
-    isExternal: false,
+    isUpdated: false,
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ const UXlist = [
     to: "/ux/assembly",
     image: "/thumbnail/assembly.png",
     Tag: ["UX/UI 디자인", "Mobile", "High-Fi Prototype"],
-    isExternal: false,
+    isUpdated: false,
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ const UXlist = [
     to: "/ux/a7m3",
     image: "/thumbnail/a7m3.png",
     Tag: ["UX/UI 디자인", "High-Fi Prototype"],
-    isExternal: false,
+    isUpdated: false,
   },
   // {
   //   id: 4,
