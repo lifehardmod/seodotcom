@@ -1,18 +1,11 @@
 import MovieLayout from "@/components/common/MovieLayout";
 import Image from "next/image";
 import ProjectOverview from "@/components/programming/ProjectOverview";
-import {
-  Responsive,
-  CodeSplitting,
-  Zustand,
-  Tailwind,
-  UXImprorve,
-  RabbitRetrospect,
-} from "@/components/programming/rabbit";
 import Devider from "@/components/common/Devider";
 import Carousel from "@/components/common/Carousel";
 import WebMockup from "@/components/programming/mimo/WebMockup";
 import StoryBook from "@/components/programming/mimo/StoryBook";
+import AtomicDesign from "@/components/programming/mimo/AtomicDesign";
 const MockupImages = [
   "/MIMO/Layout/main.webp",
   "/MIMO/Layout/chat.webp",
@@ -101,6 +94,7 @@ const Mimo = () => {
           <div className="flex flex-col gap-10">
             <StoryBook />
             <Devider />
+            <AtomicDesign />
           </div>
         </div>
       </div>

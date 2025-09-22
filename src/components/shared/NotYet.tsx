@@ -95,7 +95,7 @@ const NotYet = () => {
           {/* 헤더 */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-white mb-2">
-              개발중입니다...ㅠㅠ
+              개발중입니다.
             </h1>
           </div>
 
