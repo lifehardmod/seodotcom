@@ -44,34 +44,8 @@ export const worker = setupWorker(...handlers);
       );
     }
 
-    if (params.maxIr && Number(params.maxIr) !== 0) {
-      filteredList = filteredList.filter(
-        (item) => item.ir <= Number(params.maxIr),
-      );
-    }
+    ...
 
-    if (params.minIr && Number(params.minIr) !== 0) {
-      filteredList = filteredList.filter(
-        (item) => item.ir >= Number(params.minIr),
-      );
-    }
-
-    if (params.repayType) {
-      const repayTypeMap: Record<string, string> = {
-        "1": "원리금 균등 상환", // 원리금 균등 상환
-        "2": "원금 균등 상환", // 원금 균등 상환
-        "3": "만기 일시 상환", // 만기 일시 상환
-      };
-
-      filteredList = filteredList.filter((item) => {
-        const repayType = params.repayType;
-        if (!repayType) return false;
-
-        return Array.isArray(repayType)
-          ? repayType.some((type) => repayTypeMap[type] === item.repayType)
-          : repayTypeMap[repayType] === item.repayType;
-      });
-    }
 
     // 페이지네이션 적용
     const pageNumber = params.pageNumber ? Number(params.pageNumber) : 0;

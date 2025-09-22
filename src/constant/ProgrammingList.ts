@@ -15,7 +15,7 @@ const ProgrammingList = [
     description: "모임을 쉽고 간편하게 운영할 수 있는 서비스",
     to: "/programming/mimo",
     image: "/thumbnail/mimo.webp",
-    Tag: ["Frontend", "React", "VAC 패턴", "StoryBook", "Web"],
+    Tag: ["Frontend", "React", "StoryBook", "Web"],
     isUpdated: false,
   },
   {

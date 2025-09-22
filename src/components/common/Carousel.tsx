@@ -65,17 +65,23 @@ const Carousel = ({ images }: CarouselProps) => {
           }
         }}
       >
-        <Image
-          src={images[currentIndex] as string}
-          alt={images[currentIndex] as string}
-          width={1920}
-          height={1080}
-          sizes="(max-width: 768px) 100vw, 800px"
-          className={`object-contain transition-opacity duration-500 ${
-            isLoading ? "opacity-0" : "opacity-100"
-          }`}
-          onLoadingComplete={() => setIsLoading(false)}
-        />
+        {typeof images[currentIndex] === "string" ? (
+          <Image
+            src={images[currentIndex] as string}
+            alt={images[currentIndex] as string}
+            width={1920}
+            height={1080}
+            sizes="(max-width: 768px) 100vw, 800px"
+            className={`object-contain transition-opacity duration-500 ${
+              isLoading ? "opacity-0" : "opacity-100"
+            }`}
+            onLoadingComplete={() => setIsLoading(false)}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            {images[currentIndex]}
+          </div>
+        )}
       </div>
 
       {/* 네비게이션 영역 */}
