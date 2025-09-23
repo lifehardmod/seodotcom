@@ -1,7 +1,6 @@
 import DefaultSection from "@/components/common/DefaultSection";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { TEXT_STYLES } from "@/constant/util";
-import Image from "next/image";
 
 const ImprovementPoint = () => {
   return (
