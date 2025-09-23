@@ -6,6 +6,7 @@ import Carousel from "@/components/common/Carousel";
 import WebMockup from "@/components/programming/mimo/WebMockup";
 import StoryBook from "@/components/programming/mimo/StoryBook";
 import AtomicDesign from "@/components/programming/mimo/AtomicDesign";
+import ImprovementPoint from "@/components/programming/mimo/ImprovementPoint";
 const MockupImages = [
   "/MIMO/Layout/main.webp",
   "/MIMO/Layout/chat.webp",
@@ -95,6 +96,13 @@ const Mimo = () => {
             <StoryBook />
             <Devider />
             <AtomicDesign />
+            <Devider />
+            <section className="w-full px-4 bg-white/5 backdrop-blur-sm rounded-lg p-4 sm:px-8 sm:py-6">
+              <h3 className="text-xl sm:text-2xl font-semibold">
+                개선해야할 점
+              </h3>
+            </section>
+            <ImprovementPoint />
           </div>
         </div>
       </div>
