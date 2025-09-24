@@ -2,8 +2,8 @@ import Image from "next/image";
 
 const WebMockup = ({ images }: { images: string }) => {
   return (
-    <div className="w-full aspect-[3/2] bg-white">
-      <div className="h-full bg-white overflow-y-scroll">
+    <div className=" w-full aspect-[3/2] bg-white">
+      <div className="h-full w-full bg-white overflow-y-scroll">
         <Image
           src={images}
           alt={images}

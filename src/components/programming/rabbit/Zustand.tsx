@@ -1,4 +1,7 @@
 import DefaultSection from "@/components/common/DefaultSection";
+import Explanation from "@/components/common/Explanation";
+import ExplanationLayout from "@/components/common/ExplanationLayout";
+import { TEXT_STYLES } from "@/constant/util";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 const Zustand = () => {
@@ -41,35 +44,26 @@ const Zustand = () => {
 };`}
       </SyntaxHighlighter>
 
-      <div className="bg-black/40 py-8 mb-12 rounded-xl space-y-8 w-full px-8">
-        <h4 className="text-2xl font-semibold mb-6 text-white flex items-center">
-          Zustand 사용 이유와 성과
-        </h4>
-        <ul className="space-y-4">
-          <li className="flex items-start">
-            <span className="text-blue-400 mr-3 text-xl">•</span>
-            <p className="text-xl">
-              Page → Filter → 세부 컴포넌트로 내려가는 props drilling을 제거하기
-              위해, Zustand 전역 상태를 활용했습니다.
-            </p>
-          </li>
-          <li className="flex items-start">
-            <span className="text-blue-400 mr-3 text-xl">•</span>
-            <p className="text-xl">
-              필터 상태 변경 시 필요한 컴포넌트만 리렌더링하도록 셀렉터 기반
-              구독을 적용하여 성능을 최적화했습니다
-            </p>
-          </li>
-          <li className="flex items-start">
-            <span className="text-blue-400 mr-3 text-xl">•</span>
-            <p className="text-xl">
-              각 섹션은 독립적인 UI를 유지하면서, store를 통해 상태를 읽고
-              갱신할 수 있어, API 호출 시 모든 필터 조건을 쉽게 통합할 수
-              있었습니다. 이를 통해 props 전달과 상태 관리 복잡성을 줄였습니다.
-            </p>
-          </li>
-        </ul>
-      </div>
+      <ExplanationLayout title="Zustand 사용 이유와 성과">
+        <Explanation>
+          Page → Filter → 세부 컴포넌트로 내려가는{" "}
+          <span className={TEXT_STYLES.highlight}>props drilling</span>을
+          제거하기 위해, Zustand 전역 상태를 활용했습니다.
+        </Explanation>
+        <Explanation>
+          필터 상태 변경 시 필요한 컴포넌트만 리렌더링하도록{" "}
+          <span className={TEXT_STYLES.highlight}>셀렉터 기반 구독</span>을
+          적용하여 성능을 최적화했습니다.
+        </Explanation>
+        <Explanation>
+          각 섹션은 독립적인 상태를 유지하면서,{" "}
+          <span className={TEXT_STYLES.highlight}>
+            store를 통해 상태를 읽고 갱신
+          </span>
+          할 수 있어, API 호출 시 모든 필터 조건을 쉽게 통합할 수 있었습니다.
+          이를 통해 props 전달과 상태 관리 복잡성을 줄였습니다.
+        </Explanation>
+      </ExplanationLayout>
     </DefaultSection>
   );
 };

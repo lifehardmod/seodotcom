@@ -85,29 +85,30 @@ const Carousel = ({ images }: CarouselProps) => {
       </div>
 
       {/* 네비게이션 영역 */}
-      <div className="flex items-center justify-center gap-8">
+      <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-8">
         {/* 이전 버튼 */}
         <button
           onClick={prevSlide}
-          className={`px-6 py-2 rounded-lg text-lg font-medium transition-colors ${
+          className={`px-4 py-2 sm:px-4 md:px-6 rounded-lg text-sm sm:text-base md:text-lg font-medium transition-colors ${
             currentIndex === 0
               ? "bg-white/5 text-white/30 cursor-not-allowed"
               : "bg-white/10 hover:bg-white/20 text-white"
           }`}
           disabled={currentIndex === 0}
         >
-          이전
+          <span className="hidden sm:inline">이전</span>
+          <span className="sm:hidden">‹</span>
         </button>
 
         {/* 인디케이터 */}
-        <div className="flex gap-3">
+        <div className="flex gap-1 sm:gap-2 md:gap-3 px-2">
           {images.map((_, index) => (
             <button
               key={index}
               onClick={() => {
                 setCurrentIndex(index);
               }}
-              className={`w-3 h-3 rounded-full transition-all ${
+              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${
                 currentIndex === index
                   ? "bg-white"
                   : "bg-white/30 hover:bg-white/50"
@@ -118,14 +119,15 @@ const Carousel = ({ images }: CarouselProps) => {
         {/* 다음 버튼 */}
         <button
           onClick={nextSlide}
-          className={`px-6 py-2 rounded-lg text-lg font-medium transition-colors ${
+          className={`px-4 py-2 sm:px-4 md:px-6 rounded-lg text-sm sm:text-base md:text-lg font-medium transition-colors ${
             currentIndex === images.length - 1
               ? "bg-white/5 text-white/30 cursor-not-allowed"
               : "bg-white/10 hover:bg-white/20 text-white"
           }`}
           disabled={currentIndex === images.length - 1}
         >
-          다음
+          <span className="hidden sm:inline">다음</span>
+          <span className="sm:hidden">›</span>
         </button>
       </div>
       {/* 라이트박스 */}
