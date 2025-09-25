@@ -96,7 +96,8 @@ const Resume = () => {
               <ResumeItem
                 title="2025 블레이버스 MVP 개발 해커톤: 시즌2 우수상"
                 date="2025.08"
-                content="수여기관 강동구 청년해냄센터, 블레이버스"
+                content="실제 창업 기업의 MVP로 웹 경매 플랫폼을 구현하였습니다."
+                extra="수여기관 강동구 청년해냄센터, 블레이버스"
               />
               <ResumeItem
                 title="SQL Developer"

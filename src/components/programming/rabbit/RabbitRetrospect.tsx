@@ -1,4 +1,4 @@
-import DefaultSection from "@/components/common/DefaultSection";
+import { DefaultSection } from "@/components/common";
 import Retrospect from "@/components/ux/rabbit/Retrospect";
 
 const RabbitRetrospect = () => {

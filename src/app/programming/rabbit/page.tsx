@@ -1,4 +1,3 @@
-import MovieLayout from "@/components/common/MovieLayout";
 import RabbitCoin from "@/components/ux/rabbit/RabbitCoin";
 import Image from "next/image";
 import ProjectOverview from "@/components/programming/ProjectOverview";
@@ -13,8 +12,7 @@ import {
   UXImprorve,
   RabbitRetrospect,
 } from "@/components/programming/rabbit";
-import Devider from "@/components/common/Devider";
-
+import { MovieLayout, Separator } from "@/components/common";
 const Rabbit = () => {
   return (
     <>
@@ -62,7 +60,7 @@ const Rabbit = () => {
           <ProjectOverview
             title="프로젝트 개요"
             list={[
-              "기간 : 2025.03 - 2024.04, 6주",
+              "기간 : 2025.03 - 2025.04, 6주",
               "역할 : Front-end 개발 50%, UX/UI 디자인 100%",
               "구현 정도 : 웹 배포 후 실 사용 테스트 및 최적화",
               "성과 : 디지털인증협회 블록체인 & AI 해커톤 예선 진출 (전국 20팀), 카카오뱅크 Finnect 챌린지 예선 진출 (서울권 8팀)",
@@ -81,17 +79,17 @@ const Rabbit = () => {
           <PlanningSection title="기획" Images={PPTImages} />
           <div className="flex flex-col gap-10">
             <MSW />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <Responsive />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <CodeSplitting />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <Zustand />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <Tailwind />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <UXImprorve />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <RabbitRetrospect />
           </div>
         </div>

@@ -1,6 +1,8 @@
-import DefaultSection from "@/components/common/DefaultSection";
-import ExplanationLayout from "@/components/common/ExplanationLayout";
-import Explanation from "@/components/common/Explanation";
+import {
+  ExplanationLayout,
+  Explanation,
+  DefaultSection,
+} from "@/components/common";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 const ImprovementPoint = () => {

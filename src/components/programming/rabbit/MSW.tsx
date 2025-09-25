@@ -1,8 +1,10 @@
-import DefaultSection from "@/components/common/DefaultSection";
+import {
+  ExplanationLayout,
+  Explanation,
+  DefaultSection,
+} from "@/components/common";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { TEXT_STYLES } from "@/constant/util";
-import ExplanationLayout from "@/components/common/ExplanationLayout";
-import Explanation from "@/components/common/Explanation";
 
 const MSW = () => {
   return (

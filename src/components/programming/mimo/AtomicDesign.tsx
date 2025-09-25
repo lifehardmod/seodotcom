@@ -1,6 +1,8 @@
-import DefaultSection from "@/components/common/DefaultSection";
-import ExplanationLayout from "@/components/common/ExplanationLayout";
-import Explanation from "@/components/common/Explanation";
+import {
+  ExplanationLayout,
+  Explanation,
+  DefaultSection,
+} from "@/components/common";
 import { TEXT_STYLES } from "@/constant/util";
 import Image from "next/image";
 import { Star, StarHalf, User2 } from "lucide-react";

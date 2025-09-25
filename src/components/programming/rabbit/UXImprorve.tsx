@@ -1,8 +1,10 @@
-import DefaultSection from "@/components/common/DefaultSection";
+import {
+  ExplanationLayout,
+  Explanation,
+  DefaultSection,
+} from "@/components/common";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import UXImproveContent from "./UXImproveContent";
-import ExplanationLayout from "@/components/common/ExplanationLayout";
-import Explanation from "@/components/common/Explanation";
 import { TEXT_STYLES } from "@/constant/util";
 
 const UXImprorve = () => {

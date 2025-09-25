@@ -1,13 +1,14 @@
-import MovieLayout from "@/components/common/MovieLayout";
+import { MovieLayout, Separator, Carousel } from "@/components/common";
 import Image from "next/image";
 import ProjectOverview from "@/components/programming/ProjectOverview";
-import Devider from "@/components/common/Devider";
-import Carousel from "@/components/common/Carousel";
-import WebMockup from "@/components/programming/mimo/WebMockup";
-import StoryBook from "@/components/programming/mimo/StoryBook";
-import AtomicDesign from "@/components/programming/mimo/AtomicDesign";
-import ImprovementPoint from "@/components/programming/mimo/ImprovementPoint";
-import NestedLayout from "@/components/programming/mimo/NestedLayout";
+
+import {
+  WebMockup,
+  StoryBook,
+  AtomicDesign,
+  ImprovementPoint,
+  NestedLayout,
+} from "@/components/programming/mimo";
 const MockupImages = [
   "/MIMO/Layout/main.webp",
   "/MIMO/Layout/chat.webp",
@@ -77,7 +78,7 @@ const Mimo = () => {
           <ProjectOverview
             title="프로젝트 개요"
             list={[
-              "기간 : 2025.01 - 2024.02, 7주",
+              "기간 : 2025.01 - 2025.02, 7주",
               "역할 : Front-end 개발 50%, UX/UI 디자인 100%",
               "구현 정도 : 웹 배포 후 실 사용 테스트 및 최적화",
             ]}
@@ -93,11 +94,11 @@ const Mimo = () => {
           />
           <div className="flex flex-col gap-10">
             <StoryBook />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <AtomicDesign />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <NestedLayout />
-            <Devider />
+            <Separator className="sm:my-16 my-8" />
             <ImprovementPoint />
           </div>
         </div>

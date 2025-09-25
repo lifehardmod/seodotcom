@@ -1,9 +1,11 @@
-import DefaultSection from "@/components/common/DefaultSection";
+import {
+  ExplanationLayout,
+  Explanation,
+  DefaultSection,
+} from "@/components/common";
 import ResponsiveTabs from "@/components/ux/rabbit/UI/ResponsiveTabs";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { TEXT_STYLES } from "@/constant/util";
-import ExplainSection from "@/components/common/ExplanationLayout";
-import Explanation from "@/components/common/Explanation";
 
 const tabs = [
   { id: 0, label: "입찰 내역 페이지" },
@@ -21,7 +23,7 @@ const Responsive = () => {
       <div className="w-full">
         <ResponsiveTabs tabs={tabs} />
       </div>
-      <ExplainSection title="반응형 디자인">
+      <ExplanationLayout title="반응형 디자인">
         <Explanation>
           사용자는{" "}
           <span className={TEXT_STYLES.highlight}>
@@ -34,7 +36,7 @@ const Responsive = () => {
           언제 어디서나 원활하게 수행할 수 있어 사용자 편의성과 접근성을 크게
           향상시켰습니다.
         </Explanation>
-      </ExplainSection>
+      </ExplanationLayout>
       <SyntaxHighlighter language="javascript">
         {`import { useEffect, useState } from "react";
 
@@ -71,7 +73,7 @@ export const useMediaQuery = (
 export default useMediaQuery;
 `}
       </SyntaxHighlighter>
-      <ExplainSection>
+      <ExplanationLayout>
         <Explanation>
           전달받은 breakpoint에 따라 현재 화면이 해당 조건을 만족하는지 boolean
           값으로 반환하는 Hook입니다.
@@ -80,7 +82,7 @@ export default useMediaQuery;
           window.matchMedia와 이벤트 리스너를 활용하여 화면 크기 변화에 따라
           실시간으로 상태를 갱신합니다.
         </Explanation>
-      </ExplainSection>
+      </ExplanationLayout>
 
       <SyntaxHighlighter language="javascript">{`
 const AuctionBidHistory = ({ data }: AuctionBidHistoryProps) => {
@@ -108,12 +110,12 @@ const AuctionBidHistory = ({ data }: AuctionBidHistoryProps) => {
 };
 
 `}</SyntaxHighlighter>
-      <ExplainSection>
+      <ExplanationLayout>
         <Explanation>
           useMediaQuery로 받은 값에 따라 데스크톱 또는 모바일 버전의 컴포넌트를
           렌더링하는 방향으로 사용하였습니다.
         </Explanation>
-      </ExplainSection>
+      </ExplanationLayout>
       <SyntaxHighlighter language="javascript">{`
     <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
     
@@ -122,15 +124,15 @@ const AuctionBidHistory = ({ data }: AuctionBidHistoryProps) => {
     <div className="text font-medium whitespace-nowrap text-white sm:text-xl">
 
 `}</SyntaxHighlighter>
-      <ExplainSection>
+      <ExplanationLayout>
         <Explanation>
           Tailwind CSS의 반응형 유틸리티(grid-cols-*, sm:, md:, lg: 등)를
           활용하여, 화면 크기에 따라 컬럼 수와 레이아웃이 자동으로 조정되도록
           구현함으로써 별도의 컴포넌트를 교체하지 않고도 다양한 화면에서 일관된
           UI를 유지할 수 있었습니다.
         </Explanation>
-      </ExplainSection>
-      <ExplainSection title="의도">
+      </ExplanationLayout>
+      <ExplanationLayout title="의도">
         <Explanation>
           모든 디바이스에서{" "}
           <span className={TEXT_STYLES.highlight}>일관된 사용자 경험</span> 제공
@@ -138,12 +140,12 @@ const AuctionBidHistory = ({ data }: AuctionBidHistoryProps) => {
         <Explanation>
           <span className={TEXT_STYLES.highlight}>접근성</span> 최적화
         </Explanation>
-      </ExplainSection>
+      </ExplanationLayout>
 
-      <ExplainSection title="기대 효과">
+      <ExplanationLayout title="기대 효과">
         <Explanation>사용자 만족도 및 서비스 접근성 향상</Explanation>
         <Explanation>다양한 디바이스에서의 원활한 서비스 이용</Explanation>
-      </ExplainSection>
+      </ExplanationLayout>
     </DefaultSection>
   );
 };

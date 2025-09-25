@@ -23,7 +23,7 @@ const ProgrammingList = [
     title: "ClassOn",
     description: "교사를 위한 학생 관리 서비스",
     to: "/programming/classon",
-    image: "/thumbnail/ClassOn.jpg",
+    image: "/thumbnail/ClassOn.webp",
     Tag: ["Frontend", "Web", "React", "WebSocket", "나홀로 프론트"],
     isUpdated: false,
   },
