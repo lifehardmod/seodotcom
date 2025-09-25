@@ -102,19 +102,11 @@ const Carousel = ({ images }: CarouselProps) => {
 
         {/* 인디케이터 */}
         <div className="flex gap-1 sm:gap-2 md:gap-3 px-2">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setCurrentIndex(index);
-              }}
-              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${
-                currentIndex === index
-                  ? "bg-white"
-                  : "bg-white/30 hover:bg-white/50"
-              }`}
-            />
-          ))}
+          <div className="flex flex-row gap-1">
+            <span>{currentIndex + 1}</span>
+            <span>/</span>
+            <span>{images.length}</span>
+          </div>
         </div>
         {/* 다음 버튼 */}
         <button
