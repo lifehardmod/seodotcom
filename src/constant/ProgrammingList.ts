@@ -18,15 +18,15 @@ const ProgrammingList = [
     Tag: ["Frontend", "React", "StoryBook", "Web"],
     isUpdated: true,
   },
-  {
-    id: 3,
-    title: "ClassOn",
-    description: "교사를 위한 학생 관리 서비스",
-    to: "/programming/classon",
-    image: "/thumbnail/ClassOn.webp",
-    Tag: ["Frontend", "Web", "React", "WebSocket", "나홀로 프론트"],
-    isUpdated: false,
-  },
+  // {
+  //   id: 3,
+  //   title: "ClassOn",
+  //   description: "교사를 위한 학생 관리 서비스",
+  //   to: "/programming/classon",
+  //   image: "/thumbnail/ClassOn.webp",
+  //   Tag: ["Frontend", "Web", "React", "WebSocket", "나홀로 프론트"],
+  //   isUpdated: false,
+  // },
 ];
 
 export default ProgrammingList;
