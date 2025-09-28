@@ -5,7 +5,7 @@ const ProgrammingList = [
     description: "NFT기반 차용증 거래 서비스 RABBIT",
     to: "/programming/rabbit",
     image: "/thumbnail/RabbitThumbNail.png",
-    Tag: ["Frontend", "React", "Web", "Mobile", "반응형 웹", "MSW"],
+    Tag: ["Frontend", "React", "Web", "반응형 웹", "MSW"],
     isUpdated: true,
   },
 

@@ -86,7 +86,7 @@ const Mimo = () => {
           <ProjectOverview
             title="기술 스택"
             list={[
-              "React, TypeScript, Vite",
+              "React, TypeScript, Vite, npm",
               "스타일링 : Tailwind CSS",
               "서버 상태/캐싱 : React Query",
               "컴포넌트 개발 및 검증 : StoryBook",

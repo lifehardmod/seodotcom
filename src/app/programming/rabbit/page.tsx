@@ -13,6 +13,7 @@ import {
   RabbitRetrospect,
 } from "@/components/programming/rabbit";
 import { MovieLayout, Separator } from "@/components/common";
+import Page4 from "@/components/ux/rabbit/UI/Page4";
 const Rabbit = () => {
   return (
     <>
@@ -69,7 +70,7 @@ const Rabbit = () => {
           <ProjectOverview
             title="기술 스택"
             list={[
-              "React, TypeScript, Vite",
+              "React, TypeScript, Vite, pnpm",
               "스타일링 : Tailwind CSS",
               "상태관리 : Zustand",
               "서버 상태/캐싱 : React Query",
@@ -77,6 +78,7 @@ const Rabbit = () => {
             ]}
           />
           <PlanningSection title="기획" Images={PPTImages} />
+          <PlanningSection title="디자인" component={<Page4 />} />
           <div className="flex flex-col gap-10">
             <MSW />
             <Separator className="sm:my-16 my-8" />

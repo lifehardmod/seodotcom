@@ -78,6 +78,7 @@ const ResponsiveTabs = ({ tabs }: ResponsiveTabsProps) => {
             height={1080}
             className="object-contain transition-all duration-300 ease-in-out group-hover:scale-105"
             priority={activeTab === 0}
+            unoptimized
           />
           {/* 확대 아이콘 오버레이 */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">

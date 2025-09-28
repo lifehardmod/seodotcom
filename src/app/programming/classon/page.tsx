@@ -64,7 +64,7 @@ const classon = () => {
           <ProjectOverview
             title="기술 스택"
             list={[
-              "React, TypeScript, Vite",
+              "React, TypeScript, Vite, pnpm",
               "스타일링 : Tailwind CSS",
               "서버 상태/캐싱 : React Query",
             ]}
