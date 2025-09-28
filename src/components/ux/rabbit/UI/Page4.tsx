@@ -57,10 +57,7 @@ const Page4 = () => {
 
   return (
     <div className="w-full h-full flex flex-col p-8 rounded-lg gap-8">
-      <PageTitle
-        title="상세 페이지"
-        subtitle="채권, 채무 계약부터 거래까지의 플로우를 구성하였습니다."
-      />
+      <PageTitle title="상세 페이지" />
       <div className="flex-1 flex flex-col items-center justify-center gap-16">
         <div className="w-full space-y-6">
           <ResponsiveTabsWithScroll tabs={tabs} />
