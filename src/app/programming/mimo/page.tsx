@@ -63,8 +63,8 @@ const Mimo = () => {
         <section className="flex flex-col items-center gap-4">
           <div className="rounded-sm px-6 my-10 py-4 bg-white flex justify-center">
             <Image
-              src="/MIMO/MIMO_Logo.svg"
-              alt="rabbit_logo"
+              src="/MIMO/MIMO_LOGO.svg"
+              alt="MIMO_logo"
               width={300}
               height={150}
             />
