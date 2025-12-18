@@ -77,6 +77,15 @@ const Rabbit = () => {
               "테스트 및 API 모킹 : MSW",
             ]}
           />
+          <ProjectOverview
+            title="요약"
+            list={[
+              "MSW를 이용해 백엔드 개발 속도에 영향을 받지 않고 프론트엔드 개발을 진행할 수 있었습니다.",
+              "반응형 웹 디자인을 적용하여 모바일과 데스크탑 모두 호환되는 웹 사이트를 구현했습니다.",
+              "코드 스플리팅을 적용하여 index.js의 크기를 1.74MB에서 1.18MB로 약 32% 감소시켰습니다.",
+              "Zustand를 활용해 상태 관리를 구현하고, props drilling을 제거했습니다.",
+            ]}
+          />
           <PlanningSection title="기획" Images={PPTImages} />
           <PlanningSection title="디자인" component={<Page4 />} />
           <div className="flex flex-col gap-10">
