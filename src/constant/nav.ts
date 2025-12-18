@@ -15,11 +15,11 @@ export const NAV_ITEMS = [
     label: "UX/UI",
     activeLabel: "ux",
   },
-  {
-    to: "/blog",
-    label: "Blog",
-    activeLabel: "blog",
-  },
+  // {
+  //   to: "/blog",
+  //   label: "Blog",
+  //   activeLabel: "blog",
+  // },
   {
     to: "/resume",
     label: "Resume",
