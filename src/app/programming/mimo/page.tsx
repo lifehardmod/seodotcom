@@ -9,6 +9,7 @@ import {
   ImprovementPoint,
   NestedLayout,
 } from "@/components/programming/mimo";
+import { FaGithub } from "react-icons/fa";
 const MockupImages = [
   "/MIMO/Layout/main.webp",
   "/MIMO/Layout/chat.webp",
@@ -69,12 +70,24 @@ const Mimo = () => {
               height={150}
             />
           </div>
+
           <div className="flex flex-col w-full gap-4 px-4 bg-black/5 rounded-sm p-4 sm:px-8 sm:py-6">
             <h3 className="text-xl sm:text-2xl font-semibold">디자인</h3>
             <Carousel images={MockupNode} />
           </div>
         </section>
         <div className="flex w-full flex-col gap-8">
+          <div className="flex text-xl font-semibold gap-2 w-full justify-center">
+            <a
+              href="https://github.com/lifehardmod/MIMO"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 border-2 border-white rounded-sm px-4 py-2 hover:text-gray-900 transition-colors"
+            >
+              <span>GitHub</span>
+              <FaGithub />
+            </a>
+          </div>
           <ProjectOverview
             title="프로젝트 개요"
             list={[

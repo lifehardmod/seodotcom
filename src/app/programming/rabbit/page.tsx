@@ -14,6 +14,7 @@ import {
 } from "@/components/programming/rabbit";
 import { MovieLayout, Separator } from "@/components/common";
 import Page4 from "@/components/ux/rabbit/UI/Page4";
+import { FaGithub } from "react-icons/fa";
 const Rabbit = () => {
   return (
     <>
@@ -57,7 +58,18 @@ const Rabbit = () => {
             className="pb-36 px-4"
           />
         </section>
-        <div className="flex w-full flex-col gap-8">
+        <div className="flex w-full flex-col gap-8 ">
+          <div className="flex text-xl font-semibold gap-2 w-full justify-center">
+            <a
+              href="https://github.com/lifehardmod/RABBIT"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 border-2 border-white rounded-sm px-4 py-2 hover:text-gray-900 transition-colors"
+            >
+              <span>GitHub</span>
+              <FaGithub />
+            </a>
+          </div>
           <ProjectOverview
             title="프로젝트 개요"
             list={[
@@ -70,10 +82,10 @@ const Rabbit = () => {
           <ProjectOverview
             title="기술 스택"
             list={[
-              "React, TypeScript, Vite, pnpm",
-              "스타일링 : Tailwind CSS",
+              "React v19, TypeScript, Vite, pnpm",
+              "스타일링 : Tailwind CSS v4",
               "상태관리 : Zustand",
-              "서버 상태/캐싱 : React Query",
+              "서버 상태/캐싱 : React Query v5",
               "테스트 및 API 모킹 : MSW",
             ]}
           />
