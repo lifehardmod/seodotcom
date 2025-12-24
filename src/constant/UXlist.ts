@@ -5,7 +5,7 @@ const UXlist = [
     description: "NFT기반 차용증 거래 서비스 RABBIT",
     to: "/ux/rabbit",
     image: "/thumbnail/RabbitThumbNail.png",
-    Tag: ["UX/UI 디자인", "Frontend 개발", "Web", "Mobile"],
+    tags: ["UX/UI 디자인", "Frontend 개발", "Web", "Mobile"],
     isUpdated: false,
   },
   {
@@ -14,7 +14,7 @@ const UXlist = [
     description: "나에게 가장 잘 맞는 데스크탑 조립 서비스",
     to: "/ux/assembly",
     image: "/thumbnail/assembly.png",
-    Tag: ["UX/UI 디자인", "Mobile", "High-Fi Prototype"],
+    tags: ["UX/UI 디자인", "Mobile", "High-Fi Prototype"],
     isUpdated: false,
   },
   {
@@ -23,7 +23,7 @@ const UXlist = [
     description: "기존 불편했던 카메라 조작을 개선",
     to: "/ux/a7m3",
     image: "/thumbnail/a7m3.png",
-    Tag: ["UX/UI 디자인", "High-Fi Prototype"],
+    tags: ["UX/UI 디자인", "High-Fi Prototype"],
     isUpdated: false,
   },
   // {

@@ -5,7 +5,7 @@ const ProgrammingList = [
     description: "NFT기반 차용증 거래 서비스 RABBIT",
     to: "/programming/rabbit",
     image: "/thumbnail/RabbitThumbNail.png",
-    Tag: ["Frontend", "React", "Web", "반응형 웹", "MSW"],
+    tags: ["Frontend", "React", "Web", "반응형 웹", "MSW"],
     isUpdated: true,
   },
 
@@ -15,7 +15,16 @@ const ProgrammingList = [
     description: "모임을 쉽고 간편하게 운영할 수 있는 서비스",
     to: "/programming/mimo",
     image: "/thumbnail/mimo.webp",
-    Tag: ["Frontend", "React", "StoryBook", "Web"],
+    tags: ["Frontend", "React", "StoryBook", "Web"],
+    isUpdated: true,
+  },
+  {
+    id: 3,
+    title: "두더지 게임",
+    description: "사과게임 형식의 웹 게임",
+    to: "/programming/duduji",
+    image: "/thumbnail/Duduji.webp",
+    tags: ["Frontend", "Backend", "Web", "React", "AI First"],
     isUpdated: true,
   },
   // {

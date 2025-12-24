@@ -7,7 +7,7 @@ interface PortfolioListProps {
     description: string;
     to: string;
     image: string;
-    Tag: string[];
+    tags: string[];
     isUpdated: boolean;
   }[];
 }
@@ -15,12 +15,23 @@ interface PortfolioListProps {
 const PortfolioList = ({ list }: PortfolioListProps) => {
   return (
     <div>
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-20">
-        {list.map((item) => (
-          <li key={item.id}>
-            <Card {...item} Tag={item.Tag || []} isUpdated={item.isUpdated} />
-          </li>
-        ))}
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-10 md:gap-y-20">
+        {list.map((item) => {
+          const { id, title, description, to, image, tags, isUpdated } = item;
+          return (
+            <li key={id}>
+              <Card
+                id={id}
+                title={title}
+                description={description}
+                to={to}
+                image={image}
+                tags={tags || []}
+                isUpdated={isUpdated}
+              />
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
