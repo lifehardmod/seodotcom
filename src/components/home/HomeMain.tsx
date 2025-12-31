@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
-const texts = ["FrontEnd Developer", "UX/UI Designer"];
+const texts = ["FrontEnd Developer"];
 
 export default function HomeMain() {
   const [displayText, setDisplayText] = useState("");

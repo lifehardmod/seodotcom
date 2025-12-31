@@ -10,11 +10,11 @@ export const NAV_ITEMS = [
     label: "개발",
     activeLabel: "programming",
   },
-  {
-    to: "/ux",
-    label: "UX/UI",
-    activeLabel: "ux",
-  },
+  // {
+  //   to: "/ux",
+  //   label: "UX/UI",
+  //   activeLabel: "ux",
+  // },
   // {
   //   to: "/blog",
   //   label: "Blog",

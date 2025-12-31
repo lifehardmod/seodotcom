@@ -19,7 +19,7 @@ const FrontendSkillSet = () => {
         </p>
       </SkillSection>
 
-      <SkillSection title="TypeScript 활용">
+      <SkillSection title="TypeScript">
         <p>
           <span className="font-semibold">TypeScript</span> 환경에서 개발하여,
           런타임 오류를 사전에 방지하고, 컴포넌트 간 데이터 흐름의 명확성과

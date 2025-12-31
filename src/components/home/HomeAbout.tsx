@@ -11,14 +11,13 @@ const HomeAbout = () => {
           <span className="font-bold text-green-400 inline-block">
             프론트엔드 개발자
           </span>
-          이자{" "}
+          {/* 이자{" "}
           <span className="font-bold text-green-400 inline-block">
             UX/UI 디자이너
-          </span>{" "}
+          </span>{" "} */}{" "}
           <span className="font-bold inline-block">서주원</span>입니다.
         </p>
       </div>
-
       <div className="flex flex-col gap-1">
         <p className="whitespace-normal break-normal">
           <span className="font-semibold">Visual Communication Design</span>을
@@ -37,7 +36,28 @@ const HomeAbout = () => {
           에서 웹 개발을 익혔습니다.
         </p>
       </div>
-
+      <div className="flex flex-col gap-1">
+        <p className="whitespace-normal break-normal">
+          저는 AI의 발전을 적극적으로 받아들이고 있습니다.
+        </p>
+        <p className="whitespace-normal break-normal">
+          <span className="font-semibold">Cursor IDE와 Gemini등</span> AI 도구를
+          사용하여 학습과 개발의 효율성을 높이며,
+        </p>
+        <p className="whitespace-normal break-normal">
+          AI를 잘 활용할 수 있는 개발자가 되기 위해 노력하고 있습니다.
+        </p>
+      </div>
+      <div className="flex flex-col gap-1">
+        <p className="whitespace-normal break-normal">
+          제가 가진 강점은 전공을 기반으로한{" "}
+          <span className="font-semibold">UX 역량</span>입니다.
+        </p>
+        <p className="whitespace-normal break-normal">
+          이를 바탕으로 사용자에게 더 나은 경험을 제공하는 구조와 흐름을
+          생각하며 개발합니다.
+        </p>
+      </div>
       <div className="flex flex-col gap-1">
         <p className="whitespace-normal break-normal">
           자세한 내용은{" "}
