@@ -1,4 +1,4 @@
-import { ExternalLink, FileText } from "lucide-react";
+import { Computer, ExternalLink, FileText } from "lucide-react";
 import Link from "next/link";
 
 const HomeAbout = () => {
@@ -67,6 +67,14 @@ const HomeAbout = () => {
           >
             이력서
             <FileText size={16} />
+          </Link>
+          와{" "}
+          <Link
+            href="/programming"
+            className="font-semibold cursor-pointer inline-flex items-center gap-1 text-green-400 hover:text-green-700 transition-colors"
+          >
+            프로젝트
+            <Computer size={16} />
           </Link>{" "}
           를 참고해주세요.
         </p>
