@@ -5,6 +5,7 @@ import MobileNav from "@/components/common/MobileNav";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/common/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import FeedbackDialog from "@/components/shared/FeedbackDialog";
 export const metadata = {
   title: "SeoJuWon",
   description: "서주원 포트폴리오입니다.",
@@ -65,6 +66,7 @@ export default function RootLayout({
         <main className="flex-1 w-full h-fit px-4 py-4 max-w-[1440px] mx-auto mt-0 md:mt-28">
           {children}
         </main>
+        <FeedbackDialog />
         <MobileNav />
         <Analytics />
         <SpeedInsights />

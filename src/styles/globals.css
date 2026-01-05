@@ -637,4 +637,10 @@
   *::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-gray-400);
   }
+
+  body[data-scroll-locked] {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+  }
 }
