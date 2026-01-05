@@ -1,12 +1,16 @@
 // app/api/feedback/route.ts
 export const runtime = "edge";
 
-const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL!;
-
 export async function POST(req: Request) {
+  const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+
+  if (!WEBHOOK_URL) {
+    return new Response("Webhook not configured", { status: 500 });
+  }
+
   const { feedback } = await req.json();
 
-  if (!feedback) {
+  if (!feedback || !feedback.trim()) {
     return new Response("invalid", { status: 400 });
   }
 
