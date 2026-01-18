@@ -111,8 +111,8 @@ const Mimo = () => {
             <AtomicDesign />
             <Separator className="sm:my-16 my-8" />
             <NestedLayout />
-            <Separator className="sm:my-16 my-8" />
-            <ImprovementPoint />
+            {/* <Separator className="sm:my-16 my-8" />
+            <ImprovementPoint /> */}
           </div>
         </div>
       </div>
