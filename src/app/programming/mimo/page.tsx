@@ -6,7 +6,7 @@ import {
   WebMockup,
   StoryBook,
   AtomicDesign,
-  ImprovementPoint,
+  // ImprovementPoint,
   NestedLayout,
 } from "@/components/programming/mimo";
 import { FaGithub } from "react-icons/fa";
