@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://seodotcom.vercel.app";
+  const baseUrl = "https://www.seojuwon.work";
 
   // 정적 라우트
   const routes = ["", "/ux", "/resume", "/blog", "/programming"].map(

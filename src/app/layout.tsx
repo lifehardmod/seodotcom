@@ -34,7 +34,7 @@ export const metadata = {
     siteName: "SeoJuWon",
     images: [
       {
-        url: "/profile.webp", // 또는 실제 이미지 URL
+        url: "https://www.seojuwon.work/profile.webp", // 또는 실제 이미지 URL
         width: 1200,
         height: 630,
         alt: "SeoJuWon Portfolio",
