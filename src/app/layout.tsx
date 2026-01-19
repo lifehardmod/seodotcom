@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import FeedbackDialog from "@/components/shared/FeedbackDialog";
 export const metadata = {
   title: "SeoJuWon",
-  description: "서주원 포트폴리오입니다.",
+  description: "프론트엔드 개발자 서주원 포트폴리오입니다.",
   keywords: [
     "포트폴리오",
     "개발자",
@@ -23,6 +23,9 @@ export const metadata = {
   creator: "서주원",
   publisher: "서주원",
   robots: "index, follow",
+  alternates: {
+    canonical: "https://www.seojuwon.work",
+  },
   openGraph: {
     title: "SeoJuWon",
     description: "서주원 포트폴리오입니다.",
@@ -31,7 +34,7 @@ export const metadata = {
     siteName: "SeoJuWon",
     images: [
       {
-        url: "https://seodotcom.vercel.app/og-image.png", // 또는 실제 이미지 URL
+        url: "/profile.webp", // 또는 실제 이미지 URL
         width: 1200,
         height: 630,
         alt: "SeoJuWon Portfolio",
