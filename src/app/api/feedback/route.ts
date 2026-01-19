@@ -1,5 +1,5 @@
-// app/api/feedback/route.ts
-export const runtime = "edge";
+export const runtime = "nodejs";
+export const preferredRegion = "icn1";
 
 export async function POST(req: Request) {
   const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
@@ -20,11 +20,9 @@ export async function POST(req: Request) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      content: `📝 새 피드백\n내용: ${feedback}`,
+      content: `새 피드백\n내용: ${feedback}`,
     }),
   });
 
-  return new Response(JSON.stringify({ ok: true }), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return Response.json({ ok: true });
 }
