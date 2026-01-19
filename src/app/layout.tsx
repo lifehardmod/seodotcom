@@ -24,7 +24,7 @@ export const metadata = {
   publisher: "서주원",
   robots: "index, follow",
   alternates: {
-    canonical: "https://www.seojuwon.work",
+    canonical: "https://seojuwon.work",
   },
   openGraph: {
     title: "SeoJuWon",
@@ -34,7 +34,7 @@ export const metadata = {
     siteName: "SeoJuWon",
     images: [
       {
-        url: "https://www.seojuwon.work/profile.webp", // 또는 실제 이미지 URL
+        url: "https://seojuwon.work/profile.webp", // 또는 실제 이미지 URL
         width: 1200,
         height: 630,
         alt: "SeoJuWon Portfolio",
