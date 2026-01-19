@@ -1,0 +1,16 @@
+{
+    "redirects": [
+      {
+        "source": "/(.*)",
+        "has": [
+          {
+            "type": "host",
+            "value": "seodotcom.vercel.app"
+          }
+        ],
+        "destination": "https://seojuwon.work/$1",
+        "permanent": true
+      }
+    ]
+  }
+  
