@@ -8,17 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import FeedbackDialog from "@/components/shared/FeedbackDialog";
 export const metadata = {
   title: "SeoJuWon",
-  description: "프론트엔드 개발자 서주원 포트폴리오입니다.",
-  keywords: [
-    "포트폴리오",
-    "개발자",
-    "프론트엔드",
-    "웹 개발",
-    "서주원",
-    "UX/UI",
-    "서주원닷컴",
-    "seojuwon",
-  ],
+  description: "사용자의 흐름을 이해하고 직접 구현하는 프론트엔드 개발자 서주원의 포트폴리오입니다. 프론트엔드 프로젝트를 소개합니다.",
   authors: [{ name: "서주원" }],
   creator: "서주원",
   publisher: "서주원",
@@ -28,7 +18,7 @@ export const metadata = {
   },
   openGraph: {
     title: "SeoJuWon",
-    description: "서주원 포트폴리오입니다.",
+    description: "사용자의 흐름을 이해하고 직접 구현하는 프론트엔드 개발자 서주원의 포트폴리오입니다. 프론트엔드 프로젝트를 소개합니다.",
     type: "website",
     locale: "ko_KR",
     siteName: "SeoJuWon",
