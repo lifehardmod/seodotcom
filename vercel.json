@@ -11,6 +11,7 @@
         "destination": "https://seojuwon.work/$1",
         "permanent": true
       }
-    ]
+    ],
+    "regions":["icn1"]
   }
   
