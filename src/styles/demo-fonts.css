@@ -1,0 +1,40 @@
+@import "./demo-font-fallbacks.css";
+
+/* Pretendard Variable 폰트 */
+/* DNF Bit Bit v2 폰트 */
+@font-face {
+  font-family: "DNFBitBit";
+  src: url("../assets/fonts/DNFBitBitPortfolio.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: optional;
+}
+
+/* Partial Sans KR 폰트 */
+@font-face {
+  font-family: "PartialSansKR";
+  src: url("../assets/fonts/PartialSansPortfolio.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: optional;
+}
+
+/* Pixel-Regular 폰트 */
+@font-face {
+  font-family: "Pixel-Regular";
+  src: url("../assets/fonts/PixelPortfolio.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: optional;
+}
+
+/* DungGeunMo 폰트 */
+@font-face {
+  font-family: "DungGeunMo";
+  src: url("../assets/fonts/DungGeunMoPortfolio.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: optional;
+}
+
+/* Pretendard 폰트 */

@@ -13,6 +13,7 @@ const SkillCard = ({ name, icon }: Skill) => {
         alt={name}
         width={60}
         height={60}
+        sizes="(max-width: 514px) 36px, (max-width: 1000px) 7vw, 70px"
         className="size-[clamp(36px,7vw,70px)]"
       />
       <p className="text-sm sm:text-base ">{name}</p>

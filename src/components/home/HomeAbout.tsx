@@ -63,6 +63,7 @@ const HomeAbout = () => {
           자세한 내용은{" "}
           <Link
             href="/resume"
+            prefetch={false}
             className="font-semibold cursor-pointer inline-flex items-center gap-1 text-green-400 hover:text-green-700 transition-colors"
           >
             이력서
@@ -71,6 +72,7 @@ const HomeAbout = () => {
           와{" "}
           <Link
             href="/programming"
+            prefetch={false}
             className="font-semibold cursor-pointer inline-flex items-center gap-1 text-green-400 hover:text-green-700 transition-colors"
           >
             프로젝트

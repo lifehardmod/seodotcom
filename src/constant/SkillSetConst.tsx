@@ -29,7 +29,7 @@ const FrontendList: Skill[] = [
   },
   {
     name: "Zustand",
-    icon: "/Icon/SkillSet/Zustand.svg",
+    icon: "/Icon/SkillSet/Zustand.webp",
   },
   {
     name: "TypeScript",

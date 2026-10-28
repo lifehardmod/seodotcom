@@ -4,7 +4,7 @@ import {
   DefaultSection,
 } from "@/components/common";
 import { TEXT_STYLES } from "@/constant/util";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import SyntaxHighlighter from "@/components/common/CodeBlock";
 
 const Zustand = () => {
   return (

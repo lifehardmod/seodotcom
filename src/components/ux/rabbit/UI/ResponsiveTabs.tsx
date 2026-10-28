@@ -1,10 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
+const Lightbox = dynamic(() => import("@/components/common/ImageLightbox"), {
+  ssr: false,
+});
+
 import { useState, useRef } from "react";
 import Image from "next/image";
-import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import "yet-another-react-lightbox/styles.css";
 
 interface Tab {
   id: number;
@@ -57,7 +59,7 @@ const ResponsiveTabs = ({ tabs }: ResponsiveTabsProps) => {
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeTab === tab.id
                 ? "bg-white/20 text-white"
-                : "bg-white/5 text-gray-400 hover:bg-white/10"
+                : "bg-white/5 text-gray-200 hover:bg-white/10"
             }`}
           >
             {tab.label}
@@ -69,16 +71,15 @@ const ResponsiveTabs = ({ tabs }: ResponsiveTabsProps) => {
         <div
           className="relative w-full h-fit overflow-hidden rounded-lg bg-white/5 cursor-pointer group"
           onClick={handleImageClick}
-          title="이미지를 클릭하여 확대"
+          title="이미지를 클릭하여 원본 애니메이션 확대"
         >
           <Image
-            src={`/Rabbit/반응형${activeTab + 1}.webp`}
+            src={`/Rabbit/previews/responsive-${activeTab + 1}.webp`}
             alt={`반응형 ${activeTab + 1} 예시`}
             width={1920}
             height={1080}
             className="object-contain transition-all duration-300 ease-in-out group-hover:scale-105"
-            priority={activeTab === 0}
-            unoptimized
+            sizes="(max-width: 767px) calc(100vw - 32px), 1200px"
           />
           {/* 확대 아이콘 오버레이 */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
@@ -102,29 +103,31 @@ const ResponsiveTabs = ({ tabs }: ResponsiveTabsProps) => {
       </div>
 
       {/* 라이트박스 */}
-      <Lightbox
-        open={lightboxOpen}
-        close={() => setLightboxOpen(false)}
-        slides={slides}
-        index={lightboxIndex}
-        controller={{ closeOnBackdropClick: true }}
-        plugins={[Zoom]}
-        zoom={{
-          maxZoomPixelRatio: 2,
-          zoomInMultiplier: 1.5,
-          doubleTapDelay: 300,
-          doubleClickDelay: 300,
-          doubleClickMaxStops: 1,
-          keyboardMoveDistance: 50,
-          wheelZoomDistanceFactor: 500,
-          pinchZoomDistanceFactor: 500,
-          scrollToZoom: true,
-        }}
-        render={{
-          buttonPrev: slides.length <= 1 ? () => null : undefined,
-          buttonNext: slides.length <= 1 ? () => null : undefined,
-        }}
-      />
+      {lightboxOpen && (
+        <Lightbox
+          open={lightboxOpen}
+          close={() => setLightboxOpen(false)}
+          slides={slides}
+          index={lightboxIndex}
+          controller={{ closeOnBackdropClick: true }}
+          withZoom
+          zoom={{
+            maxZoomPixelRatio: 2,
+            zoomInMultiplier: 1.5,
+            doubleTapDelay: 300,
+            doubleClickDelay: 300,
+            doubleClickMaxStops: 1,
+            keyboardMoveDistance: 50,
+            wheelZoomDistanceFactor: 500,
+            pinchZoomDistanceFactor: 500,
+            scrollToZoom: true,
+          }}
+          render={{
+            buttonPrev: slides.length <= 1 ? () => null : undefined,
+            buttonNext: slides.length <= 1 ? () => null : undefined,
+          }}
+        />
+      )}
     </>
   );
 };

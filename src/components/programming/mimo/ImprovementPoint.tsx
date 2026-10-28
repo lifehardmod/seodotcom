@@ -3,7 +3,7 @@ import {
   Explanation,
   DefaultSection,
 } from "@/components/common";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import SyntaxHighlighter from "@/components/common/CodeBlock";
 
 const ImprovementPoint = () => {
   return (

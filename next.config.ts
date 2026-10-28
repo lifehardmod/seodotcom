@@ -1,9 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
-};
+const nextConfig: NextConfig = {};
 
-module.exports = nextConfig;
+export default nextConfig;

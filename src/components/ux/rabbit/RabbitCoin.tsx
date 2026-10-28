@@ -1,9 +1,8 @@
 "use client";
 
-import { Environment, OrbitControls } from "@react-three/drei";
+import { Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import Coin from "./Coin";
 import Lights from "./Lights";
@@ -23,7 +22,7 @@ const CoinContainer = () => {
     scaleRef.current = THREE.MathUtils.lerp(
       scaleRef.current,
       clampedTarget,
-      0.1
+      0.1,
     );
     groupRef.current.scale.setScalar(scaleRef.current);
 
@@ -34,12 +33,12 @@ const CoinContainer = () => {
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
       x * 0.05,
-      0.05
+      0.05,
     );
     groupRef.current.rotation.x = THREE.MathUtils.lerp(
       groupRef.current.rotation.x,
       -y * 0.05,
-      0.05
+      0.05,
     );
   });
 
@@ -52,10 +51,31 @@ const CoinContainer = () => {
 
 // 메인 코인 컴포넌트
 const RabbitCoin = () => {
+  const container = useRef<HTMLDivElement>(null);
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let visible = false;
+    const update = () =>
+      setAnimate(visible && !document.hidden && !motion.matches);
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      update();
+    });
+    if (container.current) observer.observe(container.current);
+    motion.addEventListener("change", update);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      observer.disconnect();
+      motion.removeEventListener("change", update);
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, []);
   return (
-    <div className="h-full w-full">
+    <div ref={container} className="h-full w-full">
       <Canvas
-        shadows
+        dpr={[1, 1.5]}
+        frameloop={animate ? "always" : "demand"}
         camera={{
           position: [0, 8, 28],
           fov: 70,
@@ -70,14 +90,15 @@ const RabbitCoin = () => {
           maxDistance={30}
           autoRotate={false}
         />
-        <Environment preset="warehouse" />
-        <EffectComposer>
-          <Bloom
-            intensity={0.2}
-            luminanceThreshold={0.2}
-            luminanceSmoothing={0.9}
+        <Environment resolution={128} frames={1}>
+          <Lightformer intensity={3} position={[0, 8, 5]} scale={[20, 10, 1]} />
+          <Lightformer
+            intensity={2}
+            position={[-10, 0, 0]}
+            rotation={[0, Math.PI / 2, 0]}
+            scale={[10, 20, 1]}
           />
-        </EffectComposer>
+        </Environment>
       </Canvas>
     </div>
   );

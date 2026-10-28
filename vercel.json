@@ -1,17 +1,27 @@
 {
-    "redirects": [
-      {
-        "source": "/(.*)",
-        "has": [
-          {
-            "type": "host",
-            "value": "seodotcom.vercel.app"
-          }
-        ],
-        "destination": "https://seojuwon.work/$1",
-        "permanent": true
-      }
-    ],
-    "regions":["icn1"]
-  }
-  
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "seodotcom.vercel.app"
+        }
+      ],
+      "destination": "https://www.seojuwon.work/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "seojuwon.work"
+        }
+      ],
+      "destination": "https://www.seojuwon.work/:path*",
+      "permanent": true
+    }
+  ],
+  "regions": ["icn1"]
+}

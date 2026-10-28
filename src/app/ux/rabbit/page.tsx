@@ -1,5 +1,11 @@
+import pageFont from "@/lib/fonts/ux-rabbit";
+import { pageMetadata } from "@/lib/seo";
+import PageStructuredData from "@/components/common/PageStructuredData";
+
+export const metadata = pageMetadata("/ux/rabbit");
+
 import MovieLayout from "@/components/common/MovieLayout";
-import RabbitCoin from "@/components/ux/rabbit/RabbitCoin";
+import RabbitCoin from "@/components/ux/rabbit/LazyRabbitCoin";
 import RabbitAccordion from "@/components/ux/rabbit/RabbitAccordion";
 import RabbitCarousel from "@/components/ux/rabbit/RabbitCarousel";
 import DesignSystem from "@/components/ux/rabbit/DesignSystem";
@@ -75,53 +81,59 @@ const Rabbit = () => {
   ];
 
   return (
-    <LoadingProvider>
-      <div>
-        <MovieLayout
-          movieLink="/movies/Rabbit_Title.webm"
-          text={
-            <div className="flex flex-col items-center gap-4">
-              <h1 className="text-[clamp(28px,5vw,48px)] font-bold">
-                NFT 기반 차용증 거래 서비스 RABBIT
-              </h1>
-              <div className="flex flex-col items-center gap-2 max-w-[800px] px-4">
-                <p className="text-[clamp(16px,2vw,28px)] text-center leading-relaxed font-light">
-                  <span className="font-semibold text-brand-primary">
-                    블록체인
-                  </span>{" "}
-                  기반의{" "}
-                  <span className="font-semibold text-brand-primary">
-                    차용증 거래
-                  </span>{" "}
-                  서비스로,
-                  <br className="hidden sm:block" />
-                  투명하고 안전한{" "}
-                  <span className="font-semibold text-brand-primary">
-                    P2P 대출
-                  </span>
-                  서비스를 제공합니다.
-                </p>
+    <div
+      className={`${pageFont.className} ${pageFont.variable}`}
+      style={{ display: "contents" }}
+    >
+      <PageStructuredData path="/ux/rabbit" />
+      <LoadingProvider>
+        <div>
+          <MovieLayout
+            movieLink="/movies/Rabbit_Title.webm"
+            text={
+              <div className="flex flex-col items-center gap-4">
+                <h1 className="text-[clamp(28px,5vw,48px)] font-bold">
+                  NFT 기반 차용증 거래 서비스 RABBIT
+                </h1>
+                <div className="flex flex-col items-center gap-2 max-w-[800px] px-4">
+                  <p className="text-[clamp(16px,2vw,28px)] text-center leading-relaxed font-light">
+                    <span className="font-semibold text-brand-primary">
+                      블록체인
+                    </span>{" "}
+                    기반의{" "}
+                    <span className="font-semibold text-brand-primary">
+                      차용증 거래
+                    </span>{" "}
+                    서비스로,
+                    <br className="hidden sm:block" />
+                    투명하고 안전한{" "}
+                    <span className="font-semibold text-brand-primary">
+                      P2P 대출
+                    </span>
+                    서비스를 제공합니다.
+                  </p>
+                </div>
               </div>
+            }
+          />
+          <div className="relative flex min-h-screen w-full flex-col items-center overflow-hidden mt-8">
+            <div className="flex flex-col items-center gap-4">
+              <div className="h-[400px] w-full">
+                <RabbitCoin />
+              </div>
+              <Image
+                src="/logo.svg"
+                alt="rabbit_logo"
+                width={500}
+                height={250}
+                className="pb-36"
+              />
             </div>
-          }
-        />
-        <div className="relative flex min-h-screen w-full flex-col items-center overflow-hidden mt-8">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-[400px] w-full">
-              <RabbitCoin />
-            </div>
-            <Image
-              src="/logo.svg"
-              alt="rabbit_logo"
-              width={500}
-              height={250}
-              className="pb-36"
-            />
+            <RabbitAccordion sections={accordionSections} />
           </div>
-          <RabbitAccordion sections={accordionSections} />
         </div>
-      </div>
-    </LoadingProvider>
+      </LoadingProvider>
+    </div>
   );
 };
 

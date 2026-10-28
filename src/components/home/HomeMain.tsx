@@ -1,12 +1,11 @@
 "use client";
-import { motion, useReducedMotion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const texts = ["FrontEnd Developer"];
 
 export default function HomeMain() {
-  const [displayText, setDisplayText] = useState("");
+  const [displayText, setDisplayText] = useState(texts[0]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -14,9 +13,18 @@ export default function HomeMain() {
   const deletingSpeed = 50;
   const pauseTime = 1000;
 
-  const reduce = useReducedMotion();
+  const [reduce, setReduce] = useState(true);
 
   useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduce(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (reduce) return;
     const currentText = texts[currentIndex];
     let timer: number;
 
@@ -36,24 +44,24 @@ export default function HomeMain() {
           setDisplayText((prev) =>
             isDeleting
               ? prev.slice(0, -1)
-              : currentText.slice(0, prev.length + 1)
+              : currentText.slice(0, prev.length + 1),
           );
         },
-        isDeleting ? deletingSpeed : typingSpeed
+        isDeleting ? deletingSpeed : typingSpeed,
       );
     }
 
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, currentIndex]);
+  }, [displayText, isDeleting, currentIndex, reduce]);
 
   return (
     <section className="relative flex flex-col items-center w-full mt-10 xl:gap-0 gap-2 overflow-hidden">
       {/* 타이핑 효과 영역 */}
       <h2
-        className="w-full text-[clamp(32px,6vw,80px)] font-semibold -mb-4 caret-transparent text-brand-primary"
-        aria-live="polite"
+        className="w-full min-h-[1.5em] text-[clamp(32px,6vw,80px)] font-semibold -mb-4 caret-transparent text-brand-primary"
+        aria-label="FrontEnd Developer"
       >
-        {displayText}
+        <span aria-hidden="true">{reduce ? texts[0] : displayText}</span>
         <span
           className={cn("inline-block align-baseline", {
             "animate-blink": !isDeleting && displayText === texts[currentIndex],
@@ -63,23 +71,13 @@ export default function HomeMain() {
         </span>
       </h2>
 
-      <motion.h1
-        initial={{ opacity: 0, y: reduce ? 0 : 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: reduce ? 0 : 0.5, delay: 0.2 }}
-        className="w-full text-[clamp(36px,7vw,80px)] font-bold -mb-4 caret-transparent"
-      >
+      <h1 className="w-full text-[clamp(36px,7vw,80px)] font-bold -mb-4 caret-transparent">
         서주원
-      </motion.h1>
+      </h1>
 
-      <motion.h2
-        initial={{ opacity: 0, y: reduce ? 0 : 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: reduce ? 0 : 0.5, delay: 0.4 }}
-        className="w-full text-[clamp(36px,7vw,80px)] font-bold caret-transparent"
-      >
+      <h2 className="w-full text-[clamp(36px,7vw,80px)] font-bold caret-transparent">
         포트폴리오입니다.
-      </motion.h2>
+      </h2>
     </section>
   );
 }

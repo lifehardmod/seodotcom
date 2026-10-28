@@ -1,8 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
+const Lightbox = dynamic(() => import("@/components/common/ImageLightbox"), {
+  ssr: false,
+});
+
 import { useState } from "react";
-import { Lightbox } from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 import Image from "next/image";
 interface CarouselProps {
   images: (string | React.ReactNode)[];
@@ -32,7 +35,6 @@ const Carousel = ({ images }: CarouselProps) => {
       setIsLightboxOpen(true);
     }
   };
-  const [isLoading, setIsLoading] = useState(true);
 
   // 문자열 이미지들만 필터링해서 lightbox용 슬라이드 생성
   const imageSlides = images
@@ -72,10 +74,7 @@ const Carousel = ({ images }: CarouselProps) => {
             width={1920}
             height={1080}
             sizes="(max-width: 768px) 100vw, 800px"
-            className={`object-contain transition-opacity duration-500 ${
-              isLoading ? "opacity-0" : "opacity-100"
-            }`}
-            onLoadingComplete={() => setIsLoading(false)}
+            className="object-contain h-auto"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -123,18 +122,20 @@ const Carousel = ({ images }: CarouselProps) => {
         </button>
       </div>
       {/* 라이트박스 */}
-      <Lightbox
-        open={isLightboxOpen}
-        close={() => setIsLightboxOpen(false)}
-        slides={imageSlides}
-        index={getCurrentLightboxIndex()}
-        render={{
-          buttonPrev: imageSlides.length <= 1 ? () => null : undefined,
-          buttonNext: imageSlides.length <= 1 ? () => null : undefined,
-        }}
-        carousel={{ finite: true }}
-        controller={{ closeOnBackdropClick: true }}
-      />
+      {isLightboxOpen && (
+        <Lightbox
+          open={isLightboxOpen}
+          close={() => setIsLightboxOpen(false)}
+          slides={imageSlides}
+          index={getCurrentLightboxIndex()}
+          render={{
+            buttonPrev: imageSlides.length <= 1 ? () => null : undefined,
+            buttonNext: imageSlides.length <= 1 ? () => null : undefined,
+          }}
+          carousel={{ finite: true }}
+          controller={{ closeOnBackdropClick: true }}
+        />
+      )}
     </div>
   );
 };

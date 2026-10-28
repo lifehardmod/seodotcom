@@ -4,7 +4,7 @@ import {
   DefaultSection,
 } from "@/components/common";
 import ResponsiveTabs from "@/components/ux/rabbit/UI/ResponsiveTabs";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import SyntaxHighlighter from "@/components/common/CodeBlock";
 import { TEXT_STYLES } from "@/constant/util";
 
 const tabs = [

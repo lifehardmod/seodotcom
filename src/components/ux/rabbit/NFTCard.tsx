@@ -24,14 +24,15 @@ type DummyNFTData = {
 const dummyData: DummyNFTData = {
   auctionId: "1",
   nftImageUrl: "/NFT.png",
-  endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+  // An empty deadline starts this illustrative countdown after hydration.
+  endDate: "",
   price: 1000000,
   la: 500000,
   ir: 5,
-  createdAt: new Date().toISOString(),
+  createdAt: "2025-03-01T00:00:00+09:00",
   repayType: "일시상환",
   totalAmount: 1500000,
-  matDt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+  matDt: "2026-03-01T00:00:00+09:00",
   dir: 10,
   earlypayFee: 2,
   creditScore: 750,
@@ -39,28 +40,31 @@ const dummyData: DummyNFTData = {
 };
 
 function useCountdown(endDate: string): string {
-  const [time, setTime] = useState("00일 00분 00초");
+  const [time, setTime] = useState("00일 00시간 00분 00초");
 
   useEffect(() => {
+    const end = endDate
+      ? new Date(endDate).getTime()
+      : Date.now() + 7 * 24 * 60 * 60 * 1000;
     const calculateTimeLeft = (): string => {
-      const end = new Date(endDate).getTime();
       const now = new Date().getTime();
       const difference = end - now;
 
       if (difference <= 0) {
-        return "00일 00분 00초";
+        return "00일 00시간 00분 00초";
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
       );
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
 
       return `${String(days).padStart(2, "0")}일 ${String(hours).padStart(
         2,
-        "0"
-      )}분 ${String(seconds).padStart(2, "0")}초`;
+        "0",
+      )}시간 ${String(minutes).padStart(2, "0")}분 ${String(seconds).padStart(2, "0")}초`;
     };
 
     setTime(calculateTimeLeft());
@@ -97,7 +101,7 @@ export const NFTCard = ({ item = dummyData }: NFTCardProps) => {
             sizes="40vw"
             className={cn(
               "object-cover transition-opacity duration-500",
-              isImageLoaded ? "opacity-100" : "opacity-0"
+              isImageLoaded ? "opacity-100" : "opacity-0",
             )}
             onLoad={() => setIsImageLoaded(true)}
           />
@@ -114,17 +118,17 @@ export const NFTCard = ({ item = dummyData }: NFTCardProps) => {
           <span
             className={cn(
               "text-brand-gradient font-partial",
-              item.price.toString().length < 10 ? "text-xl" : "text-base"
+              item.price.toString().length < 10 ? "text-xl" : "text-base",
             )}
           >
-            {item.price.toLocaleString()} ₩
+            {item.price.toLocaleString("ko-KR")} ₩
           </span>
         </div>
         <div className="font-bit mt-3 flex w-full justify-between text-sm">
           <div className="items-cen flex flex-col">
             <span>원금</span>
             <div>
-              <span>{item.la.toLocaleString()}</span>
+              <span>{item.la.toLocaleString("ko-KR")}</span>
               <span className="text-brand-primary">₩</span>
             </div>
           </div>
@@ -148,12 +152,16 @@ export const NFTCardInfo = ({ className, item }: NFTcardInfoProps) => {
     <div
       className={cn(
         "absolute flex h-full w-full flex-col justify-between px-6 py-4 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 ",
-        className
+        className,
       )}
     >
       <div className="flex justify-between">
         <span>최초 등록일</span>
-        <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+        <span>
+          {new Date(item.createdAt).toLocaleDateString("ko-KR", {
+            timeZone: "Asia/Seoul",
+          })}
+        </span>
       </div>
       <div className="flex justify-between">
         <span>종류</span>
@@ -162,12 +170,16 @@ export const NFTCardInfo = ({ className, item }: NFTcardInfoProps) => {
       <div className="flex justify-between">
         <span>만기 수취액</span>
         <div>
-          <span>{item.totalAmount.toLocaleString()} ₩</span>
+          <span>{item.totalAmount.toLocaleString("ko-KR")} ₩</span>
         </div>
       </div>
       <div className="flex justify-between">
         <span>만기일</span>
-        <span>{new Date(item.matDt).toLocaleDateString()}</span>
+        <span>
+          {new Date(item.matDt).toLocaleDateString("ko-KR", {
+            timeZone: "Asia/Seoul",
+          })}
+        </span>
       </div>
       <div className="flex justify-between">
         <span>연체 이자율</span>

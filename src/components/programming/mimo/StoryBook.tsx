@@ -3,7 +3,7 @@ import {
   Explanation,
   DefaultSection,
 } from "@/components/common";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import SyntaxHighlighter from "@/components/common/CodeBlock";
 import { TEXT_STYLES } from "@/constant/util";
 import Image from "next/image";
 
@@ -61,6 +61,7 @@ export const Disabled: Story = {
         alt="StoryBook"
         width={1800}
         height={1300}
+        sizes="(max-width: 1440px) calc(100vw - 64px), 1376px"
       />
       <ExplanationLayout title="Storybook">
         <Explanation>

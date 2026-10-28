@@ -33,6 +33,11 @@ const Coin = ({ position = [0, 0, 0], scale = 1 }: CoinProps) => {
     const backTexture = createSleekGridBackTexture();
     const logoAlphaMap = createLogoAlphaMap();
     setTextures({ logo: logoTexture, back: backTexture, alpha: logoAlphaMap });
+    return () => {
+      logoTexture?.dispose();
+      backTexture?.dispose();
+      logoAlphaMap?.dispose();
+    };
   }, []);
 
   useEffect(() => {

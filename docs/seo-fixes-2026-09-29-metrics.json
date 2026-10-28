@@ -1,0 +1,604 @@
+{
+  "baselineCommit": "36b651796adda4d8661d701feac96c59189615b7",
+  "environment": {
+    "node": "24.13.0",
+    "next": "15.3.6",
+    "lighthouse": "13.5.0",
+    "baseUrls": {
+      "before": "http://127.0.0.1:3218",
+      "after": "http://127.0.0.1:3217"
+    },
+    "mobileConfig": {
+      "output": [
+        "json",
+        "html"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "node",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": [
+        "performance",
+        "accessibility",
+        "best-practices",
+        "seo"
+      ],
+      "skipAudits": null
+    }
+  },
+  "before": [
+    {
+      "mode": "before",
+      "path": "/",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:20:27.164Z",
+      "scores": {
+        "performance": 56,
+        "accessibility": 94,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 11416.83975,
+        "largest-contentful-paint": 13216.83975,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.0026231771327888775,
+        "speed-index": 11416.83975,
+        "total-byte-weight": 4006768
+      },
+      "warnings": []
+    },
+    {
+      "mode": "before",
+      "path": "/programming",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:20:36.122Z",
+      "scores": {
+        "performance": 73,
+        "accessibility": 94,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 758.6795999999999,
+        "largest-contentful-paint": 16138.019399999997,
+        "total-blocking-time": 122,
+        "cumulative-layout-shift": 0.06435811416852148,
+        "speed-index": 1810.009442230888,
+        "total-byte-weight": 6273238
+      },
+      "warnings": []
+    },
+    {
+      "mode": "before",
+      "path": "/programming/rabbit",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:20:43.935Z",
+      "scores": {
+        "performance": 37,
+        "accessibility": 90,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 1215.7392,
+        "largest-contentful-paint": 29565.739199999996,
+        "total-blocking-time": 7622.5072,
+        "cumulative-layout-shift": 0.0877534176415279,
+        "speed-index": 6331.0321960631645,
+        "total-byte-weight": 9955474
+      },
+      "warnings": []
+    },
+    {
+      "mode": "before",
+      "path": "/programming/mimo",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:20:57.960Z",
+      "scores": {
+        "performance": 71,
+        "accessibility": 90,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 1063.2133,
+        "largest-contentful-paint": 14119.81995,
+        "total-blocking-time": 68,
+        "cumulative-layout-shift": 0.11005048329326471,
+        "speed-index": 1890.731248685197,
+        "total-byte-weight": 4536458
+      },
+      "warnings": []
+    },
+    {
+      "mode": "before",
+      "path": "/resume",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:21:10.584Z",
+      "scores": {
+        "performance": 75,
+        "accessibility": 94,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 911.4857,
+        "largest-contentful-paint": 12317.22855,
+        "total-blocking-time": 39,
+        "cumulative-layout-shift": 0.005030496215094565,
+        "speed-index": 1002.4382240103807,
+        "total-byte-weight": 2305293
+      },
+      "warnings": []
+    }
+  ],
+  "final": [
+    {
+      "mode": "final",
+      "path": "/",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:31:53.579Z",
+      "scores": {
+        "performance": 93,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 905.202,
+        "largest-contentful-paint": 3080.2019999999993,
+        "total-blocking-time": 103.69949999999949,
+        "cumulative-layout-shift": 0.0011984888257613032,
+        "speed-index": 905.202,
+        "total-byte-weight": 533291
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/blog",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:01.599Z",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 66
+      },
+      "metrics": {
+        "first-contentful-paint": 904.3031000000001,
+        "largest-contentful-paint": 2704.3031,
+        "total-blocking-time": 26,
+        "cumulative-layout-shift": 0,
+        "speed-index": 904.3031000000001,
+        "total-byte-weight": 383678
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:10.061Z",
+      "scores": {
+        "performance": 94,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 905.5073,
+        "largest-contentful-paint": 3080.5073,
+        "total-blocking-time": 26.999999999999545,
+        "cumulative-layout-shift": 0,
+        "speed-index": 905.5073,
+        "total-byte-weight": 497026
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming/classon",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:17.537Z",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "first-contentful-paint": 904.576,
+        "largest-contentful-paint": 2929.576,
+        "total-blocking-time": 32,
+        "cumulative-layout-shift": 0.0486085769048834,
+        "speed-index": 904.576,
+        "total-byte-weight": 406966
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming/duduji",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:25.691Z",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 66
+      },
+      "metrics": {
+        "first-contentful-paint": 905.8073999999999,
+        "largest-contentful-paint": 2705.8074,
+        "total-blocking-time": 25,
+        "cumulative-layout-shift": 0,
+        "speed-index": 905.8073999999999,
+        "total-byte-weight": 381156
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming/mimo",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:32.602Z",
+      "scores": {
+        "performance": 88,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 1056.4373,
+        "largest-contentful-paint": 3981.4372999999996,
+        "total-blocking-time": 38,
+        "cumulative-layout-shift": 0.03176050618414963,
+        "speed-index": 1056.4373,
+        "total-byte-weight": 665304
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming/rabbit",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:41.889Z",
+      "scores": {
+        "performance": 93,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 1055.2671,
+        "largest-contentful-paint": 3230.2671,
+        "total-blocking-time": 55,
+        "cumulative-layout-shift": 0.003439121486357456,
+        "speed-index": 1055.2671,
+        "total-byte-weight": 455709
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/resume",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:50.505Z",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 904.5343,
+        "largest-contentful-paint": 3004.5343000000007,
+        "total-blocking-time": 32,
+        "cumulative-layout-shift": 0,
+        "speed-index": 904.5343,
+        "total-byte-weight": 389403
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/ux",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:32:57.880Z",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "first-contentful-paint": 904.991,
+        "largest-contentful-paint": 3004.991,
+        "total-blocking-time": 29,
+        "cumulative-layout-shift": 0,
+        "speed-index": 904.991,
+        "total-byte-weight": 469097
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/ux/a7m3",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:33:04.622Z",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "first-contentful-paint": 906.9590000000001,
+        "largest-contentful-paint": 3006.959,
+        "total-blocking-time": 16.5,
+        "cumulative-layout-shift": 0.004816263713721775,
+        "speed-index": 906.9590000000001,
+        "total-byte-weight": 560939
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/ux/assembly",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:33:11.822Z",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "first-contentful-paint": 907.6241,
+        "largest-contentful-paint": 2857.6241,
+        "total-blocking-time": 31,
+        "cumulative-layout-shift": 0.005046776790450474,
+        "speed-index": 907.6241,
+        "total-byte-weight": 666679
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/ux/rabbit",
+      "device": "mobile",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:33:19.182Z",
+      "scores": {
+        "performance": 92,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "first-contentful-paint": 1055.3461,
+        "largest-contentful-paint": 3305.3461,
+        "total-blocking-time": 29,
+        "cumulative-layout-shift": 0,
+        "speed-index": 1055.3461,
+        "total-byte-weight": 546897
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/",
+      "device": "desktop",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:33:28.237Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 248.4497,
+        "largest-contentful-paint": 648.4497,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.003096952453803337,
+        "speed-index": 312.6764251070007,
+        "total-byte-weight": 1107852
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming",
+      "device": "desktop",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:33:36.774Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 247.41039999999998,
+        "largest-contentful-paint": 647.4104,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0,
+        "speed-index": 264.6409499004571,
+        "total-byte-weight": 1173602
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming/rabbit",
+      "device": "desktop",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:33:44.499Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 286.0719,
+        "largest-contentful-paint": 706.0719000000001,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0,
+        "speed-index": 357.1934927463699,
+        "total-byte-weight": 993895
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/programming/mimo",
+      "device": "desktop",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:33:55.056Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 285.5597,
+        "largest-contentful-paint": 745.5597,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.005569738625633575,
+        "speed-index": 418.82294260102344,
+        "total-byte-weight": 1127893
+      },
+      "warnings": []
+    },
+    {
+      "mode": "final",
+      "path": "/resume",
+      "device": "desktop",
+      "version": "13.5.0",
+      "fetchTime": "2026-09-29T06:34:03.315Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 244.47199999999998,
+        "largest-contentful-paint": 604.472,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0,
+        "speed-index": 244.47199999999998,
+        "total-byte-weight": 386835
+      },
+      "warnings": []
+    }
+  ],
+  "browserCases": 24,
+  "seoCheck": "PASS /\nPASS /blog\nPASS /programming\nPASS /resume\nPASS /ux\nPASS /programming/classon\nPASS /programming/duduji\nPASS /programming/mimo\nPASS /programming/rabbit\nPASS /ux/a7m3\nPASS /ux/assembly\nPASS /ux/rabbit\nPASS 12 pages, sitemap (5 URLs), robots and 404\n",
+  "interactions": {
+    "passed": [
+      "mobile: no video/3D/full-size font downloads on initial load",
+      "3D opens on demand and unmounts on close; no HDR download",
+      "responsive screenshot opens original animation in lightbox and closes",
+      "UX design details expand with all section text rendered",
+      "mobile video starts only on request and stops",
+      "reduced-motion desktop uses poster",
+      "feedback opens only on click; mocked failure preserves input and mocked success closes; no external message sent"
+    ],
+    "errors": []
+  },
+  "productionCodeDeployed": false,
+  "redirects": [
+    {
+      "url": "https://seojuwon.work/",
+      "response": [
+        "HTTP/2 308",
+        "location: https://www.seojuwon.work/"
+      ]
+    },
+    {
+      "url": "https://seojuwon.work/programming/rabbit?seo_test=1",
+      "response": [
+        "HTTP/2 308",
+        "location: https://www.seojuwon.work/programming/rabbit?seo_test=1"
+      ]
+    },
+    {
+      "url": "https://seodotcom.vercel.app/",
+      "response": [
+        "HTTP/2 308",
+        "location: https://www.seojuwon.work/"
+      ]
+    },
+    {
+      "url": "https://seodotcom.vercel.app/programming/rabbit?seo_test=1",
+      "response": [
+        "HTTP/2 308",
+        "location: https://www.seojuwon.work/programming/rabbit?seo_test=1"
+      ]
+    }
+  ]
+}

@@ -122,25 +122,25 @@ const AtomicDesign = () => {
     >
       <div className="flex flex-col gap-16 sm:gap-6 mt-16">
         <div className="bg-black/40 sm:p-8 rounded-xl space-y-8 w-full">
-          <h4 className="text-2xl font-semibold mb-6 text-white flex items-center">
+          <h3 className="text-2xl font-semibold mb-6 text-white flex items-center">
             Atom 예시
-          </h4>
+          </h3>
           <div className="flex gap-2">
             <MemberCount /> <RatingStar /> <Tag />
           </div>
         </div>
         <div className="bg-black/40 sm:p-8 rounded-xl space-y-8 w-full">
-          <h4 className="text-2xl font-semibold mb-6 text-white flex items-center">
+          <h3 className="text-2xl font-semibold mb-6 text-white flex items-center">
             Molecule 예시
-          </h4>
+          </h3>
           <div className="flex gap-2">
             <Card />
           </div>
         </div>
         <div className="bg-black/40 sm:p-8 rounded-xl space-y-8 w-full">
-          <h4 className="text-2xl font-semibold mb-6 text-white flex items-center">
+          <h3 className="text-2xl font-semibold mb-6 text-white flex items-center">
             Organism 예시
-          </h4>
+          </h3>
           <ListContainer />
         </div>
       </div>

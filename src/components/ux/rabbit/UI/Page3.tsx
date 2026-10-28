@@ -68,7 +68,7 @@ const Page3 = () => {
                 <div className="text-center">
                   <button
                     onClick={handleLoading1}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
                   >
                     로딩 시작
                   </button>
@@ -83,7 +83,7 @@ const Page3 = () => {
             <div className="bg-gray-800 p-6 rounded-lg min-h-[200px] flex items-center justify-center">
               <button
                 onClick={handleStartLoading}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
               >
                 로딩 시작
               </button>

@@ -18,7 +18,7 @@ const ResponsiveTabsWithScroll = ({ tabs }: ResponsiveTabsWithScrollProps) => {
 
   return (
     <>
-      <div className="flex space-x-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -26,7 +26,7 @@ const ResponsiveTabsWithScroll = ({ tabs }: ResponsiveTabsWithScrollProps) => {
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeTab === tab.id
                 ? "bg-white/20 text-white"
-                : "bg-white/5 text-gray-400 hover:bg-white/10"
+                : "bg-white/5 text-gray-200 hover:bg-white/10"
             }`}
           >
             {tab.label}
@@ -41,10 +41,15 @@ const ResponsiveTabsWithScroll = ({ tabs }: ResponsiveTabsWithScrollProps) => {
             className="w-full h-auto object-cover rounded-lg"
             width={1920}
             height={1080}
+            sizes="(max-width: 767px) calc(100vw - 64px), 1200px"
           />
         </div>
       </div>
-      <div className="mt-4">{tabs[activeTab].detail}</div>
+      {tabs.map((tab) => (
+        <div key={tab.id} hidden={activeTab !== tab.id} className="mt-4">
+          {tab.detail}
+        </div>
+      ))}
     </>
   );
 };

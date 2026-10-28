@@ -1,12 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
+const Lightbox = dynamic(() => import("@/components/common/ImageLightbox"), {
+  ssr: false,
+});
+
 import { FaEnvelope, FaGithub, FaPhone } from "react-icons/fa";
 import ResumeItem from "./ResumeItem";
 import ResumeCategory from "./ResumeCategory";
 import Image from "next/image";
 import { useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 
 const Resume = () => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -14,8 +17,8 @@ const Resume = () => {
   const profileImage = {
     src: "/profile.webp",
     alt: "프로필 이미지",
-    width: 800,
-    height: 1000,
+    width: 400,
+    height: 500,
   };
 
   return (
@@ -37,6 +40,9 @@ const Resume = () => {
                 className="md:ml-5 mt-5 sm:mt-0 w-40 h-45 object-cover rounded-lg"
                 width={profileImage.width}
                 height={profileImage.height}
+                priority
+                fetchPriority="high"
+                sizes="160px"
               />
             </div>
             <div className="flex flex-col items-start justify-center">
@@ -183,15 +189,17 @@ const Resume = () => {
       </div>
 
       {/* 라이트박스 */}
-      <Lightbox
-        open={isLightboxOpen}
-        close={() => setIsLightboxOpen(false)}
-        slides={[profileImage]}
-        render={{
-          buttonPrev: () => null,
-          buttonNext: () => null,
-        }}
-      />
+      {isLightboxOpen && (
+        <Lightbox
+          open={isLightboxOpen}
+          close={() => setIsLightboxOpen(false)}
+          slides={[profileImage]}
+          render={{
+            buttonPrev: () => null,
+            buttonNext: () => null,
+          }}
+        />
+      )}
     </section>
   );
 };

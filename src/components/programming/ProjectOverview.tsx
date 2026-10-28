@@ -10,13 +10,13 @@ const ProjectOverview = ({ title, description, list }: ContentItem) => {
   return (
     <section className="w-full px-4 bg-white/5 backdrop-blur-sm rounded-lg p-4 sm:px-8 sm:py-6">
       {title && (
-        <h3 className="text-xl sm:text-2xl font-semibold mb-4">{title}</h3>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">{title}</h2>
       )}
       {description && (
         <p
           className={cn(
             "mb-4 leading-relaxed text-base sm:text-xl",
-            list ? "mb-4" : "mb-0"
+            list ? "mb-4" : "mb-0",
           )}
         >
           {description}

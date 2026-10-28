@@ -1,8 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
+const Lightbox = dynamic(() => import("@/components/common/ImageLightbox"), {
+  ssr: false,
+});
+
 import { useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 import Image from "next/image";
 
 const ImageLayout = () => {
@@ -25,9 +28,11 @@ const ImageLayout = () => {
       <article className="w-full flex flex-col gap-4 px-4">
         <Image
           src="/A7M3/1.webp"
-          alt="A7M3"
+          alt="A7M3 카메라 UI 개선 프로젝트 자료"
           width={1000}
           height={1000}
+          priority
+          sizes="(max-width: 767px) calc(100vw - 64px), 1360px"
           className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity"
           onClick={() => openLightbox(0)}
         />
@@ -35,9 +40,10 @@ const ImageLayout = () => {
           <div className="flex-1">
             <Image
               src="/A7M3/2.webp"
-              alt="A7M3"
+              alt="A7M3 카메라 UI 개선 프로젝트 자료"
               width={1920}
               height={1080}
+              sizes="(max-width: 767px) 44vw, 650px"
               className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity"
               onClick={() => openLightbox(1)}
             />
@@ -45,9 +51,10 @@ const ImageLayout = () => {
           <div className="flex-1">
             <Image
               src="/A7M3/3.webp"
-              alt="A7M3"
+              alt="A7M3 카메라 UI 개선 프로젝트 자료"
               width={1920}
               height={1080}
+              sizes="(max-width: 767px) 44vw, 650px"
               className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity"
               onClick={() => openLightbox(2)}
             />
@@ -55,15 +62,17 @@ const ImageLayout = () => {
         </div>
       </article>
 
-      <Lightbox
-        open={isLightboxOpen}
-        close={() => setIsLightboxOpen(false)}
-        slides={slides}
-        index={currentSlideIndex}
-        carousel={{
-          finite: true,
-        }}
-      />
+      {isLightboxOpen && (
+        <Lightbox
+          open={isLightboxOpen}
+          close={() => setIsLightboxOpen(false)}
+          slides={slides}
+          index={currentSlideIndex}
+          carousel={{
+            finite: true,
+          }}
+        />
+      )}
     </div>
   );
 };

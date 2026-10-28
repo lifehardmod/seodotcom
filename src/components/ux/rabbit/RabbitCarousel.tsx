@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 
 interface RabbitCarouselProps {
@@ -27,10 +27,6 @@ const RabbitCarousel = ({
     });
   }, [enableScroll]);
 
-  useEffect(() => {
-    scrollToCarousel();
-  }, [currentIndex, scrollToCarousel]);
-
   const nextSlide = () => {
     if (currentIndex === images.length - 1) {
       setCurrentIndex(0);
@@ -56,8 +52,7 @@ const RabbitCarousel = ({
           width={1920}
           height={1080}
           className="w-full h-auto object-contain"
-          quality={100}
-          priority
+          sizes="(max-width: 767px) calc(100vw - 64px), 1200px"
         />
       );
     }
@@ -70,11 +65,17 @@ const RabbitCarousel = ({
     <div ref={carouselRef} className="relative w-full space-y-6">
       {/* 슬라이드 */}
       <div className="relative w-full overflow-hidden rounded-lg bg-white/5">
-        {renderSlide(images[currentIndex])}
+        {typeof images[currentIndex] === "string"
+          ? renderSlide(images[currentIndex])
+          : images.map((slide, i) => (
+              <div key={i} hidden={i !== currentIndex}>
+                {renderSlide(slide)}
+              </div>
+            ))}
       </div>
 
       {/* 네비게이션 영역 */}
-      <div className="flex items-center justify-center gap-8">
+      <div className="flex items-center justify-center gap-2 sm:gap-8">
         {/* 이전 버튼 */}
         <button
           onClick={prevSlide}
@@ -89,15 +90,17 @@ const RabbitCarousel = ({
         </button>
 
         {/* 인디케이터 */}
-        <div className="flex gap-3">
+        <div className="flex max-w-full flex-wrap justify-center gap-2">
           {images.map((_, index) => (
             <button
               key={index}
+              aria-label={`${index + 1}번째 슬라이드`}
+              aria-current={currentIndex === index ? "true" : undefined}
               onClick={() => {
                 setCurrentIndex(index);
                 scrollToCarousel();
               }}
-              className={`w-3 h-3 rounded-full transition-all ${
+              className={`w-6 h-6 shrink-0 rounded-full border-[6px] border-transparent bg-clip-content transition-all ${
                 currentIndex === index
                   ? "bg-white"
                   : "bg-white/30 hover:bg-white/50"

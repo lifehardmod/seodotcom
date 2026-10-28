@@ -22,7 +22,7 @@ const ProgrammingList = [
     id: 3,
     title: "두더지 게임",
     description: "사과게임 형식의 웹 게임",
-    to: "/programming/duduji",
+    to: "https://duduji.site",
     image: "/thumbnail/Duduji.webp",
     tags: ["Frontend", "Backend", "Web", "React", "AI First"],
     isUpdated: true,

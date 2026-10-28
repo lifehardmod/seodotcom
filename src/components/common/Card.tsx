@@ -14,7 +14,6 @@ interface CardProps {
 }
 
 const Card = ({
-  id,
   title,
   description,
   to,
@@ -24,10 +23,11 @@ const Card = ({
 }: CardProps) => {
   return (
     <Link
-      href={id === 3 ? "https://duduji.site" : to}
+      href={to}
+      prefetch={false}
       className={cn(
         "w-full md:w-full lg:w-full h-full flex flex-col gap-2 items-center rounded-md p-3 hover:border-gradient hover:border",
-        isUpdated && "border-white border"
+        isUpdated && "border-white border",
       )}
     >
       <div className="flex flex-col gap-1 h-full">
@@ -35,6 +35,7 @@ const Card = ({
           src={image}
           width={644}
           height={416}
+          sizes="(max-width: 767px) calc(100vw - 64px), (max-width: 1439px) 46vw, 680px"
           alt={title}
           className="flex-1 h-auto"
         />

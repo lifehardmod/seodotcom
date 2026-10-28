@@ -1,13 +1,14 @@
 import React from "react";
+import "@/styles/demo-fonts.css";
 import { cva } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "inline-flex bg-white/10 hover:bg-white/20 active:translate-y-[1px] transition-all cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[4px] text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-[invalid=true]:ring-destructive/20 dark:data-[invalid=true]:ring-destructive/40 data-[invalid=true]:border-destructive",
+  "inline-flex active:translate-y-[1px] transition-all cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[4px] text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-[invalid=true]:ring-destructive/20 dark:data-[invalid=true]:ring-destructive/40 data-[invalid=true]:border-destructive",
   {
     variants: {
       variant: {
-        default: "border border-white",
-        gradient: "border-gradient",
+        default: "bg-white/10 hover:bg-white/20 border border-white",
+        gradient: "bg-white/10 hover:bg-white/20 border-gradient",
         glass: "border-gradient bg-glass",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20dark:focus-visible:ring-destructive/40",
@@ -31,12 +32,12 @@ export const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 const DesignSystem = () => {
   return (
-    <div className="space-y-12 p-6">
+    <div className="design-system-examples space-y-12 p-6">
       {/* 브랜드 컬러 */}
       <div className="space-y-6">
         <h3 className="text-2xl font-semibold">브랜드 컬러</h3>
@@ -44,22 +45,22 @@ const DesignSystem = () => {
           <div className="space-y-3">
             <div className="h-24 rounded-lg bg-[#00FF66]"></div>
             <p className="text-base">Primary</p>
-            <p className="text-sm text-gray-400">#00FF66</p>
+            <p className="text-sm text-gray-200">#00FF66</p>
           </div>
           <div className="space-y-3">
             <div className="h-24 rounded-lg bg-[#037DD6]"></div>
             <p className="text-base">Positive</p>
-            <p className="text-sm text-gray-400">#037DD6</p>
+            <p className="text-sm text-gray-200">#037DD6</p>
           </div>
           <div className="space-y-3">
             <div className="h-24 rounded-lg bg-[#FF4646]"></div>
             <p className="text-base">Fail</p>
-            <p className="text-sm text-gray-400">#FF4646</p>
+            <p className="text-sm text-gray-200">#FF4646</p>
           </div>
           <div className="space-y-3">
             <div className="h-24 rounded-lg bg-[#FFD700]"></div>
             <p className="text-base">Caution</p>
-            <p className="text-sm text-gray-400">#FFD700</p>
+            <p className="text-sm text-gray-200">#FFD700</p>
           </div>
         </div>
       </div>
@@ -104,7 +105,10 @@ const DesignSystem = () => {
                 <button className={buttonVariants({ size: "lg" })}>
                   Large
                 </button>
-                <button className={buttonVariants({ size: "icon" })}>
+                <button
+                  aria-label="다음 아이콘 버튼 예시"
+                  className={buttonVariants({ size: "icon" })}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -159,7 +163,7 @@ const DesignSystem = () => {
           <div className="space-y-3">
             <div className="h-24 rounded-lg bg-gradient-to-r from-[#00FF37] to-[#F6FF00]"></div>
             <p className="text-base">Brand Gradient</p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-200">
               94deg, #00FF37 -15.54%, #F6FF00 111.18%
             </p>
           </div>
@@ -173,14 +177,14 @@ const DesignSystem = () => {
           <div className="space-y-3">
             <div className="h-24 rounded-lg border-gradient"></div>
             <p className="text-base">Border Gradient</p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-200">
               linear-gradient(277deg, rgba(0,0,0,0) 30%, #fff 100%)
             </p>
           </div>
           <div className="space-y-3">
             <div className="h-24 rounded-lg input-border-gradient"></div>
             <p className="text-base">Input Border</p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-200">
               linear-gradient(var(--background), var(--background)) padding-box
             </p>
           </div>
@@ -208,7 +212,7 @@ const DesignSystem = () => {
                 style={{ backgroundColor: color }}
               ></div>
               <p className="text-base">Gray {shade}</p>
-              <p className="text-sm text-gray-400">{color}</p>
+              <p className="text-sm text-gray-200">{color}</p>
             </div>
           ))}
         </div>
@@ -223,23 +227,23 @@ const DesignSystem = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
                 <p className="text-2xl font-pretendard">Pretendard</p>
-                <p className="text-base text-gray-400">font-pretendard</p>
+                <p className="text-base text-gray-200">font-pretendard</p>
               </div>
               <div className="space-y-3">
                 <p className="text-2xl font-bit">DNF Bit Bit v2</p>
-                <p className="text-base text-gray-400">font-bit</p>
+                <p className="text-base text-gray-200">font-bit</p>
               </div>
               <div className="space-y-3">
                 <p className="text-2xl font-partial">Partial Sans KR</p>
-                <p className="text-base text-gray-400">font-partial</p>
+                <p className="text-base text-gray-200">font-partial</p>
               </div>
               <div className="space-y-3">
                 <p className="text-2xl font-pixel">Pixel Regular</p>
-                <p className="text-base text-gray-400">font-pixel</p>
+                <p className="text-base text-gray-200">font-pixel</p>
               </div>
               <div className="space-y-3">
                 <p className="text-2xl font-dunggeunmo">DungGeunMo</p>
-                <p className="text-base text-gray-400">font-dunggeunmo</p>
+                <p className="text-base text-gray-200">font-dunggeunmo</p>
               </div>
             </div>
           </div>
@@ -248,25 +252,25 @@ const DesignSystem = () => {
             <div className="space-y-6">
               <div className="space-y-3">
                 <p className="text-5xl font-bold">Heading 1</p>
-                <p className="text-base text-gray-400">
+                <p className="text-base text-gray-200">
                   text-5xl font-bold (48px)
                 </p>
               </div>
               <div className="space-y-3">
                 <p className="text-4xl font-semibold">Heading 2</p>
-                <p className="text-base text-gray-400">
+                <p className="text-base text-gray-200">
                   text-4xl font-semibold (36px)
                 </p>
               </div>
               <div className="space-y-3">
                 <p className="text-3xl font-medium">Heading 3</p>
-                <p className="text-base text-gray-400">
+                <p className="text-base text-gray-200">
                   text-3xl font-medium (30px)
                 </p>
               </div>
               <div className="space-y-3">
                 <p className="text-xl">Body Text</p>
-                <p className="text-base text-gray-400">text-xl (20px)</p>
+                <p className="text-base text-gray-200">text-xl (20px)</p>
               </div>
               <div className="space-y-3">
                 <p className="text-lg text-gray-200">Secondary Text</p>
@@ -276,7 +280,7 @@ const DesignSystem = () => {
               </div>
               <div className="space-y-3">
                 <p className="text-base">Normal Text</p>
-                <p className="text-base text-gray-400">text-base (16px)</p>
+                <p className="text-base text-gray-200">text-base (16px)</p>
               </div>
               <div className="space-y-3">
                 <p className="text-lg text-[#848484]">Disabled Text</p>
@@ -294,22 +298,22 @@ const DesignSystem = () => {
           <div className="space-y-3">
             <div className="h-24 rounded-sm bg-gray-700"></div>
             <p className="text-base">Small</p>
-            <p className="text-sm text-gray-400">rounded-sm (2px)</p>
+            <p className="text-sm text-gray-200">rounded-sm (2px)</p>
           </div>
           <div className="space-y-3">
             <div className="h-24 rounded-md bg-gray-700"></div>
             <p className="text-base">Medium</p>
-            <p className="text-sm text-gray-400">rounded-md (6px)</p>
+            <p className="text-sm text-gray-200">rounded-md (6px)</p>
           </div>
           <div className="space-y-3">
             <div className="h-24 rounded-lg bg-gray-700"></div>
             <p className="text-base">Large</p>
-            <p className="text-sm text-gray-400">rounded-lg (8px)</p>
+            <p className="text-sm text-gray-200">rounded-lg (8px)</p>
           </div>
           <div className="space-y-3">
             <div className="h-24 rounded-xl bg-gray-700"></div>
             <p className="text-base">Extra Large</p>
-            <p className="text-sm text-gray-400">rounded-xl (12px)</p>
+            <p className="text-sm text-gray-200">rounded-xl (12px)</p>
           </div>
         </div>
       </div>
