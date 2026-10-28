@@ -1,0 +1,112 @@
+---
+title: "없는 계정인데도 bcrypt를 돌려야 하는 이유"
+description: "오류 메시지를 통일해도 로그인 처리 시간이 다르면 계정 유무가 드러날 수 있다. bcrypt 검증과 더미 해시의 초기화 시점을 함께 맞추는 방법."
+publishedAt: "2026-10-28"
+tags: ["보안", "Python", "인증"]
+published: true
+---
+
+<Image
+  src="/blog/why-bcrypt-for-missing-users/login-timing-example-v2.webp"
+  alt="같은 로그인 오류 아래, 없는 계정과 기존 계정의 응답 시간 차이를 비교한 설명용 이미지. 표시된 수치는 실제 측정값이 아니다."
+  width={1600}
+  height={800}
+/>
+
+로그인 실패 메시지를 하나로 맞춰도, 서버는 계정이 있는지 없는지 알려줄 수 있다.
+
+계정을 못 찾았을 때 비밀번호 검증을 건너뛰는 코드가 그렇다.
+
+bcrypt를 쓰고 있다면 이 차이가 더 커질 수 있다. 비밀번호 검증에 일부러 계산 비용을 들이는 알고리즘이라, 검증을 한 요청과 안 한 요청이 수행하는 연산량이 다르기 때문이다.
+
+## 검증이 생략되는 조건
+
+아래는 계정 조회 이후의 처리를 단순화한 예제다. `verify_password`가 bcrypt로 입력한 비밀번호를 검증한다고 가정했다.
+
+```python
+if (
+    member is None
+    or not member.enabled
+    or not verify_password(candidate, member.password_digest)
+):
+    deny_login()
+```
+
+[Python의 `or`](https://docs.python.org/3/reference/expressions.html#boolean-operations)는 앞의 항목이 참이면 뒤를 평가하지 않는다. 이 조건식에서 `verify_password`까지 실행되는 경우를 나누면 다음과 같다.
+
+| 로그인 요청              | 실패하기 전에 bcrypt 검증을 하는가 |
+| ------------------------ | ---------------------------------- |
+| 계정이 없음              | 하지 않음                          |
+| 계정이 비활성 상태       | 하지 않음                          |
+| 활성 계정, 틀린 비밀번호 | 함                                 |
+
+오류 문구를 맞춰도 이 연산량 차이는 남는다. 반복되는 응답 시간의 차이가 계정을 추정할 단서가 될 수 있다. [OWASP의 인증 지침](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses)도 계정 조회에 실패하면 일찍 반환하는 코드를 예로 든다.
+
+## 검증은 한 번, 해시는 재사용
+
+실제 계정의 해시를 쓸 수 없을 때는 미리 만든 더미 해시로 검증한다. 더미 해시도 실제 비밀번호를 저장할 때 쓰는 함수로, 같은 비용 설정을 사용해 만들어야 한다. 기존 계정에 예전 비용 설정의 해시가 섞여 있으면 검증 비용의 차이는 남으므로 [별도의 갱신 정책](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#upgrading-the-work-factor)이 필요하다.
+
+더미 해시를 요청마다 생성하면 그 요청에서는 생성과 검증을 모두 수행한다. 그래서 `@cache`는 더미 해시를 만드는 함수에만 붙여 값을 재사용한다. 아래 예제의 `encode_password`와 `verify_password`는 애플리케이션의 기존 비밀번호 처리 함수를 나타낸다.
+
+```python
+from functools import cache
+from secrets import token_hex
+
+
+@cache
+def dummy_hash():
+    return encode_password(token_hex(24))
+
+
+def check_credentials(member, candidate):
+    can_authenticate = (
+        member is not None
+        and member.enabled
+        and bool(member.password_digest)
+    )
+
+    digest = (
+        member.password_digest
+        if can_authenticate
+        else dummy_hash()
+    )
+    matched = verify_password(candidate, digest)
+
+    return can_authenticate and matched
+```
+
+계정 상태에 따라 `digest`를 고른 뒤 `verify_password`는 항상 호출한다. 반환할 때는 `can_authenticate`도 확인하므로 더미 해시와의 비교가 일치해도 로그인을 허용하지 않는다. DB 조회나 실패 기록, 로깅에 걸리는 시간까지 같아지지는 않으므로 HTTP 응답 전체가 상수 시간으로 동작하는 것은 아니다.
+
+계정이 없는 요청에도 bcrypt를 실행하는 만큼 서버가 처리할 연산은 늘어난다. 로그인 시도 제한을 함께 두어 이 연산이 무제한으로 반복되지 않게 해야 한다.
+
+<Image
+  src="/blog/why-bcrypt-for-missing-users/dummy-hash-verification.webp"
+  alt="활성 계정에 틀린 비밀번호를 넣으면 저장된 해시로, 계정이 없으면 더미 해시로 bcrypt를 한 번 검증하고 로그인에 실패한다."
+  width={1600}
+  height={800}
+/>
+
+## 캐시를 채우는 시점도 옮겨야 한다
+
+[`@cache`](https://docs.python.org/3/library/functools.html#functools.cache)는 저장된 값이 없으면 함수를 실행해 값을 만든다. 위 코드에서는 더미 해시가 처음 필요한 로그인 요청이 `encode_password`의 비용까지 부담한다.
+
+더미 해시 생성은 애플리케이션의 시작 훅에서 끝내둔다.
+
+```python
+# 각 워커가 요청을 받기 전에 실행한다.
+dummy_hash()
+```
+
+<Image
+  src="/blog/why-bcrypt-for-missing-users/dummy-hash-startup.webp"
+  alt="캐시만 쓰면 더미 해시가 처음 필요한 요청에서 생성과 검증을 모두 수행한다. 워커 시작 시 미리 생성하면 요청에서는 캐시된 해시를 사용해 검증만 수행한다."
+  width={1600}
+  height={800}
+/>
+
+## 참고 자료
+
+- [Python: Boolean operations](https://docs.python.org/3/reference/expressions.html#boolean-operations)
+- [Python: functools.cache](https://docs.python.org/3/library/functools.html#functools.cache)
+- [OWASP: Authentication responses](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses)
+- [OWASP: Upgrading the work factor](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#upgrading-the-work-factor)
