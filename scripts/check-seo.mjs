@@ -5,13 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const base = process.argv[2] ?? "http://127.0.0.1:3000";
 const canonicalBase = "https://www.seojuwon.work";
-const publicPaths = [
-  "/",
-  "/programming",
-  "/programming/rabbit",
-  "/programming/mimo",
-  "/resume",
-];
+const publicPaths = ["/", "/resume"];
 const app = fileURLToPath(new URL("../src/app/", import.meta.url));
 const routes = readdirSync(app, { recursive: true })
   .filter((p) => p === "page.tsx" || p.endsWith("/page.tsx"))
@@ -86,16 +80,9 @@ for (const path of routes) {
   assert.ok(!html.includes('href="https://github.com/lifehardmod/MIMO"'));
   if (path === "/ux")
     assert.ok(html.includes('href="/ux/a7m3"'), "A7M3 destination");
-  if (path === "/programming")
-    assert.ok(html.includes('href="https://duduji.site"'), "Game destination");
   if (path === "/ux/rabbit")
     for (const heading of ["디자인 시스템", "UI 설계", "성과"])
       assert.ok(html.includes(heading), `SSR section: ${heading}`);
-  if (path === "/programming/rabbit")
-    assert.ok(
-      html.includes('class="code-example"'),
-      "Server rendered code examples",
-    );
   console.log(`PASS ${path}`);
 }
 

@@ -12,22 +12,22 @@ export const SEO_PAGES = {
     index: true,
   },
   "/programming": {
-    title: "개발 프로젝트 · 서주원",
+    title: "개발 자료 준비 중 · 서주원",
     description:
-      "서주원의 프론트엔드 개발 프로젝트입니다. NFT 차용증 거래 서비스 RABBIT, 모임 관리 서비스 MIMO와 두더지 웹 게임의 구현 경험을 소개합니다.",
-    index: true,
+      "서주원의 개발 프로젝트 자료를 준비 중입니다. 프로젝트 설명을 다시 정리하고 있으며, 이력서는 계속 확인할 수 있습니다.",
+    index: false,
   },
   "/programming/rabbit": {
-    title: "RABBIT · NFT 차용증 서비스 개발 · 서주원",
+    title: "RABBIT 개발 자료 준비 중 · 서주원",
     description:
-      "React와 TypeScript로 구현한 NFT 기반 차용증 거래 서비스 RABBIT. MSW API 모킹, 반응형 웹, 코드 분할, Zustand 상태 관리와 UX 개선 과정을 정리했습니다.",
-    index: true,
+      "RABBIT 프로젝트의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
+    index: false,
   },
   "/programming/mimo": {
-    title: "MIMO · 모임 관리 서비스 개발 · 서주원",
+    title: "MIMO 개발 자료 준비 중 · 서주원",
     description:
-      "모임 생성부터 회비 관리, 실시간 채팅까지 지원하는 MIMO 개발 프로젝트. Storybook, Atomic Design과 중첩 레이아웃을 활용한 UI 구현 경험을 소개합니다.",
-    index: true,
+      "MIMO 프로젝트의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
+    index: false,
   },
   "/resume": {
     title: "이력서 · 프론트엔드 개발자 서주원",
@@ -36,15 +36,15 @@ export const SEO_PAGES = {
     index: true,
   },
   "/programming/classon": {
-    title: "ClassOn · 교육 ERP 개발 · 서주원",
+    title: "ClassOn 개발 자료 준비 중 · 서주원",
     description:
-      "교사의 수업 운영과 학생의 학습 관리를 통합하는 ClassOn 프로젝트. React·TypeScript 기반 프론트엔드와 UX/UI 디자인 작업을 소개합니다.",
+      "ClassOn 프로젝트의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
     index: false,
   },
   "/programming/duduji": {
-    title: "두더지 게임 · 웹 게임 프로젝트 · 서주원",
+    title: "두더지 게임 개발 자료 준비 중 · 서주원",
     description:
-      "사과게임 형식의 두더지 웹 게임 프로젝트입니다. React를 활용한 웹 게임을 외부 서비스에서 직접 플레이할 수 있습니다.",
+      "두더지 게임의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
     index: false,
   },
   "/ux": {
@@ -74,7 +74,7 @@ export const SEO_PAGES = {
   "/blog": {
     title: "블로그 준비 중 · 서주원",
     description:
-      "서주원의 개발 블로그를 준비하고 있습니다. 현재 공개된 개발 프로젝트와 이력서는 포트폴리오 메뉴에서 확인할 수 있습니다.",
+      "서주원의 개발 블로그를 준비하고 있습니다. 이력서는 포트폴리오 메뉴에서 확인할 수 있습니다.",
     index: false,
   },
 } as const;
