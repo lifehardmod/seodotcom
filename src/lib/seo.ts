@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 
 export const SITE_URL = "https://www.seojuwon.work";
+export const SITE_NAME = "서주원";
+export const AUTHOR_ROLE = "소프트웨어 개발자";
+export const SITE_DESCRIPTION =
+  "개발자 서주원의 개인 사이트입니다. 소프트웨어를 만들며 만난 문제와 해결 과정, 배운 점을 기록하고 프로젝트와 이력을 공유합니다.";
 
 // Publish a draft by completing its content, linking it from navigation,
 // then setting index to true. The sitemap uses this same registry.
 export const SEO_PAGES = {
   "/": {
-    title: "서주원 · 프론트엔드 개발자 포트폴리오",
-    description:
-      "사용자의 흐름을 이해하고 직접 구현하는 프론트엔드 개발자 서주원입니다. React·TypeScript 개발 프로젝트, UX/UI 설계 경험과 이력서를 소개합니다.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     index: true,
   },
   "/programming": {
@@ -30,9 +33,9 @@ export const SEO_PAGES = {
     index: false,
   },
   "/resume": {
-    title: "이력서 · 프론트엔드 개발자 서주원",
+    title: `이력서 · ${SITE_NAME}`,
     description:
-      "프론트엔드 개발자이자 UX/UI 디자이너 서주원의 이력서입니다. React·TypeScript 기술 역량, 프로젝트 경험, 교육과 자격 사항을 확인할 수 있습니다.",
+      "개발자 서주원의 이력서입니다. 기술 역량과 프로젝트 경험, 교육 및 자격 사항을 소개합니다.",
     index: true,
   },
   "/programming/classon": {
@@ -50,7 +53,7 @@ export const SEO_PAGES = {
   "/ux": {
     title: "UX/UI 디자인 프로젝트 · 서주원",
     description:
-      "개발과 디자인을 함께 고려한 서주원의 UX/UI 포트폴리오. RABBIT, Assembly, A7M3 카메라 인터페이스 프로젝트를 소개합니다.",
+      "서주원의 UX/UI 디자인 프로젝트입니다. RABBIT, Assembly, A7M3 카메라 인터페이스의 기획과 설계 과정을 소개합니다.",
     index: false,
   },
   "/ux/rabbit": {
@@ -72,9 +75,9 @@ export const SEO_PAGES = {
     index: false,
   },
   "/blog": {
-    title: "블로그 준비 중 · 서주원",
+    title: "Blog · 서주원",
     description:
-      "서주원의 개발 블로그를 준비하고 있습니다. 이력서는 포트폴리오 메뉴에서 확인할 수 있습니다.",
+      "개발 중 직접 부딪힌 문제와 해결 과정을 기록합니다. 코드와 근거를 바탕으로 배운 점을 나눕니다.",
     index: false,
   },
 } as const;
@@ -93,7 +96,7 @@ export function pageMetadata(path: PagePath): Metadata {
       title: page.title,
       description: page.description,
       url,
-      siteName: "서주원 포트폴리오",
+      siteName: SITE_NAME,
       type: "website",
       locale: "ko_KR",
       images: [
@@ -101,7 +104,7 @@ export function pageMetadata(path: PagePath): Metadata {
           url: `${SITE_URL}/profile.webp`,
           width: 400,
           height: 500,
-          alt: "프론트엔드 개발자 서주원",
+          alt: `${SITE_NAME} 프로필`,
         },
       ],
     },

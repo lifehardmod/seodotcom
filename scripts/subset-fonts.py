@@ -100,6 +100,9 @@ for html in html_files:
     parser = VisibleText()
     parser.feed(html.read_text())
     route = html.relative_to(html_dir).with_suffix("").as_posix()
+    # Blog content uses system fonts rather than a per-article subset.
+    if route == "blog" or route.startswith("blog/"):
+        continue
     name = "home" if route == "index" else route.replace("/", "-")
     route_texts[name] = "".join(parser.parts)
     common_text.extend(parser.common)

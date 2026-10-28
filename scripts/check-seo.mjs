@@ -1,15 +1,29 @@
 // Run against `npm run build && npm run start`, or pass a preview URL.
 import assert from "node:assert/strict";
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import matter from "gray-matter";
 
 const base = process.argv[2] ?? "http://127.0.0.1:3000";
 const canonicalBase = "https://www.seojuwon.work";
 const publicPaths = ["/", "/resume"];
+const postsDirectory = new URL("../content/posts/", import.meta.url);
+const posts = readdirSync(postsDirectory)
+  .filter((file) => file.endsWith(".mdx"))
+  .map((file) => ({
+    slug: file.slice(0, -4),
+    ...matter(readFileSync(new URL(file, postsDirectory), "utf8")).data,
+  }))
+  .filter((post) => post.published === true);
+if (posts.length)
+  publicPaths.push("/blog", ...posts.map((post) => `/blog/${post.slug}`));
 const app = fileURLToPath(new URL("../src/app/", import.meta.url));
 const routes = readdirSync(app, { recursive: true })
-  .filter((p) => p === "page.tsx" || p.endsWith("/page.tsx"))
+  .filter(
+    (p) => !p.includes("[") && (p === "page.tsx" || p.endsWith("/page.tsx")),
+  )
   .map((p) => (p === "page.tsx" ? "/" : "/" + p.slice(0, -9)));
+routes.push(...posts.map((post) => `/blog/${post.slug}`));
 const attr = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
 const titles = new Set();
 const descriptions = new Set();
@@ -95,9 +109,21 @@ assert.deepEqual(
   publicPaths.map((path) => new URL(path, canonicalBase).href).sort(),
 );
 assert.ok(
-  !/<lastmod>|<changefreq>|<priority>/.test(xml),
-  "No synthetic modification dates",
+  !/<changefreq>|<priority>/.test(xml),
+  "No guessed crawl frequency or priority",
 );
+for (const entry of xml.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
+  const location = entry[1].match(/<loc>(.*?)<\/loc>/)?.[1];
+  const modified = entry[1].match(/<lastmod>(.*?)<\/lastmod>/)?.[1];
+  const post = posts.find(
+    (item) => location === `${canonicalBase}/blog/${item.slug}`,
+  );
+  assert.equal(
+    modified,
+    post ? (post.updatedAt ?? post.publishedAt) : undefined,
+    "Sitemap dates come from post metadata",
+  );
+}
 const robots = await (await fetch(new URL("/robots.txt", base))).text();
 assert.ok(robots.includes(`Sitemap: ${canonicalBase}/sitemap.xml`));
 const missing = await fetch(new URL("/seo-check-missing-page", base));

@@ -32,8 +32,13 @@ class PageText(HTMLParser):
 html_dir = ROOT / ".next/server/app"
 pages = sorted(p for p in html_dir.rglob("*.html") if not p.stem.startswith("_"))
 assert pages, "Run npm run build before checking fonts"
+checked = 0
 original = set(TTFont(ROOT / "public/fonts/PretendardVariable.woff2").getBestCmap())
 for page in pages:
+    route = page.relative_to(html_dir).with_suffix("").as_posix()
+    # Blog content uses system fonts, so there is no per-article subset.
+    if route == "blog" or route.startswith("blog/"):
+        continue
     name = page.relative_to(html_dir).with_suffix("").as_posix().replace("/", "-")
     name = "home" if name == "index" else name
     parser = PageText()
@@ -45,5 +50,6 @@ for page in pages:
         f"{name}: missing {''.join(chr(cp) for cp in sorted(missing))!r}; "
         "run python3 scripts/subset-fonts.py, then rebuild"
     )
+    checked += 1
     print(f"PASS {name}: {len(wanted)} used glyphs")
-print(f"PASS {len(pages)} route fonts")
+print(f"PASS {checked} route fonts")

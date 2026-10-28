@@ -22,7 +22,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@content/*": ["./content/*"]
     }
   },
   "include": [
@@ -30,6 +31,7 @@
     "./src/**/*.ts",
     "./src/**/*.tsx",
     ".next/types/**/*.ts",
+    ".next-build/types/**/*.ts",
     "public/fonts/pretendard.ts"
   ],
   "exclude": ["node_modules"]

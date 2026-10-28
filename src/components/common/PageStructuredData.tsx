@@ -1,11 +1,18 @@
-import { SEO_PAGES, SITE_URL, type PagePath } from "@/lib/seo";
+import {
+  AUTHOR_ROLE,
+  SEO_PAGES,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  type PagePath,
+} from "@/lib/seo";
 
 export default function PageStructuredData({ path }: { path: PagePath }) {
   const person = {
     "@type": "Person",
     "@id": `${SITE_URL}/#person`,
-    name: "서주원",
-    jobTitle: "프론트엔드 개발자, UX/UI 디자이너",
+    name: SITE_NAME,
+    jobTitle: AUTHOR_ROLE,
     url: SITE_URL,
     image: `${SITE_URL}/profile.webp`,
     sameAs: ["https://github.com/lifehardmod"],
@@ -25,7 +32,8 @@ export default function PageStructuredData({ path }: { path: PagePath }) {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
-      name: "서주원 포트폴리오",
+      name: SITE_NAME,
+      description: SITE_DESCRIPTION,
       inLanguage: "ko-KR",
     });
   } else {
