@@ -20,9 +20,9 @@ export const NAV_ITEMS = [
     label: "Blog",
     activeLabel: "blog",
   },
-  {
-    to: "/resume",
-    label: "Resume",
-    activeLabel: "resume",
-  },
+  // {
+  //   to: "/resume",
+  //   label: "Resume",
+  //   activeLabel: "resume",
+  // },
 ];

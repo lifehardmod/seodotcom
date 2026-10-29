@@ -18,7 +18,7 @@ export default function PageStructuredData({ path }: { path: PagePath }) {
     sameAs: ["https://github.com/lifehardmod"],
   };
   const graph: Record<string, unknown>[] = [];
-  if (path === "/" || path === "/resume") {
+  if (path === "/") {
     graph.push(person, {
       "@type": "ProfilePage",
       "@id": `${SITE_URL}${path}#profile`,

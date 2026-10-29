@@ -18,11 +18,11 @@ export default function Preparing({
           프로젝트 설명을 다시 정리하고 있습니다.
         </p>
         <Link
-          href="/resume"
+          href="/"
           prefetch={false}
           className="mt-8 inline-flex min-h-12 items-center rounded-md border border-gray-600 px-5 py-3 text-base font-medium text-white transition-colors hover:border-green-400 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-400"
         >
-          이력서 보기
+          홈으로
         </Link>
       </section>
     </>

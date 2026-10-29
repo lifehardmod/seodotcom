@@ -6,7 +6,7 @@ import matter from "gray-matter";
 
 const base = process.argv[2] ?? "http://127.0.0.1:3000";
 const canonicalBase = "https://www.seojuwon.work";
-const publicPaths = ["/", "/resume"];
+const publicPaths = ["/"];
 const postsDirectory = new URL("../content/posts/", import.meta.url);
 const posts = readdirSync(postsDirectory)
   .filter((file) => file.endsWith(".mdx"))

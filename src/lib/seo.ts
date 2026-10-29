@@ -17,37 +17,36 @@ export const SEO_PAGES = {
   "/programming": {
     title: "개발 자료 준비 중 · 서주원",
     description:
-      "서주원의 개발 프로젝트 자료를 준비 중입니다. 프로젝트 설명을 다시 정리하고 있으며, 이력서는 계속 확인할 수 있습니다.",
+      "서주원의 개발 프로젝트 자료를 준비 중입니다. 프로젝트 설명을 다시 정리하고 있습니다.",
     index: false,
   },
   "/programming/rabbit": {
     title: "RABBIT 개발 자료 준비 중 · 서주원",
     description:
-      "RABBIT 프로젝트의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
+      "RABBIT 프로젝트의 개발 자료를 다시 정리하고 있습니다.",
     index: false,
   },
   "/programming/mimo": {
     title: "MIMO 개발 자료 준비 중 · 서주원",
     description:
-      "MIMO 프로젝트의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
+      "MIMO 프로젝트의 개발 자료를 다시 정리하고 있습니다.",
     index: false,
   },
   "/resume": {
-    title: `이력서 · ${SITE_NAME}`,
-    description:
-      "개발자 서주원의 이력서입니다. 기술 역량과 프로젝트 경험, 교육 및 자격 사항을 소개합니다.",
-    index: true,
+    title: `이력서 준비 중 · ${SITE_NAME}`,
+    description: "서주원의 이력서를 다시 정리하고 있습니다.",
+    index: false,
   },
   "/programming/classon": {
     title: "ClassOn 개발 자료 준비 중 · 서주원",
     description:
-      "ClassOn 프로젝트의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
+      "ClassOn 프로젝트의 개발 자료를 다시 정리하고 있습니다.",
     index: false,
   },
   "/programming/duduji": {
     title: "두더지 게임 개발 자료 준비 중 · 서주원",
     description:
-      "두더지 게임의 개발 자료를 다시 정리하고 있습니다. 준비 중인 자료 대신 서주원의 이력서를 확인할 수 있습니다.",
+      "두더지 게임의 개발 자료를 다시 정리하고 있습니다.",
     index: false,
   },
   "/ux": {
