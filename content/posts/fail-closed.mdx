@@ -1,0 +1,118 @@
+---
+title: "판정할 수 없으면 막는다, fail-closed"
+description: "세션 가드를 짜면서 모르는 계정 상태와 확인할 수 없는 세션을 어디로 보낼지 정한 과정. 처음 만든 쿠키 확인 가드가 왜 반쯤만 닫혀 있었는지도 함께 정리했다."
+publishedAt: "2026-10-29"
+tags: ["보안", "인증", "TypeScript"]
+published: true
+---
+
+보호 페이지 앞에 세션 가드를 짜다 보면 허용과 거부 말고 세 번째 결과가 계속 나온다. 상태값이 처음 보는 값이거나, 세션을 확인할 방법이 아직 없거나, 확인하던 중에 예외가 나는 경우다.
+
+이런 요청을 거부와 같은 경로로 보내는 원칙을 fail-closed라고 한다. [OWASP의 Fail securely](https://community.owasp.org/Fail_securely)는 `isAuthorized()` 같은 보안 메서드가 처리 중 예외를 만나면 `false`를 돌려주도록 설계하라고 설명한다.
+
+아래는 프런트엔드 서버의 세션 가드를 만들면서 이 원칙을 적용한 부분이다. 실제 코드는 단순화해서 옮겼다.
+
+## 차단 목록에 없는 값은 통과한다
+
+로그인한 사용자의 계정 상태는 활성, 임시, 비활성, 탈퇴 네 가지였다. 막아야 할 상태만 골라 내는 식으로 짜면 이렇게 된다. 실제로 쓴 코드는 아니고 비교용 예시다.
+
+```typescript
+function resolveStatusAccess(status: UserStatus): StatusAccessDecision {
+  if (status === "TEMP") {
+    return { kind: "redirect", redirectTo: "/password" };
+  }
+
+  if (status === "INACTIVE" || status === "WITHDRAWN") {
+    return { kind: "forbidden" };
+  }
+
+  return { kind: "allow" };
+}
+```
+
+마지막 줄은 활성 계정만 허용하는 조건이 아니라, 위에서 걸리지 않은 값을 전부 허용한다. 나중에 상태 목록에 새 값이 추가되고 이 함수를 고치지 않으면, 정책을 정한 적 없는 상태의 계정이 보호 페이지에 들어온다.
+
+## 허용할 상태를 먼저 정한다
+
+실제로는 허용할 상태부터 적고 마지막 줄을 차단으로 두었다.
+
+```typescript
+type StatusAccessDecision =
+  | { kind: "allow" }
+  | { kind: "forbidden" }
+  | { kind: "redirect"; redirectTo: string };
+
+function resolveStatusAccess(status: UserStatus): StatusAccessDecision {
+  if (status === "ACTIVE") {
+    return { kind: "allow" };
+  }
+
+  if (status === "TEMP") {
+    return { kind: "redirect", redirectTo: "/password" };
+  }
+
+  if (status === "INACTIVE" || status === "WITHDRAWN") {
+    return { kind: "forbidden" };
+  }
+
+  return { kind: "forbidden" };
+}
+```
+
+보호 페이지로 들어가는 분기는 `ACTIVE` 하나다. 임시 상태의 계정은 비밀번호 변경 화면으로 보내고, 비활성·탈퇴 계정은 막는다. 마지막 두 분기는 같은 값을 돌려주는데, 앞의 분기는 막아야 하는 상태를 이름으로 적어 둔 것이고 마지막 줄은 이 함수가 모르는 상태를 위한 자리다. 새 상태가 생겨도 허용 분기에 추가하기 전까지는 막힌다. [OWASP의 권한 지침](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html#deny-by-default)도 명시적인 허용 규칙에 맞지 않는 요청은 기본적으로 거절하라고 권고한다.
+
+TypeScript라면 마지막 줄 대신 `const unhandled: never = status` 같은 검사를 두어, 상태가 추가됐는데 분기를 빠뜨린 경우를 컴파일 단계에서 잡을 수도 있다. 위 예제처럼 상태를 리터럴로 하나씩 비교하면 가능하다. 실제 코드는 허용·차단할 상태를 정책 배열로 받아 `includes`로 확인하는데, 이렇게 하면 타입이 좁혀지지 않아 이 검사를 쓸 수 없다. 그래서 모르는 상태는 마지막 줄의 차단에 맡겼다.
+
+## 목록 밖의 값은 함수까지 오지 않는다
+
+서버가 상태 목록에 없는 값을 보내는 경우는 이 함수가 처리하지 않는다. 현재 사용자 응답을 [Zod](https://zod.dev/api#enums)의 enum 스키마로 검증하기 때문에, 목록 밖의 값이 오면 검증 단계에서 오류가 난다.
+
+```typescript
+const userStatusSchema = z.enum(["ACTIVE", "INACTIVE", "TEMP", "WITHDRAWN"]);
+```
+
+현재 사용자를 조회하는 함수는 인증이 없거나 만료됐다는 응답일 때만 `null`을 돌려주고, 검증 실패를 포함한 나머지 오류는 그대로 던진다. 그래서 이 경우에도 요청은 통과하지 않고 오류로 끝난다.
+
+닫히는 방향은 맞지만 사용자에게는 권한이 없다는 안내가 아니라 오류 화면이 보인다. 서버와 상태 목록이 어긋났다는 사실을 알아차리려면 이 오류가 어디서 났는지 찾을 수 있어야 한다.
+
+## 쿠키만 보던 첫 가드
+
+로그인 가드는 처음에 지금과 달랐다. 현재 사용자를 조회하는 API의 응답 형식이 아직 정해지지 않아서, 인증 쿠키가 있는지만 볼 수 있었다.
+
+```typescript
+async function requireUser() {
+  if (await hasSessionCookie()) {
+    return;
+  }
+
+  redirect("/login");
+}
+```
+
+쿠키가 없는 요청은 확실히 로그인 화면으로 보낸다. 그런데 쿠키가 있는 요청은 그 쿠키가 유효한 세션인지 모르는 채로 통과시킨다. 쿠키 이름만으로는 판정할 수 없는 요청을 들여보낸 셈이라, 이 가드는 쿠키가 없는 쪽만 닫혀 있었다.
+
+API 형식이 정해진 뒤 가드를 이렇게 바꿨다.
+
+```typescript
+async function requireUser(): Promise<SessionUser> {
+  if (!(await hasSessionCookie())) {
+    redirect("/login");
+  }
+
+  const user = await getCurrentUser();
+
+  if (user) {
+    return user;
+  }
+
+  redirect("/login");
+}
+```
+
+쿠키 확인은 쿠키가 아예 없는 요청을 일찍 돌려보내는 용도로만 남았다. 들여보낼지는 서버에 현재 사용자를 조회해 확인된 사용자가 있을 때만 정한다. 조회 결과가 없으면 로그인 화면으로 보내고, 조회 중 다른 오류가 나면 앞에서 본 것처럼 요청이 통과하지 않는다.
+
+## 참고 자료
+
+- [OWASP: Fail securely](https://community.owasp.org/Fail_securely)
+- [OWASP: Authorization Cheat Sheet — Deny by Default](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html#deny-by-default)
+- [Zod: Enums](https://zod.dev/api#enums)
