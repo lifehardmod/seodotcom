@@ -1,0 +1,196 @@
+---
+title: "같은 서버 조회인데 한 화면에만 스켈레톤이 없던 이유"
+description: "관리 화면 세 곳이 데이터를 기다리는 모습이 달랐던 이유를 await 위치와 Suspense 경계로 설명한다. 서버 조회는 그대로 두고 경계만 옮긴 과정과, 레이아웃의 await가 같은 폴더의 loading.tsx로 가려지지 않는 이유를 정리했다."
+publishedAt: "2026-10-29"
+tags: ["Next.js", "React"]
+published: true
+---
+
+관리자 설정에 있는 목록 화면 A, 목록 화면 B, 현황 화면은 모두 백엔드에서 데이터를 받아 그린다. 그런데 기다리는 동안의 모습이 달랐다. 목록 화면 B와 현황 화면은 화면 모양을 닮은 스켈레톤이 먼저 보였고, 목록 화면 A는 그런 스켈레톤 없이 데이터가 다 온 뒤 머리글과 표가 함께 나타났다.
+
+목록 화면 B는 이 작업에서 브라우저 조회로 바꿨기 때문에, 브라우저에서 불러오면 스켈레톤이 보이고 서버에서 불러오면 안 보인다고 설명할 수도 있다. 하지만 현황 화면도 서버에서 데이터를 가져오면서 스켈레톤을 보여 줬고, 바꾸기 전의 목록 화면 B도 서버 조회를 `<Suspense>`로 감싸 스켈레톤을 보여 주고 있었다. 세 화면을 가른 것은 데이터를 어디서 기다리는지, 그리고 그 위에서 가장 가까운 Suspense 경계가 어디에 있는지였다. Next.js 16 App Router 기준이고, 코드는 이름을 바꾸고 단순화해서 옮겼다.
+
+## 서버 컴포넌트의 await는 그 아래 전체를 붙잡는다
+
+당시 목록 화면 A는 컴포넌트 맨 위에서 목록을 기다렸다.
+
+```tsx
+export async function ListScreen() {
+  const items = await getItems();
+
+  return (
+    <main>
+      <PageHeader title="목록" />
+      <ItemTable items={items} />
+    </main>
+  );
+}
+```
+
+`getItems`가 끝나야 `return`에 닿으므로, 데이터와 상관없는 머리글도 표와 함께 기다린다. 공식 문서도 서버 컴포넌트에 느린 데이터 요청이 있으면 데이터를 다 받을 때까지 라우트 렌더링이 막힌다고 설명한다([Fetching Data: Streaming](https://nextjs.org/docs/app/getting-started/fetching-data#streaming)). 이 목록은 세션 쿠키를 넘기는 실시간 조회라서, 캐시된 응답 없이 들어올 때마다 백엔드를 기다린다([서버 fetch의 캐시 정책](/blog/nextjs-server-fetch-cache-policy)).
+
+기다리는 동안 화면에 나올 수 있는 것은 이 컴포넌트 위에서 가장 가까운 Suspense 경계의 fallback이다. `loading.tsx`는 같은 폴더의 페이지와 그 아래 세그먼트를 `<Suspense>`로 감싸는 파일이다([loading.js](https://nextjs.org/docs/app/api-reference/file-conventions/loading#instant-loading-states)). 당시에는 로그인이 필요한 영역의 최상위에 `loading.tsx`를 두고 가운데에 스피너를 그렸고, 목록 화면 A 위에서 가장 가까운 경계가 그것이었다. 표 모양의 스켈레톤이 들어갈 경계가 없었다.
+
+## 경계를 표 바로 위로 내렸다
+
+목록을 기다리는 부분만 비동기 자식 컴포넌트로 떼어 내고 `<Suspense>`로 감쌌다.
+
+```tsx
+async function ItemTableData() {
+  const items = await getItems();
+
+  return <ItemTable items={items} />;
+}
+
+export function ListScreen() {
+  return (
+    <main>
+      <PageHeader title="목록" />
+      <Suspense fallback={<ItemTableSkeleton />}>
+        <ItemTableData />
+      </Suspense>
+    </main>
+  );
+}
+```
+
+페이지가 권한 확인을 마치면 머리글은 목록을 기다리지 않고 바로 렌더링된다. 경계 안쪽은 fallback이 먼저 나가고, 목록이 준비되면 실제 표로 바뀐다([Fetching Data: With Suspense](https://nextjs.org/docs/app/getting-started/fetching-data#with-suspense)). 목록은 여전히 서버에서 권한을 확인한 뒤 조회한다. 바뀐 것은 기다리는 동안 fallback이 차지하는 범위다. fallback에는 실제 표와 같은 열 머리글을 두고 행 자리를 회색 블록으로 채웠다.
+
+현황 화면과 바꾸기 전의 목록 화면 B가 이미 이 구조였다. 현황 화면의 페이지는 권한 확인과 쿼리 해석만 기다리고, 지표를 조회하는 컴포넌트는 화면 모양의 스켈레톤을 fallback으로 둔 `<Suspense>` 안에 있었다. 서버에서 데이터를 가져오면서도 스켈레톤이 먼저 보인 이유다.
+
+<Image
+  src="/blog/await-and-suspense-boundary/boundary-before-after.webp"
+  alt="경계를 옮기기 전에는 영역 전체 로딩 표시 뒤에 머리글과 표가 함께 나타나고, 옮긴 뒤에는 머리글이 먼저 보이고 표 자리의 스켈레톤만 데이터가 온 뒤 표로 바뀐다."
+  width={1600}
+  height={800}
+/>
+
+## 목록 화면 B는 첫 렌더링에 데이터가 없다
+
+같은 작업에서 목록 화면 B는 브라우저에서 데이터를 불러오도록 바꿨다. 필터 조건을 URL 쿼리와 맞추고, 조건이 바뀌면 라우트 핸들러를 거쳐 다시 불러온다.
+
+```tsx
+"use client";
+
+export function FilteredListClient({ search }: { search: string }) {
+  const [state, setState] = useState<ListState | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function load() {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(`/api/list?${search}`, {
+          signal: controller.signal,
+        });
+        setState(await toListState(response));
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setState(toErrorState(error));
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void load();
+
+    return () => controller.abort();
+  }, [search]);
+
+  if (!state && isLoading) {
+    return <ListSkeleton />;
+  }
+
+  return <ListTable state={state} />;
+}
+```
+
+클라이언트 컴포넌트도 처음에는 서버에서 HTML로 미리 렌더링된다([Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components#on-the-server)). 이펙트는 서버에서 실행되지 않으므로, 서버가 보내는 HTML에는 데이터 없이 로딩 상태만 담긴다([React: Fetching data with Effects](https://react.dev/reference/react/useEffect#fetching-data-with-effects)). 브라우저가 자바스크립트를 받아 컴포넌트를 실행한 뒤에야 요청이 나가고, 응답이 오면 표로 바뀐다. 바꾼 뒤 이 화면의 스켈레톤은 Suspense 경계가 아니라 첫 렌더링에 데이터가 없다는 사실에서 나온다.
+
+그 대가로 브라우저가 부를 라우트 핸들러를 하나 더 두어야 했고, 요청 취소와 오류 상태도 컴포넌트가 직접 처리한다.
+
+## 레이아웃의 await는 같은 폴더의 loading.tsx가 가리지 못한다
+
+로그인이 필요한 영역에 `loading.tsx`를 처음 추가할 때, 같은 폴더의 레이아웃은 사이드바에 쓸 세션 정보를 기다린 뒤 렌더링했다.
+
+```tsx
+export default async function AuthLayout({ children }: { children: ReactNode }) {
+  const sessionInfo = await getSidebarSessionInfo();
+
+  return <SidebarShell sessionInfo={sessionInfo}>{children}</SidebarShell>;
+}
+```
+
+`loading.tsx`가 감싸는 범위에 같은 폴더의 `layout.tsx`는 들어가지 않는다([loading.js](https://nextjs.org/docs/app/api-reference/file-conventions/loading#instant-loading-states)). 문서는 레이아웃이 `cookies()`, `headers()`, 캐시하지 않는 fetch 같은 요청 시점 데이터에 접근하면 같은 세그먼트의 `loading.js`가 fallback을 보여 주지 못하고, Cache Components를 쓰지 않으면 레이아웃 렌더링이 끝날 때까지 이동이 멈춘다고 설명한다([Fetching Data: With loading.js](https://nextjs.org/docs/app/getting-started/fetching-data#with-loadingjs), [layout.js: Interaction with loading.js](https://nextjs.org/docs/app/api-reference/file-conventions/layout#interaction-with-loadingjs)). 세션 정보는 쿠키를 읽고 현재 사용자를 실시간으로 조회하므로 여기에 해당한다. 다만 레이아웃은 그 아래 페이지끼리 이동할 때는 다시 렌더링되지 않으므로([layout.js: Request Object](https://nextjs.org/docs/app/api-reference/file-conventions/layout#request-object)), 막히는 때는 이 영역에 처음 들어오거나 새로고침해서 레이아웃부터 렌더링할 때다.
+
+<Image
+  src="/blog/await-and-suspense-boundary/layout-outside-loading.webp"
+  alt="layout 안에 loading의 Suspense 경계가 있고 그 안에 page가 있다. layout의 await는 경계 바깥이라 layout이 기다리는 동안에는 같은 세그먼트 loading의 fallback이 보이지 않는다."
+  width={1600}
+  height={800}
+/>
+
+이후 App Router 구성을 정리하면서, 레이아웃은 세션 정보를 기다리지 않고 프로미스를 그대로 넘기도록 바뀌었다.
+
+```tsx
+export default function AuthLayout({ children }: { children: ReactNode }) {
+  const sessionInfoPromise = getSidebarSessionInfo();
+
+  return (
+    <SidebarShell sessionInfoPromise={sessionInfoPromise}>
+      {children}
+    </SidebarShell>
+  );
+}
+```
+
+사이드바 셸은 클라이언트 컴포넌트다. 세션 정보가 필요한 부분만 `<Suspense>`로 감싸고, 그 안에서 React의 `use`로 프로미스를 읽는다.
+
+```tsx
+"use client";
+
+function SessionSidebar({
+  sessionInfoPromise,
+}: {
+  sessionInfoPromise: Promise<SessionInfo>;
+}) {
+  const sessionInfo = use(sessionInfoPromise);
+
+  return <Sidebar sessionInfo={sessionInfo} />;
+}
+
+export function SidebarShell({
+  children,
+  sessionInfoPromise,
+}: {
+  children: ReactNode;
+  sessionInfoPromise: Promise<SessionInfo>;
+}) {
+  return (
+    <>
+      {/* 세션 정보가 오기 전에는 사용자 정보 없이 사이드바를 그린다. */}
+      <Suspense fallback={<Sidebar />}>
+        <SessionSidebar sessionInfoPromise={sessionInfoPromise} />
+      </Suspense>
+      <main>{children}</main>
+    </>
+  );
+}
+```
+
+서버 컴포넌트가 만든 프로미스를 클라이언트 컴포넌트에 넘기면, 클라이언트 컴포넌트는 `use`로 값을 읽고 값이 오기 전에는 가장 가까운 `<Suspense>`의 fallback을 보여 준다([React: use](https://react.dev/reference/react/use#streaming-data-from-server-to-client), [Fetching Data: Streaming data with the use API](https://nextjs.org/docs/app/getting-started/fetching-data#streaming-data-with-the-use-api)). 세션 정보를 기다리는 곳이 레이아웃에서 사이드바 안쪽으로 내려갔다. 레이아웃이 바로 반환되므로, 그 아래 페이지가 데이터를 기다리는 동안에는 `loading.tsx`나 페이지 안의 `<Suspense>`가 fallback을 보여 줄 수 있다.
+
+## 참고 자료
+
+- [Next.js: Fetching Data](https://nextjs.org/docs/app/getting-started/fetching-data#streaming)
+- [Next.js: loading.js](https://nextjs.org/docs/app/api-reference/file-conventions/loading#instant-loading-states)
+- [Next.js: layout.js](https://nextjs.org/docs/app/api-reference/file-conventions/layout#interaction-with-loadingjs)
+- [Next.js: Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components#on-the-server)
+- [React: Fetching data with Effects](https://react.dev/reference/react/useEffect#fetching-data-with-effects)
+- [React: use](https://react.dev/reference/react/use#streaming-data-from-server-to-client)

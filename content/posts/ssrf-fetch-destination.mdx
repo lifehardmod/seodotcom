@@ -1,0 +1,171 @@
+---
+title: "서버가 fetch할 주소를 요청에서 만들지 않는다, SSRF"
+description: "서버가 fetch할 주소의 일부가 들어온 요청에서 오면 요청자가 목적지를 고를 수 있다. 첨부 파일은 data URL만 받아 디코딩하고, 내부 호출 주소는 서버 설정에서 읽도록 바꾼 과정을 정리했다."
+publishedAt: "2026-10-29"
+tags: ["보안", "Next.js", "TypeScript"]
+published: true
+---
+
+서버 코드가 `fetch`할 주소의 일부를 들어온 요청에서 가져오면, 그 요청을 보낸 사람이 서버가 어디로 요청을 보낼지 고를 수 있다. 이렇게 요청자가 서버를 시켜 원하는 곳으로 요청을 보내게 하는 공격을 SSRF(Server-Side Request Forgery)라고 한다. [OWASP의 SSRF 방지 지침](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#context)은 SSRF를 애플리케이션을 이용해 내부·외부 네트워크나 서버 자신과 통신하게 만드는 공격으로 설명한다.
+
+서버는 외부에서 직접 닿지 않는 내부 서비스에 접근할 수 있고, 클라우드 인스턴스라면 자격 증명을 내주는 메타데이터 서비스에도 닿는다. OWASP는 [클라우드 환경의 SSRF가 메타데이터 서비스에서 자격 증명과 토큰을 빼내는 데 자주 쓰인다](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#imdsv2-in-aws)고 적는다. 서버가 받은 응답을 요청자에게 돌려주지 않는 [blind SSRF](https://portswigger.net/web-security/ssrf/blind)는 보통 영향이 더 작지만, 서버나 내부 시스템의 다른 취약점을 찾는 데 쓰일 수 있다.
+
+<Image
+  src="/blog/ssrf-fetch-destination/server-reaches-internal.webp"
+  alt="요청자는 내부 서비스와 메타데이터 서비스에 직접 닿지 못하지만, 요청받은 서버가 대신 fetch하면 서버의 네트워크 위치에서 그 서비스에 닿는다."
+  width={1600}
+  height={800}
+/>
+
+아래는 서버가 보낼 요청의 주소를 들어온 요청에서 만들던 코드 두 곳을 고친 과정이다. 실제 코드는 단순화해서 옮겼다.
+
+## 첨부 파일 URL을 서버가 받아 오던 코드
+
+파일을 첨부받는 API가 있었다. 첨부는 `url` 필드를 가진 객체로 들어왔고, 이 값은 호스팅된 파일의 URL일 수도 data URL일 수도 있었다. 예를 들어 [AI SDK의 파일 파트](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#fileuipart)도 `url`에 두 형태를 모두 허용한다.
+
+서버는 첨부를 다른 서버로 넘기기 전에 `Blob`으로 바꿨는데, 이때 `url`을 그대로 `fetch`했다.
+
+```typescript
+async function toBlob(part: FilePart): Promise<Blob> {
+  const response = await fetch(part.url);
+  return response.blob();
+}
+```
+
+화면에서는 파일을 `FileReader`로 읽어 data URL로 보냈으므로, 정상적인 사용에서는 이 `fetch`가 네트워크로 나가지 않았다. 하지만 서버가 받는 것은 JSON 본문이고, 본문은 화면을 거치지 않고도 만들 수 있다. 로그인한 사용자가 `url`에 내부 주소를 넣어 요청을 직접 보내면 서버가 그 주소로 요청을 보낸다.
+
+## 첨부는 디코딩만 한다
+
+첨부 경로에서 외부 URL을 받아야 할 이유는 없었다. 그래서 `data:`로 시작하지 않는 URL은 거절하고, data URL은 서버가 직접 디코딩하도록 바꿨다. [data URL](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)은 파일 내용을 URL 안에 담고 있어서 읽는 데 네트워크 요청이 필요 없다.
+
+```typescript
+type DecodeResult =
+  | { ok: true; blob: Blob }
+  | { ok: false; message: string };
+
+function decodeAttachment(part: FilePart): DecodeResult {
+  if (!part.url.startsWith("data:")) {
+    return { ok: false, message: "첨부는 data: URL만 받는다." };
+  }
+
+  const comma = part.url.indexOf(",");
+  if (comma < 0) {
+    return { ok: false, message: "data: URL 형식이 올바르지 않다." };
+  }
+
+  const header = part.url.slice("data:".length, comma);
+  const body = part.url.slice(comma + 1);
+  if (!header.split(";").includes("base64")) {
+    return { ok: false, message: "base64 data: URL만 받는다." };
+  }
+
+  if (base64ByteLength(body) > MAX_ATTACHMENT_BYTES) {
+    return { ok: false, message: "첨부 파일이 너무 크다." };
+  }
+
+  const bytes = Buffer.from(body, "base64");
+  return { ok: true, blob: new Blob([bytes], { type: part.mediaType }) };
+}
+```
+
+예제는 base64 data URL만 다루도록 줄였고, 실제 코드는 퍼센트 인코딩된 data URL도 받아 디코딩한다. `base64ByteLength`는 디코딩하지 않고 base64 문자열 길이로 바이트 수를 계산하는 함수다. 디코딩하면 같은 내용이 바이트 배열로 한 벌 더 메모리에 올라가므로, 상한을 넘는 첨부는 디코딩 전에 거절한다. 처음 고칠 때는 디코딩한 뒤에 크기를 쟀고, 디코딩 전에 재도록 바꾼 것은 그 뒤의 일이다.
+
+요청을 처리하기 전에 첨부를 이 검사에 통과시키고, 실패하면 400으로 끝낸다. 다른 서버로 넘기려고 `Blob`을 만드는 단계도 같은 디코딩 함수만 쓴다. 변환 단계에서 `fetch`를 없애 두면, 앞의 검사를 거치지 않는 경로가 생기더라도 서버가 첨부 때문에 밖으로 요청을 보내는 일은 없다.
+
+## 내부 호출 주소를 요청 URL에서 만들던 코드
+
+다른 하나는 Next.js 미들웨어였다. Next.js 16부터는 [미들웨어 파일 규칙의 이름이 `proxy`로 바뀌었다](https://nextjs.org/docs/app/api-reference/file-conventions/proxy#version-history). 보호 페이지 앞에서 세션을 확인해야 하는 경우 같은 앱의 세션 API를 서버에서 호출했는데, 이 주소를 브라우저 리다이렉트에 쓰던 함수로 만들고 있었다.
+
+```typescript
+function buildPublicUrl(request: Request, pathname: string): URL {
+  return new URL(pathname, request.url);
+}
+
+function redirectToLogin(request: Request): Response {
+  return Response.redirect(buildPublicUrl(request, "/login"));
+}
+
+async function checkSession(request: Request): Promise<Response> {
+  return fetch(buildPublicUrl(request, SESSION_PATH), {
+    headers: { cookie: request.headers.get("cookie") ?? "" },
+    redirect: "manual",
+  });
+}
+```
+
+`redirectToLogin`과 `checkSession`은 같은 방식으로 URL을 만들지만 그 URL로 요청을 보내는 쪽이 다르다. 리다이렉트는 주소를 브라우저에 돌려줄 뿐이고, 따라가는 것은 브라우저다. `checkSession`은 서버가 직접 그 주소로 요청을 보내고, 들어온 요청의 쿠키도 함께 실어 보낸다. 미들웨어는 이 응답의 상태를 보고 요청을 통과시킬지 로그인 화면으로 보낼지 정했다.
+
+이 `fetch`의 목적지는 `request.url`의 origin이 정한다. 그런데 `request.url`의 호스트를 무엇으로 채울지는 이 코드가 아니라 프레임워크와 실행 환경이 정한다. 글을 쓰는 시점의 최신 안정 버전인 Next.js 16.4.3 소스에서 직접 실행한 서버는 미들웨어에 넘길 URL을 기본적으로 [서버가 실행된 호스트 이름과 포트로 조립](https://github.com/vercel/next.js/blob/v16.4.3/packages/next/src/server/next-server.ts#L1785-L1797)한다. 요청의 Host 헤더가 이 URL에 들어가는 것은 `skipProxyUrlNormalize`로 라우터가 만든 URL을 쓰게 하고, 그 URL을 만들 때 [내부용 설정인 `trustHostHeader`가 켜져 있을 때](https://github.com/vercel/next.js/blob/v16.4.3/packages/next/src/server/lib/router-utils/resolve-routes.ts#L176-L182)뿐이다.
+
+Host 헤더로 URL을 만드는 환경이라면 사정이 다르다. Host 헤더는 요청을 보내는 쪽이 정하는 값이다. [PortSwigger](https://portswigger.net/web-security/host-header/exploiting#routing-based-ssrf)는 검증하지 않은 Host 헤더로 요청을 전달하는 프록시가 공격자가 고른 시스템으로 요청을 보내게 되는 경우를 설명한다. Next.js에도 14.1.1 이전 셀프 호스팅 환경에서 Host 헤더를 바꾸면 [Server Actions의 상대 경로 리다이렉트가 서버에서 다른 곳으로 요청을 보내게 되는 취약점(CVE-2024-34351)](https://github.com/vercel/next.js/security/advisories/GHSA-fr5h-rqp8-mj6g)이 있었다. 이 코드의 내부 호출이 어디로 가는지는 이 코드 밖의 동작에 달려 있었다.
+
+## 내부 호출은 서버 설정의 origin으로 보낸다
+
+리다이렉트용 함수는 그대로 두고 내부 호출용 함수를 따로 만들었다. 목적지 origin은 서버 전용 환경 변수에서 읽는다. 미들웨어는 요청마다 실행되므로 처음 읽은 값을 모듈 변수에 저장해 두고 쓴다.
+
+```typescript
+let internalOrigin: string | undefined;
+
+function getInternalOrigin(): string {
+  if (internalOrigin === undefined) {
+    const value = process.env.INTERNAL_ORIGIN;
+    if (!value) {
+      throw new Error("INTERNAL_ORIGIN이 설정되지 않았다.");
+    }
+    internalOrigin = new URL(value).origin;
+  }
+  return internalOrigin;
+}
+
+function buildInternalUrl(pathname: string): URL {
+  return new URL(pathname, getInternalOrigin());
+}
+
+async function checkSession(request: Request): Promise<Response> {
+  return fetch(buildInternalUrl(SESSION_PATH), {
+    headers: { cookie: request.headers.get("cookie") ?? "" },
+    redirect: "manual",
+  });
+}
+```
+
+들어온 요청이 이 호출에 넣을 수 있는 것은 쿠키 같은 몇몇 헤더 값뿐이고, 목적지는 서버 설정이 정한다. `redirect: "manual"`도 그대로 두었다. [fetch의 기본값은 리다이렉트를 따라가는 것](https://developer.mozilla.org/en-US/docs/Web/API/RequestInit#redirect)이라, 이 옵션이 없으면 목적지를 고정해도 응답이 가리키는 다른 주소로 한 번 더 요청이 나갈 수 있다.
+
+고치면서 단위 테스트도 붙였다. 메타데이터 서비스 주소를 URL로 가진 요청 객체를 직접 만들어 미들웨어에 넣고, `fetch`를 가짜 함수로 바꿔 실제로 호출된 주소를 확인한다. 요청 객체를 직접 만들기 때문에 프레임워크가 URL을 어떻게 조립하는지와 관계없이 미들웨어 코드만 확인할 수 있다. 아래는 그 테스트를 단순화한 예제다.
+
+```typescript
+it("요청 URL의 호스트로 내부 호출을 보내지 않는다", async () => {
+  vi.stubEnv("INTERNAL_ORIGIN", "http://app.internal.test:3000");
+  const fetchMock = vi.fn().mockResolvedValue(new Response("{}"));
+  vi.stubGlobal("fetch", fetchMock);
+
+  await middleware(
+    new Request("http://169.254.169.254/protected", {
+      headers: { cookie: "session=dummy" },
+    }),
+  );
+
+  const calledUrl = String(fetchMock.mock.calls[0][0]);
+  expect(calledUrl).not.toContain("169.254.169.254");
+  expect(calledUrl.startsWith("http://app.internal.test:3000/")).toBe(true);
+});
+```
+
+## URL을 받아야 하는 기능이라면
+
+두 경우 모두 목적지를 요청에서 받을 이유가 없었기 때문에, 목적지로 쓰이던 입력을 없앨 수 있었다. 목적지를 받아야 하더라도 연결할 서비스가 미리 정해져 있다면, OWASP는 [전체 URL을 받지 말고](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#url) IP나 도메인만 받아 허용 목록과 비교한 뒤 scheme·포트·경로는 애플리케이션이 정해 요청을 직접 조립하라고 권한다. 검사를 통과한 주소도 리다이렉트로 다른 곳을 가리킬 수 있으므로 [HTTP 클라이언트의 리다이렉트 추적은 끈다](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#application-layer). 도메인 허용 목록만으로는 DNS 리바인딩을 막지 못한다. 검사할 때와 연결할 때 도메인이 서로 다른 IP로 해석될 수 있기 때문이다. 그래서 [해석된 IP를 검사하고 검사를 통과한 IP로만 연결한다](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#domain-name).
+
+웹훅처럼 사용자가 정한 임의의 외부 주소로 요청을 보내야 하는 기능에는 [허용 목록을 쓸 수 없다](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#case-2-application-can-send-requests-to-any-external-ip-address-or-domain-name). OWASP는 이때 해석된 IP가 사설·루프백·링크 로컬 대역이 아닌지 차단 목록으로 확인하고 그 IP로만 연결하라고 설명한다. 차단 목록은 [우회되기 쉬우므로](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#deny-list-last-resort) 허용 목록을 쓸 수 있으면 그쪽을 택하고, [네트워크 계층에서 서버가 나갈 수 있는 경로를 제한](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html#network-layer)하는 것도 함께 권한다.
+
+## 참고 자료
+
+- [OWASP: Server-Side Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html)
+- [PortSwigger: Blind SSRF vulnerabilities](https://portswigger.net/web-security/ssrf/blind)
+- [PortSwigger: Routing-based SSRF](https://portswigger.net/web-security/host-header/exploiting#routing-based-ssrf)
+- [Next.js: GHSA-fr5h-rqp8-mj6g (CVE-2024-34351)](https://github.com/vercel/next.js/security/advisories/GHSA-fr5h-rqp8-mj6g)
+- [Next.js 16.4.3: 미들웨어 요청 URL 조립](https://github.com/vercel/next.js/blob/v16.4.3/packages/next/src/server/next-server.ts#L1785-L1797)
+- [Next.js 16.4.3: trustHostHeader 분기](https://github.com/vercel/next.js/blob/v16.4.3/packages/next/src/server/lib/router-utils/resolve-routes.ts#L176-L182)
+- [Next.js: proxy.js 버전 기록](https://nextjs.org/docs/app/api-reference/file-conventions/proxy#version-history)
+- [AI SDK: FileUIPart](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#fileuipart)
+- [MDN: data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)
+- [MDN: RequestInit — redirect](https://developer.mozilla.org/en-US/docs/Web/API/RequestInit#redirect)

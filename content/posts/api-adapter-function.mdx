@@ -1,0 +1,171 @@
+---
+title: "화면 대신 API 형식을 아는 함수, 어댑터"
+description: "폼 필드 이름, 응답을 감싼 봉투, 상태 코드의 의미를 화면 컴포넌트가 아니라 API마다 요청을 보내는 함수에서 번역했다. 프런트엔드 API 호출에서 어댑터가 맡는 일과, 감싸기만 하는 함수와의 차이를 정리했다."
+publishedAt: "2026-10-29"
+tags: ["TypeScript", "디자인 패턴", "React"]
+published: true
+---
+
+로그인, 계정 등록, 비밀번호 변경 화면을 새로 만들면서 세 폼 모두 서버 API와 모양이 맞지 않았다. 폼 필드는 `userId`처럼 camelCase로 썼고 서버는 `user_id`처럼 snake_case로 받았다. 응답은 `{ data: ... }`처럼 `data` 필드로 한 번 감싸져 왔다. 이 글에서는 응답을 감싼 이 바깥 객체를 봉투라고 부른다. 이미 로그인 중인 세션이 있는 경우처럼 화면이 따로 다뤄야 하는 상황은 상태 코드로 알려 왔다.
+
+이 차이를 화면 컴포넌트마다 처리하지 않고, API마다 요청을 보내는 함수 하나에서 맞췄다. GoF의 『Design Patterns』는 이런 역할을 어댑터라고 부른다. [책의 정의](https://www.informit.com/articles/article.aspx?p=1398600)는 클래스의 인터페이스를 클라이언트가 기대하는 다른 인터페이스로 바꿔, 인터페이스가 맞지 않아 함께 쓸 수 없던 클래스들을 함께 동작하게 한다는 것이다. 책의 예는 클래스지만 여기서는 함수 하나가 그 역할을 한다. 클라이언트는 폼이고, 맞지 않는 인터페이스는 서버 API다.
+
+실제 코드에서 등록과 비밀번호 변경은 Next.js Server Action 안에서, 로그인은 브라우저에서 호출하는 함수 안에서 이 변환을 한다. 아래 코드는 변환 부분만 단순화해서 옮겼고, 이름과 서버 규칙은 일반적인 예로 바꿨다.
+
+## 요청: 이름을 바꾸고 빈 값을 뺀다
+
+등록 폼의 값을 서버 요청 본문으로 바꾸는 부분이다.
+
+```typescript
+function emptyToUndefined(value?: string) {
+  return value === undefined || value === "" ? undefined : value;
+}
+
+function toSignupRequest(values: SignupFormValues) {
+  return {
+    user_id: values.userId,
+    name: values.name,
+    email: values.email,
+    password: values.password,
+    phone_number: emptyToUndefined(values.phoneNumber),
+  };
+}
+```
+
+<Image
+  src="/blog/api-adapter-function/adapter-both-directions.webp"
+  alt="폼에서 API로 가는 요청은 어댑터가 이름 형식을 바꾸고 빈 값을 뺀다. 반대 방향에서는 data 봉투를 풀고 필요한 값만 남기며, 약속된 HTTP 오류를 도메인 오류로 바꾼다."
+  width={1600}
+  height={800}
+/>
+
+전화번호처럼 입력하지 않아도 되는 항목은 폼에서 비워 두면 값이 빈 문자열로 들어온다. 이 서버의 요청 모델은 선택 항목이 빠져 있으면 값이 없는 것으로 받고, 들어 있으면 형식을 검사했다. 빈 문자열도 들어 있는 값으로 보기 때문에 그대로 보내면 전화번호 형식 검사에 걸린다. `undefined`로 바꾸면 [`JSON.stringify`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description)가 객체의 `undefined` 속성을 빼고 직렬화하므로 요청 본문에서 필드가 빠진다.
+
+## 응답: 봉투를 벗기고 필요한 값만 남긴다
+
+로그인 응답은 사용자 정보를 `data` 안에 담아 온다. 사용자 정보에는 여러 필드가 있지만 로그인 화면이 다음에 어디로 갈지 정하는 데 쓰는 값은 계정 상태 하나다. 그래서 어댑터는 봉투를 벗기고 `userStatus`만 돌려준다. 비밀번호 변경도 응답에서 계정 상태만 꺼내 다음 경로를 정한다. 계정 상태로 접근을 정하는 함수는 [판정할 수 없으면 막는다, fail-closed](/blog/fail-closed)에서 다뤘다.
+
+처음 버전은 봉투에 `data`가 있는지만 확인하고, 그 안의 값은 타입 단언으로 원하는 타입이라고 선언했다.
+
+```typescript
+function unwrapDataResponse<T>(payload: unknown): T {
+  if (!payload || typeof payload !== "object" || !("data" in payload)) {
+    throw new Error("Expected a { data: ... } response envelope.");
+  }
+
+  return (payload as { data: T }).data;
+}
+```
+
+[TypeScript 문서](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)대로 타입 단언은 컴파일할 때 지워지고 실행 중에는 아무것도 검사하지 않는다. 서버가 목록에 없는 계정 상태를 보내도 이 함수는 그 값을 그대로 넘긴다. 이후 응답 모양 전체를 Zod 스키마로 검증하도록 바꿨다.
+
+```typescript
+const signInResponseSchema = z.object({
+  data: z.object({
+    user: z.object({
+      status: z.enum(["ACTIVE", "INACTIVE", "TEMP", "WITHDRAWN"]),
+    }),
+  }),
+});
+```
+
+[Zod의 `safeParse`](https://zod.dev/basics#handling-errors)는 값이 스키마에 맞으면 검증한 값을, 맞지 않으면 오류를 결과 객체에 담아 돌려준다.
+
+나중에 로그인 화면 번들을 줄이면서 로그인 어댑터에서는 Zod를 뺐다. 지금은 봉투, 사용자 객체, 계정 상태 값을 직접 검사하는 함수가 같은 검증을 한다. 비밀번호 변경 쪽은 지금도 Zod 스키마로 검증한다.
+
+## 오류: 상태 코드를 화면이 쓰는 이름으로 바꾼다
+
+이 서버는 이미 로그인 중인 세션이 있으면 그 사실을 상태 코드로 알렸다. 아래는 그 상태 코드가 409이고, 요청에 `replace_session: true`를 넣어 다시 보내면 로그인을 계속한다고 가정한 예시다. [HTTP 명세](https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict)에서 409는 대상 리소스의 현재 상태와 충돌해 요청을 끝낼 수 없다는 뜻이다. 그 충돌이 이미 로그인 중인 세션이라는 것은 명세가 아니라 이 API가 따로 정한 규칙이다. 화면이 이 규칙을 알게 하는 대신 어댑터가 상태 코드를 이름 있는 오류로 바꿨다.
+
+아래는 Zod로 검증하던 때의 로그인 어댑터를 단순화한 코드다.
+
+```typescript
+export class SessionConflictError extends Error {
+  constructor(message = "이미 로그인 중인 세션이 있습니다.") {
+    super(message);
+    this.name = "SessionConflictError";
+  }
+}
+
+export async function submitLogin(input: {
+  userId: string;
+  password: string;
+  replaceSession?: boolean;
+}): Promise<{ userStatus: UserStatus }> {
+  const response = await fetch("/api/login", {
+    method: "POST",
+    credentials: "include",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      user_id: input.userId,
+      password: input.password,
+      replace_session: input.replaceSession ?? false,
+    }),
+  });
+  const body = await readBody(response);
+
+  if (!response.ok) {
+    const message = readErrorMessage(body) ?? "로그인 요청에 실패했습니다.";
+
+    if (response.status === 409) {
+      throw new SessionConflictError(message);
+    }
+
+    throw new Error(message);
+  }
+
+  const result = signInResponseSchema.safeParse(body);
+
+  if (!result.success) {
+    throw new Error("로그인 요청에 실패했습니다.", { cause: result.error });
+  }
+
+  return { userStatus: result.data.data.user.status };
+}
+```
+
+`readBody`는 응답 본문을 JSON이나 텍스트로 읽고, `readErrorMessage`는 그 본문에서 서버가 보낸 오류 문구를 꺼낸다. 응답 모양이 스키마와 맞지 않을 때도 화면에는 일반 실패 문구만 보내고, 검증 오류는 `cause`에 남긴다.
+
+폼 쪽 코드는 이 함수가 돌려주는 값과 오류 종류만 다룬다. 아래는 로그인 폼에서 어댑터를 호출하는 부분을 줄인 예시다.
+
+```typescript
+try {
+  const { userStatus } = await submitLogin({ userId, password, replaceSession });
+  goToNextPage(userStatus);
+} catch (error) {
+  if (error instanceof SessionConflictError) {
+    openSessionConflictDialog();
+    return;
+  }
+
+  setRootError(
+    error instanceof Error ? error.message : "로그인 요청에 실패했습니다.",
+  );
+}
+```
+
+폼은 요청 주소, snake_case 필드, 응답 봉투, 상태 코드의 의미를 모른다. 확인 창에서 계속 진행을 고르면 같은 함수를 `replaceSession: true`로 다시 부르고, 어댑터가 이 값을 `replace_session`으로 바꿔 서버에 보낸다.
+
+## 바뀐 곳이 어댑터 안에 머문다
+
+응답을 Zod 스키마로 검증하도록 바꾼 커밋과, 나중에 로그인 요청 경로를 옮긴 커밋은 로그인 기능에서 어댑터 파일과 그 테스트만 고쳤다. 로그인 폼 컴포넌트는 두 커밋 모두에서 바뀌지 않았다. 로그인 화면에서 Zod를 걷어낸 커밋은 폼의 입력 검증도 함께 고쳤지만, 폼이 어댑터를 부르고 오류를 구분하는 코드는 바뀌지 않았다.
+
+## 감싸기만 하는 함수는 어댑터가 아니다
+
+API를 호출하는 함수가 모두 어댑터인 것은 아니다. 아래는 비교를 위한 예시다.
+
+```typescript
+function fetchNotices() {
+  return api.get("/notices");
+}
+```
+
+이 함수는 요청 주소를 한곳에 모을 뿐, 화면이 받는 값은 서버 응답 그대로다. 서버가 필드 이름이나 봉투를 바꾸면 이 함수를 쓰는 화면도 바뀌므로, 화면을 서버 형식에서 떼어 놓지는 못한다. 요청 모양, 응답 모양, 오류의 의미 중 하나라도 화면 쪽 말로 바꿀 때 어댑터 역할을 한다.
+
+## 참고 자료
+
+- [Gamma 외: Design Patterns — Adapter](https://www.informit.com/articles/article.aspx?p=1398600)
+- [MDN: JSON.stringify()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description)
+- [TypeScript: Type Assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)
+- [Zod: Handling errors](https://zod.dev/basics#handling-errors)
+- [RFC 9110: 409 Conflict](https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict)

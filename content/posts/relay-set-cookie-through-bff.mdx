@@ -1,0 +1,140 @@
+---
+title: "백엔드가 내려준 Set-Cookie는 브라우저까지 저절로 가지 않는다"
+description: "Next.js 서버가 인증 서비스를 대신 호출하면 응답의 Set-Cookie는 Next.js 서버에서 멈춘다. 로그인은 Route Handler로 헤더를 그대로 넘기고, 비밀번호 변경 Server Action은 쿠키를 다시 만들어 심게 된 과정을 정리했다."
+publishedAt: "2026-10-29"
+tags: ["Next.js", "인증", "HTTP"]
+published: true
+---
+
+로그인 세션 쿠키는 백엔드 인증 서비스가 만든다. 로그인에 성공하면 인증 서비스가 응답에 `Set-Cookie` 헤더를 붙이고, 그 응답을 받은 브라우저가 쿠키를 저장한다. [Next.js 문서](https://nextjs.org/docs/app/api-reference/functions/cookies#understanding-cookie-behavior-in-server-components)의 설명처럼 서버는 `Set-Cookie`로 저장을 지시할 뿐이고, 저장은 브라우저에서 일어난다.
+
+Next.js 서버가 인증 서비스를 대신 호출하면 이 응답은 Next.js 서버에 도착한다. 브라우저가 받는 응답은 Next.js 서버가 따로 만들어 보내므로, 인증 서비스의 `Set-Cookie`를 그 응답에 다시 싣지 않으면 브라우저의 쿠키는 그대로다. 아래는 이 쿠키를 어디서 넘길지 정한 과정이다. 코드는 단순화해서 옮겼고, 경로와 함수 이름은 예시다.
+
+## 본문만 읽으면 쿠키는 버려진다
+
+비밀번호 변경은 Server Action에서 처리한다. 폼 값을 검증하고, 서버에서 인증 서비스를 호출한 뒤, 결과로 받은 계정 상태에 따라 이동할 화면을 정한다. 처음에는 인증 서비스의 응답에서 본문만 읽었다.
+
+```typescript
+"use server";
+
+export async function changePasswordAction(
+  _prevState: PasswordFormState,
+  formData: FormData,
+) {
+  // 폼 검증과 접근 확인은 생략했다.
+  const data = await authClient.json("/me/password", {
+    method: "PUT",
+    body: { currentPassword, newPassword },
+  });
+
+  redirect(pathForStatus(data.status));
+}
+```
+
+이 응답에 쿠키가 없던 동안은 이것으로 충분했다. 이후 백엔드가 데이터 요청마다 계정 상태를 확인해 활성 계정만 통과시키도록 바뀌었고, 같은 변경에서 비밀번호 변경 응답도 활성 상태로 새로 발급한 access 토큰을 `Set-Cookie`로 내려주게 됐다. [임시 상태의 계정](/blog/fail-closed)이 비밀번호를 바꾸면 활성 상태로 돌아가고, 새 토큰은 이 활성 상태로 발급된다. 본문만 읽는 코드는 이 헤더를 버리므로 브라우저에는 임시 상태로 발급된 이전 토큰이 남는다. 그러면 비밀번호를 바꾼 직후 들어간 화면의 데이터 요청이 활성 계정만 허용하는 검사에 막히고, 이전 토큰이 만료될 때까지 풀리지 않는다.
+
+## Route Handler는 받은 헤더를 그대로 붙인다
+
+로그인과 로그아웃은 처음부터 다른 경로를 썼다. 브라우저가 같은 출처의 Route Handler를 호출하면, Route Handler가 요청을 인증 서비스로 전달하고 받은 응답으로 브라우저에 보낼 응답을 만든다. Next.js는 이런 구성을 [Backend for Frontend 패턴](https://nextjs.org/docs/app/guides/backend-for-frontend)으로 설명하고, [Route Handler를 다른 백엔드의 프록시로 쓰는 예](https://nextjs.org/docs/app/guides/backend-for-frontend#proxying-to-a-backend)를 든다.
+
+```typescript
+// app/api/auth/[...path]/route.ts
+async function handle(request: Request): Promise<Response> {
+  const hasBody = !["GET", "HEAD"].includes(request.method);
+  const upstream = await fetch(toUpstreamUrl(request.url), {
+    body: hasBody ? await request.arrayBuffer() : undefined,
+    cache: "no-store",
+    headers: pickForwardHeaders(request.headers),
+    method: request.method,
+  });
+
+  const headers = new Headers();
+
+  upstream.headers.forEach((value, key) => {
+    // 실제 코드는 연결·인코딩 관련 헤더도 여기서 거른다.
+    if (key !== "set-cookie") {
+      headers.append(key, value);
+    }
+  });
+
+  for (const cookie of upstream.headers.getSetCookie()) {
+    headers.append("set-cookie", cookie);
+  }
+
+  return new Response(upstream.body, {
+    headers,
+    status: upstream.status,
+  });
+}
+
+export { handle as GET, handle as POST };
+```
+
+`toUpstreamUrl`은 브라우저가 부른 경로를 인증 서비스 주소로 바꾸고, `pickForwardHeaders`는 정해 둔 요청 헤더만 골라 넘긴다.
+
+인증 서비스가 보낸 `Set-Cookie` 문자열은 손대지 않은 채 브라우저 응답에 붙는다. 이 코드는 `HttpOnly`, `SameSite`, `Max-Age` 같은 속성을 읽지 않으므로, 인증 서비스가 쿠키 정책을 바꿔도 고칠 곳이 없다. 로그아웃도 같은 Route Handler를 거치므로 인증 서비스가 쿠키를 지우려고 보낸 `Set-Cookie`가 그대로 브라우저에 닿는다.
+
+`Set-Cookie`는 한 응답에 여러 개가 함께 올 수 있다. [Fetch 표준](https://fetch.spec.whatwg.org/#concept-header-list-sort-and-combine)은 `forEach` 같은 순회에서 `Set-Cookie`를 하나씩 내주도록 정해 두었지만, [`Headers.get()`](https://developer.mozilla.org/en-US/docs/Web/API/Headers/get)은 같은 이름의 값들을 쉼표와 공백으로 이어 하나의 문자열로 돌려준다. 쿠키의 [`Expires` 날짜](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie#expiresdate)에도 쉼표가 들어 있어 이 문자열은 단순히 쉼표로 나눌 수 없다. [RFC 6265](https://www.rfc-editor.org/rfc/rfc6265#section-3)도 `Set-Cookie`가 쉼표를 쓰기 때문에 여러 헤더를 한 줄로 합치지 말라고 한다. 런타임마다 처리가 다를 수 있어서 `Set-Cookie`는 순회에서 빼고, 헤더마다 하나씩 배열로 돌려주는 [`getSetCookie()`](https://developer.mozilla.org/en-US/docs/Web/API/Headers/getSetCookie)로 따로 읽어 붙였다. 실제 코드에는 이 메서드가 없는 런타임에서 합쳐진 문자열을 받았을 때 `Expires` 안의 쉼표를 건너뛰며 나누는 처리도 있다.
+
+브라우저의 로그인 코드는 이 Route Handler에 아이디와 비밀번호를 보내고 응답 본문에서 계정 상태만 읽는다. 브라우저의 JavaScript는 [`Set-Cookie` 헤더를 읽을 수 없지만](https://developer.mozilla.org/en-US/docs/Web/API/Headers/getSetCookie) 쿠키 저장은 브라우저가 응답을 받으면서 처리하므로, 로그인 코드가 쿠키를 다룰 일이 없다.
+
+## Server Action에서는 쿠키를 다시 만들어 심는다
+
+비밀번호 변경을 고칠 때 Route Handler로 옮기지는 않았다. 로그인·로그아웃·세션 갱신처럼 인증 서비스의 쿠키를 그대로 넘기는 것이 주된 일인 요청은 Route Handler로, 비밀번호 변경과 초기 설정처럼 폼 검증과 서버 쪽 이동을 함께 처리하는 제출은 Server Action으로 나눈 규칙을 따라, Server Action 안에서 쿠키를 넘기는 일만 더했다.
+
+<Image
+  src="/blog/relay-set-cookie-through-bff/route-handler-vs-server-action.webp"
+  alt="Route Handler는 백엔드의 Set-Cookie 문자열을 응답에 그대로 옮기고, Server Action은 헤더를 해석한 뒤 cookies().set()으로 쿠키를 다시 만들어 해석기가 읽지 않는 속성이 빠진다."
+  width={1600}
+  height={800}
+/>
+
+Server Action은 Route Handler처럼 `Response`를 만들어 돌려주는 함수가 아니어서, 응답에 쿠키를 실으려면 [`cookies().set()`](https://nextjs.org/docs/app/api-reference/functions/cookies#setting-a-cookie)을 쓴다. 그래서 응답 본문을 읽기 전에 `Set-Cookie`를 하나씩 해석해 다시 설정하게 했다.
+
+```typescript
+async function relayAuthCookies(response: Response) {
+  const cookieStore = await cookies();
+
+  for (const header of response.headers.getSetCookie()) {
+    const parsed = parseSetCookie(header);
+
+    if (parsed) {
+      cookieStore.set({
+        name: parsed.name,
+        value: parsed.value,
+        ...parsed.options,
+      });
+    }
+  }
+}
+
+// changePasswordAction 안
+const response = await authClient.response("/me/password", {
+  method: "PUT",
+  body: { currentPassword, newPassword },
+});
+await relayAuthCookies(response);
+const data = await response.json();
+```
+
+`parseSetCookie`는 헤더 문자열에서 이름과 값, 그리고 `HttpOnly`·`Secure`·`SameSite`·`Path`·`Domain`·`Max-Age`·`Expires` 속성을 읽어 `cookies().set()`의 옵션 형태로 바꾼다. 속성 값은 인증 서비스가 보낸 헤더에서 읽으므로 Next.js 코드에 쿠키 정책을 따로 적어 두지는 않는다.
+
+그래도 Route Handler와 달리 브라우저에 가는 `Set-Cookie`는 Next.js가 새로 만든다. 해석 코드가 읽지 않는 속성은 여기서 빠진다. 위 해석 코드는 [`Partitioned`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie#partitioned)와 `Priority`를 읽지 않으므로, `cookies().set()`이 [두 옵션을 받는데도](https://nextjs.org/docs/app/api-reference/functions/cookies#options) 인증 서비스가 붙인 이 속성은 브라우저까지 가지 않는다.
+
+반대로 더해지는 속성도 있다. Next.js가 내장한 `@edge-runtime/cookies`의 [`set()` 처리 코드](https://github.com/vercel/edge-runtime/blob/%40edge-runtime/cookies%406.0.0/packages/cookies/src/response-cookies.ts#L112-L126)를 보면, `Path`가 없으면 `/`를 넣고 `Max-Age`가 있으면 설정한 시점부터 계산한 `Expires`를 채운다. 인증 서비스가 `Max-Age`만 보내도 브라우저는 `Expires`가 붙은 쿠키를 받고, 두 속성을 함께 보냈다면 `Expires`는 이 계산값으로 바뀐다.
+
+값도 다시 인코딩된다. 같은 라이브러리의 [직렬화 코드](https://github.com/vercel/edge-runtime/blob/%40edge-runtime/cookies%406.0.0/packages/cookies/src/serialize.ts)를 보면 값에 `encodeURIComponent`를 적용한다. JWT처럼 영문·숫자와 `-`, `_`, `.`만 쓰는 값은 그대로 나가지만, 이미 퍼센트 인코딩된 값이라면 `%`가 한 번 더 인코딩된다. 인증 서비스가 쿠키 형식을 바꾸면 Route Handler는 그대로 두면 되지만, 이 경로는 해석 코드도 함께 확인해야 한다.
+
+## 참고 자료
+
+- [Next.js: cookies — Understanding Cookie Behavior in Server Components](https://nextjs.org/docs/app/api-reference/functions/cookies#understanding-cookie-behavior-in-server-components)
+- [Next.js: cookies — Setting a cookie](https://nextjs.org/docs/app/api-reference/functions/cookies#setting-a-cookie)
+- [Next.js: cookies — Options](https://nextjs.org/docs/app/api-reference/functions/cookies#options)
+- [Next.js: Backend for Frontend — Proxying to a backend](https://nextjs.org/docs/app/guides/backend-for-frontend#proxying-to-a-backend)
+- [MDN: Headers.get()](https://developer.mozilla.org/en-US/docs/Web/API/Headers/get)
+- [MDN: Headers.getSetCookie()](https://developer.mozilla.org/en-US/docs/Web/API/Headers/getSetCookie)
+- [MDN: Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)
+- [RFC 6265: HTTP State Management Mechanism, Section 3](https://www.rfc-editor.org/rfc/rfc6265#section-3)
+- [vercel/edge-runtime: @edge-runtime/cookies 6.0.0 response-cookies.ts](https://github.com/vercel/edge-runtime/blob/%40edge-runtime/cookies%406.0.0/packages/cookies/src/response-cookies.ts)
+- [vercel/edge-runtime: @edge-runtime/cookies 6.0.0 serialize.ts](https://github.com/vercel/edge-runtime/blob/%40edge-runtime/cookies%406.0.0/packages/cookies/src/serialize.ts)
+- [WHATWG Fetch: sort and combine](https://fetch.spec.whatwg.org/#concept-header-list-sort-and-combine)

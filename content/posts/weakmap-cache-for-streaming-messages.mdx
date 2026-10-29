@@ -1,0 +1,176 @@
+---
+title: "바뀐 메시지만 다시 계산한다, parts 참조를 키로 쓰는 WeakMap"
+description: "스트리밍 중 갱신마다 messages 배열이 새로 오면 useMemo는 대화 전체를 다시 계산한다. 바뀌지 않은 메시지의 parts 참조를 WeakMap 키로 써서 계산 결과를 재사용하고, 키에서 빠진 입력 때문에 낡은 값을 돌려줄 수 있던 캐시를 고친 과정."
+publishedAt: "2026-10-29"
+tags: ["React", "JavaScript", "메모이제이션"]
+published: true
+---
+
+AI 답변을 스트리밍으로 보여 주는 채팅 화면에서 답변 말풍선 하나를 그리려면 메시지에서 여러 값을 뽑아야 했다. 나뉘어 들어온 본문을 마크다운 하나로 합치고, 재연결 때문에 여러 번 붙은 부가 정보 파트를 종류별로 하나로 모으고, 답변 텍스트를 따로 만든다.
+
+이 계산을 말풍선 컴포넌트에서 부모 화면으로 옮기자 스트리밍 중 화면이 갱신될 때마다 대화 전체를 다시 계산하게 됐다. 바뀌지 않은 메시지의 결과를 재사용하려고 메시지의 `parts` 배열 참조를 키로 쓰는 `WeakMap` 캐시를 붙였다. 글의 코드는 실제 코드를 단순화하고 이름을 바꿔 옮겼다.
+
+## 계산을 부모로 옮기자 모든 답변을 다시 계산했다
+
+말풍선은 가상화 리스트의 아이템이고 `memo`로 감싸 있었다. 원래는 말풍선이 렌더될 때마다 `message.parts`를 여러 번 훑어 값을 만들었고, 그중 일부는 자기 `message.parts`를 의존성으로 둔 `useMemo` 안에 있었다. 리스트 아이템은 그리기만 하도록, 이 계산을 부모 화면에서 메시지당 한 번 하고 결과를 prop 하나로 내려 주게 바꿨다.
+
+```typescript
+function deriveRenderData(messages: readonly ChatMessage[]) {
+  const result = new Map<string, RenderData>();
+  for (const message of messages) {
+    if (message.role !== "assistant") continue;
+    result.set(message.id, computeRenderData(message.parts));
+  }
+  return result;
+}
+```
+
+```tsx
+const renderDataById = useMemo(() => deriveRenderData(messages), [messages]);
+```
+
+AI SDK의 `useChat`이 구독하는 채팅 상태는 [스트림 조각을 처리할 때마다 갱신](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat#react-rendering-and-shared-chat-instances)되고, 그때마다 `messages`는 새 배열이 된다. 당시에는 [`throttle`](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat#throttle)로 화면 갱신 간격을 늘려 두었지만, 줄어드는 것은 갱신 횟수뿐이다. 의존성이 `messages`뿐이니 `useMemo`는 갱신마다 다시 실행되고, 스트리밍 중인 답변 하나 때문에 대화 안의 모든 답변을 다시 계산한다.
+
+계산 결과도 매번 새 객체라 말풍선의 `memo`가 렌더를 막지 못한다. [`memo`는 prop을 `Object.is`로 비교](https://react.dev/reference/react/memo#minimizing-props-changes)하므로 내용이 같아도 새로 만든 객체는 바뀐 prop으로 본다.
+
+옮기기 전에는 각 말풍선의 `useMemo`가 자기 `parts`만 보고 있어서, 스트리밍 중이 아닌 메시지는 `useMemo`로 감싼 계산을 건너뛰었다. 계산을 한곳에 모으면서 이 성질을 잃었기 때문에 바로 다음 커밋에서 캐시를 붙였다.
+
+## useChat이 바꾸는 참조와 남기는 참조
+
+AI SDK의 메시지 본문은 텍스트나 데이터 같은 [조각의 배열](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessagepart-types)인 `parts`에 담기고, 말풍선에 필요한 값은 모두 이 배열에서 계산한다. 이 배열을 캐시 키로 쓸 수 있는지는 스트리밍 중에 참조가 어떻게 바뀌는지에 달려 있다.
+
+AI SDK React의 채팅 상태는 메시지 하나를 갱신할 때 배열을 새로 만든다. 바뀐 메시지의 앞뒤는 기존 요소를 그대로 잘라 붙이고, 바뀐 메시지 자리에만 복제본을 넣는다. 아래는 [AI SDK React 4.0.62의 코드](https://github.com/vercel/ai/blob/%40ai-sdk/react%404.0.62/packages/react/src/chat.react.ts#L62-L72)에서 주석만 뺀 것이다. 당시 쓰던 버전도 이 부분은 같다. `snapshot`은 `structuredClone`으로 메시지를 깊게 복사한다.
+
+```typescript
+replaceMessage = (index: number, message: UI_MESSAGE) => {
+  this.#messages = [
+    ...this.#messages.slice(0, index),
+    this.snapshot(message),
+    ...this.#messages.slice(index + 1),
+  ];
+  this.#callMessagesCallbacks();
+};
+```
+
+그래서 답변이 스트리밍되는 동안 조각마다 참조가 이렇게 바뀐다.
+
+```text
+조각 1: messages A = [질문 1, 답변 1, 질문 2, 답변 2(parts P1)]
+조각 2: messages B = [질문 1, 답변 1, 질문 2, 답변 2'(parts P2)]
+
+A와 B는 다른 배열이다.
+질문 1, 답변 1, 질문 2는 A와 B에서 같은 객체다.
+답변 2'는 새 객체이고, parts도 P1과 다른 배열 P2다.
+```
+
+<Image
+  src="/blog/weakmap-cache-for-streaming-messages/reference-reuse-cache.webp"
+  alt="스트림 갱신으로 messages는 새 배열이 되지만 바뀌지 않은 메시지는 같은 객체를 유지한다. 갱신된 답변과 그 parts만 새 참조가 되어, WeakMap은 같은 parts의 결과를 재사용하고 새 parts만 다시 계산한다."
+  width={1600}
+  height={800}
+/>
+
+이전 객체가 그대로 남은 메시지는 `parts`도 같은 배열이다. 새 답변의 첫 조각은 [복제 없이 들어가는데](https://github.com/vercel/ai/blob/ai%407.0.59/packages/ai/src/ui/chat.ts#L763-L773), 이 객체는 SDK가 [스트림을 처리하며 제자리에서 고쳐 쓰는](https://github.com/vercel/ai/blob/ai%407.0.59/packages/ai/src/ui/process-ui-message-stream.ts#L431-L450) 원본이다. 다음 조각부터는 매번 복제본으로 바뀌므로, 내용이 바뀐 배열이 같은 참조로 `messages`에 남는 일은 없다. 같은 배열의 내용이 바뀐 채 남는다면 참조로 찾는 캐시는 낡은 결과를 돌려주게 된다.
+
+## parts 참조를 키로 쓰는 WeakMap
+
+메시지마다 `parts`로 캐시를 먼저 찾고, 없을 때만 계산해서 넣는다.
+
+```typescript
+type RenderDataCache = WeakMap<ChatMessage["parts"], RenderData>;
+
+function deriveRenderData(
+  messages: readonly ChatMessage[],
+  cache: RenderDataCache,
+) {
+  const result = new Map<string, RenderData>();
+  for (const message of messages) {
+    if (message.role !== "assistant") continue;
+
+    let data = cache.get(message.parts);
+    if (!data) {
+      data = computeRenderData(message.parts);
+      cache.set(message.parts, data);
+    }
+    result.set(message.id, data);
+  }
+  return result;
+}
+```
+
+`WeakMap`은 키를 내용이 아니라 참조로 찾는다. 같은 `parts` 배열이면 저장해 둔 결과 객체를 그대로 돌려주므로, 그 말풍선이 받는 계산 결과 prop도 이전과 같은 객체가 된다. 다른 prop까지 그대로라면 `memo`가 렌더를 건너뛴다. 실제로는 `messages`에 의존하던 콜백 prop도 갱신마다 바뀌고 있어서 그다음 커밋에서 따로 고쳤다.
+
+스트리밍하는 동안 새로 계산하는 답변은 `parts`가 새로 만들어지는 스트리밍 중인 답변뿐이다. 내용이 같은 다른 배열이 들어오면 캐시를 찾지 못하고 다시 계산할 뿐, 틀린 값을 돌려주지는 않는다.
+
+`messages`를 처음부터 끝까지 도는 반복문은 그대로 남는다. 캐시가 없애는 것은 메시지마다 하던 계산과 결과 객체 생성이다.
+
+`Map` 대신 `WeakMap`을 쓴 이유는 스트리밍 중인 답변에 있다. 이 답변은 조각마다 새 `parts` 배열을 받고, 그때마다 캐시에 키가 하나씩 늘어난다. `Map`은 키를 강하게 참조하므로 화면이 살아 있는 동안 지난 조각들의 `parts`와 계산 결과가 모두 남는다. [`WeakMap`은 키를 강하게 참조하지 않아서](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap#why_weakmap), 다른 곳에서 더 참조하지 않는 이전 `parts` 배열은 그 값과 함께 가비지 컬렉션 대상이 된다.
+
+[ECMAScript 명세](https://tc39.es/ecma262/multipage/keyed-collections.html#sec-weakmap-objects)는 접근할 수 없게 된 엔트리를 실제로 지우기까지 구현이 임의로 늦출 수 있다고 정하고, 키를 열거하는 방법도 주지 않는다.
+
+## 캐시 객체는 렌더마다 만들지 않는다
+
+캐시는 화면이 살아 있는 동안 같은 인스턴스여야 한다. 렌더 안에서 `new WeakMap()`을 만들면 매번 빈 캐시에서 시작한다. `useState`에 [초기화 함수](https://react.dev/reference/react/useState#avoiding-recreating-the-initial-state)를 넘겨 첫 렌더에서 한 번만 만들고, setter는 쓰지 않는다.
+
+```tsx
+const [renderDataCache] = useState<RenderDataCache>(() => new WeakMap());
+
+const renderDataById = useMemo(
+  () => deriveRenderData(messages, renderDataCache),
+  [messages, renderDataCache],
+);
+```
+
+렌더 사이에 값을 유지하는 용도라면 `useRef`에 둘 수도 있다. 하지만 캐시는 `useMemo`의 계산 함수 안에서 읽어야 하고, 이 함수는 렌더 중에 실행된다. React는 [렌더 중에 `ref.current`를 읽거나 쓰지 말라고](https://react.dev/reference/react/useRef#caveats) 하고, [`react-hooks/refs` 린트 규칙](https://react.dev/reference/eslint-plugin-react-hooks/lints/refs)도 이를 잡는다. `useState`가 돌려준 값은 렌더 중에 읽어도 되므로 캐시를 여기에 뒀다.
+
+`useMemo` 계산 안에서 `WeakMap`에 값을 넣는 것도 렌더 중의 변경이다. 같은 `parts`에는 언제나 같은 결과를 계산해 넣으므로 [Strict Mode에서 계산 함수가 두 번 실행돼도](https://react.dev/reference/react/useMemo#caveats) 결과는 같고, 캐시를 통째로 잃어도 다시 계산하면 같은 값이 나온다.
+
+## 키에 없는 입력은 캐시를 낡게 만든다
+
+말풍선에 필요한 값은 그 답변의 `parts`만으로 계산된다. 응답이 아직 생성 중인지처럼 렌더 시점에 정해지는 상태는 `parts`로 알 수 없으므로, 캐시하는 계산에 넣지 않고 말풍선에서 따로 합쳤다.
+
+같은 방식을 후속 질문 기능에도 적용했다. 답변이 사용자에게 질문 목록을 보내면 사용자의 다음 메시지가 그 질문들에 대한 답이 되고, 화면은 질문과 답을 짝지어 보여 준다. 처음에는 이 짝을 사용자 메시지의 `parts`만 키로 캐시했다.
+
+그런데 결과는 짝을 맞출 질문 목록에도 달려 있다. 재연결 등으로 답변 쪽 질문 목록이 새 배열로 바뀌어도 사용자 메시지의 `parts`는 그대로일 수 있고, 그러면 캐시는 이전 질문 목록으로 맞춘 짝을 돌려준다. 코드 리뷰에서 이 문제를 지적받고 질문 목록을 두 번째 키로 추가했다.
+
+```typescript
+type AnswerCache = WeakMap<
+  ChatMessage["parts"],
+  WeakMap<readonly Question[], readonly AnswerPair[]>
+>;
+
+function answerPairsFor(
+  parts: ChatMessage["parts"],
+  questions: readonly Question[],
+  cache: AnswerCache,
+) {
+  const cached = cache.get(parts)?.get(questions);
+  if (cached) return cached;
+
+  const pairs = pairAnswers(questions, textOf(parts));
+  let byQuestions = cache.get(parts);
+  if (!byQuestions) {
+    byQuestions = new WeakMap();
+    cache.set(parts, byQuestions);
+  }
+  byQuestions.set(questions, pairs);
+  return pairs;
+}
+```
+
+질문 목록도 답변의 `parts`를 키로 캐시한 결과라서, 답변이 바뀌지 않는 동안에는 같은 배열이 두 번째 키로 들어온다. 질문 목록이 새 배열로 바뀌면 안쪽 `WeakMap`에서 찾지 못하고 짝을 다시 계산한다.
+
+## 참고 자료
+
+- [AI SDK: useChat — React rendering and shared Chat instances](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat#react-rendering-and-shared-chat-instances)
+- [AI SDK: UIMessage parts](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessagepart-types)
+- [AI SDK 소스: chat.react.ts (@ai-sdk/react 4.0.62)](https://github.com/vercel/ai/blob/%40ai-sdk/react%404.0.62/packages/react/src/chat.react.ts#L62-L72)
+- [AI SDK 소스: chat.ts (ai 7.0.59)](https://github.com/vercel/ai/blob/ai%407.0.59/packages/ai/src/ui/chat.ts#L763-L773)
+- [AI SDK 소스: process-ui-message-stream.ts (ai 7.0.59)](https://github.com/vercel/ai/blob/ai%407.0.59/packages/ai/src/ui/process-ui-message-stream.ts#L431-L450)
+- [React: memo — Minimizing props changes](https://react.dev/reference/react/memo#minimizing-props-changes)
+- [React: useMemo — Caveats](https://react.dev/reference/react/useMemo#caveats)
+- [React: useState — Avoiding recreating the initial state](https://react.dev/reference/react/useState#avoiding-recreating-the-initial-state)
+- [React: useRef — Caveats](https://react.dev/reference/react/useRef#caveats)
+- [React: react-hooks/refs](https://react.dev/reference/eslint-plugin-react-hooks/lints/refs)
+- [MDN: WeakMap — Why WeakMap?](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap#why_weakmap)
+- [ECMAScript: WeakMap Objects](https://tc39.es/ecma262/multipage/keyed-collections.html#sec-weakmap-objects)

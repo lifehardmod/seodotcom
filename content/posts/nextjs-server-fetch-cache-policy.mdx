@@ -1,0 +1,132 @@
+---
+title: "서버 fetch의 no-store 기본값을 요청별 캐시 정책으로 바꾸기"
+description: "Next.js 서버 fetch에 일괄로 붙이던 no-store를 실시간·재검증·기본 세 가지 정책으로 나눈 과정. no-store를 지워도 캐시가 켜지지 않는 이유와, 쿠키를 싣는지에 따라 캐시 공유가 달라지는 이유를 정리했다."
+publishedAt: "2026-10-29"
+tags: ["Next.js", "캐시"]
+published: true
+---
+
+서버에서 백엔드 API를 부를 때 거치는 공용 fetch 함수가 있었다. 호출부가 따로 정하지 않으면 모든 요청에 `cache: "no-store"`를 붙였다. 당시 서버에서 부르던 API는 현재 사용자 조회, 토큰 갱신, 비밀번호 변경처럼 세션에 따라 응답이 달라지는 요청이 대부분이었다.
+
+같은 기본값이 사용자와 상관없고 거의 바뀌지 않는 읽기에도 그대로 적용됐다. 그래서 공용 함수의 기본값을 걷어내고 요청마다 캐시 정책을 고르게 바꿨다. 아래 내용은 Next.js 16 App Router에서 Cache Components를 켜지 않은 설정을 기준으로 하고, 코드는 단순화해서 옮겼다.
+
+## 서버 fetch의 cache는 Next.js 캐시를 고른다
+
+공용 함수는 대략 이런 모양이었다.
+
+```typescript
+async function fetchOrThrow(url: string, init?: RequestInit) {
+  // 응답 검사와 오류 변환은 생략
+  return fetch(url, {
+    ...init,
+    cache: init?.cache ?? "no-store",
+  });
+}
+```
+
+브라우저에서 `cache`는 HTTP 캐시를 쓸지 정하는 옵션이다. 서버에서 Next.js가 확장한 `fetch`의 `cache`는 프레임워크의 서버 측 캐시를 쓸지 정한다([Next.js: fetch](https://nextjs.org/docs/app/api-reference/functions/fetch)). `no-store`는 라우트에 요청 시점 API가 없어도 매 요청 원격 서버에서 가져오라는 뜻이다([options.cache](https://nextjs.org/docs/app/api-reference/functions/fetch#optionscache)). 이 함수를 거친 서버 요청은 모두 매번 백엔드까지 갔다.
+
+## no-store를 지워도 캐시는 켜지지 않는다
+
+Next.js 15부터 fetch는 기본으로 캐시하지 않는다([Next.js 15 업그레이드 가이드: fetch requests](https://nextjs.org/docs/app/guides/upgrading/version-15#fetch-requests)). 옵션이 없을 때의 동작은 `auto no cache`다. 라우트를 정적으로 미리 렌더링할 수 있으면 `next build` 때 한 번 가져오고, 라우트에서 요청 시점 API가 쓰이면 요청마다 가져온다.
+
+이 앱의 서버 요청은 대부분 사용자의 쿠키를 백엔드로 넘긴다. 공용 클라이언트가 요청을 보내기 전에 `cookies()`를 읽어 Cookie 헤더를 붙인다([서버 요청에 쿠키를 넘기는 방식](/blog/anonymous-server-fetch)). `cookies()`는 레이아웃이나 페이지에서 쓰이면 라우트를 동적 렌더링으로 바꾸는 요청 시점 API다([Next.js: cookies](https://nextjs.org/docs/app/api-reference/functions/cookies#good-to-know)). 이런 라우트에서는 옵션 없는 fetch도 요청마다 실행된다. 기본값을 지우는 것만으로는 캐시되는 요청이 생기지 않고, 어떤 요청을 얼마 동안 재사용할지 호출 단위로 정해야 했다.
+
+## 정책을 세 가지로 나눴다
+
+정책은 세 가지 모드를 가진 타입으로 표현하고, 실제 `fetch` 옵션으로 바꾸는 일은 공용 함수 한 곳에서 맡았다.
+
+```typescript
+type FetchCachePolicy =
+  | { mode: "default" }
+  | { mode: "realtime" }
+  | { mode: "revalidate"; seconds: number };
+
+function resolveFetchCacheOptions(policy?: FetchCachePolicy) {
+  switch (policy?.mode) {
+    case "realtime":
+      return { cache: "no-store" as const };
+    case "revalidate":
+      return { next: { revalidate: policy.seconds } };
+    default:
+      return {};
+  }
+}
+```
+
+`realtime`은 이전과 같은 `no-store`다. `revalidate`는 응답을 최대 n초 동안 캐시에 두는 `next.revalidate`가 된다([options.next.revalidate](https://nextjs.org/docs/app/api-reference/functions/fetch#optionsnextrevalidate)). `default`는 옵션을 붙이지 않고 앞에서 본 `auto no cache`에 맡긴다. 그래서 `default`는 `realtime`과 같지 않다. 쿠키를 넘기지 않는 요청을 요청 시점 API가 없는 라우트에서 부르면, 빌드 때 받은 응답이 미리 렌더링한 화면에 남는다.
+
+요청 옵션 타입에서는 `cache`를 빼서 호출부가 `fetch`의 `cache`를 직접 넘기지 못하게 했다. 정책 값에는 용도를 드러내는 이름을 붙였다. 아래 코드의 60초는 설명을 위한 예시 값이다.
+
+```typescript
+const CACHE_POLICY = {
+  AUTH_REALTIME: { mode: "realtime" },
+  SETUP_STATUS: { mode: "revalidate", seconds: 60 },
+} as const satisfies Record<string, FetchCachePolicy>;
+```
+
+정책은 서버 클라이언트를 만들 때 고정한다.
+
+```typescript
+function withFixedCachePolicy(
+  client: ServerClient,
+  cachePolicy: FetchCachePolicy,
+): ServerClient {
+  const withPolicy = (init?: ServerRequestInit) => ({ ...init, cachePolicy });
+
+  return {
+    ...client,
+    json: (path, init) => client.json(path, withPolicy(init)),
+  };
+}
+
+function createRealtimeServerClient(service: ApiService) {
+  return withFixedCachePolicy(
+    createServerClient(service),
+    CACHE_POLICY.AUTH_REALTIME,
+  );
+}
+```
+
+호출부의 옵션을 먼저 펼친 뒤 `cachePolicy`를 덮어쓰므로, 호출부에서 다른 정책을 넘겨도 클라이언트의 정책이 이긴다. 호출부에서는 클라이언트 이름만 보고 그 요청이 실시간인지 알 수 있다.
+
+## 세션에 따라 달라지는 요청은 실시간으로 둔다
+
+현재 사용자 조회, 토큰 갱신, 인증이 필요한 변경 요청은 실시간 클라이언트를 쓴다. 현재 사용자 조회 코드에는 세션과 쿠키에 의존하는 응답이라 항상 실시간 정책으로 조회한다는 주석을 남겼다. 이 응답은 [세션 가드](/blog/fail-closed)가 보호 페이지에 들여보낼지 정하는 근거라서, 캐시된 값으로 판단하지 않는다.
+
+지금 재검증 정책을 쓰는 호출은 설정 상태 조회 하나다.
+
+## 설정 상태 조회에 재검증을 붙였다
+
+설정 상태 조회는 서비스를 처음 띄운 뒤 초기 설정이 끝났는지 알려 주는 API다. 로그인 화면과 초기 설정 화면의 레이아웃이 이 값을 보고, 설정 전이면 로그인 화면에서 설정 화면으로 보내고 설정을 마친 뒤에는 설정 화면을 막는다. 응답은 사용자와 상관없고, 초기 설정을 마칠 때 한 번 바뀐다. 이 조회는 원래부터 쿠키를 넘기지 않는 익명 클라이언트를 쓰고 있었고([익명으로 보내는 이유](/blog/anonymous-server-fetch)), 여기에 재검증 정책을 붙였다.
+
+```typescript
+const setupStatusClient = createRevalidatingServerClient(
+  "auth",
+  CACHE_POLICY.SETUP_STATUS,
+  { auth: "omit" },
+);
+```
+
+Next.js는 URL·메서드·헤더·본문이 모두 같은 요청끼리만 캐시를 공유한다([options.cache](https://nextjs.org/docs/app/api-reference/functions/fetch#optionscache)). 같은 조회라도 Cookie 헤더를 실으면 세션마다 캐시 항목이 따로 생긴다. 쿠키를 싣지 않는 이 조회는 모든 방문자가 캐시 항목 하나를 함께 쓴다.
+
+<Image
+  src="/blog/nextjs-server-fetch-cache-policy/cache-entry-by-headers.webp"
+  alt="캐시를 쓰는 같은 조회에서 쿠키를 싣는 요청은 세션마다 헤더가 달라 캐시 항목이 따로 생기고, 쿠키 없는 익명 요청은 다른 조건도 같으면 모든 방문자가 캐시 항목 하나를 함께 쓴다."
+  width={1600}
+  height={800}
+/>
+
+두 화면은 요청마다 렌더링된다. 로그인 페이지는 쿼리와 쿠키를 읽고, 초기 설정 화면의 레이아웃은 조회 전에 [`connection()`](https://nextjs.org/docs/app/api-reference/functions/connection)으로 요청을 기다린다. 그래도 설정 상태 조회는 재검증 시간 동안 캐시된 응답을 쓴다. Next.js의 fetch 구현은 `revalidate`가 양수로 정해진 요청이면 라우트가 동적이어도 캐시 키를 만들어 캐시를 읽고 쓴다([Next.js v16.3.4 소스](https://github.com/vercel/next.js/blob/v16.3.4/packages/next/src/server/lib/patch-fetch.ts#L805-L1036)). 라우트를 요청마다 렌더링할지와 그 안의 fetch를 캐시할지는 따로 정해진다.
+
+시간 기반 재검증은 stale-while-revalidate 방식이다. 정해진 시간이 지나도 캐시된 응답을 먼저 돌려주고, 새 응답은 백그라운드에서 만든다([How revalidation works](https://nextjs.org/docs/app/guides/how-revalidation-works#the-revalidation-model)). 그래서 설정 상태가 바뀐 직후가 문제인데, 초기 설정을 마치는 서버 액션은 이미 로그인과 초기 설정 경로를 [revalidatePath](https://nextjs.org/docs/app/api-reference/functions/revalidatePath)로 무효화하고 있었다. 이 무효화는 경로마다 붙는 [soft tag](https://nextjs.org/docs/app/guides/how-revalidation-works#soft-tags)를 거쳐 두 경로를 렌더링하며 실행한 fetch의 캐시 항목에도 적용되므로, 초기 설정을 마친 뒤에는 재검증 시간을 기다리지 않고 설정 상태를 다시 조회한다. 서버를 여러 대 띄운다면 이 무효화는 기본적으로 요청을 처리한 인스턴스에만 적용된다([Multi-instance considerations](https://nextjs.org/docs/app/guides/how-revalidation-works#multi-instance-considerations)).
+
+## 참고 자료
+
+- [Next.js: fetch](https://nextjs.org/docs/app/api-reference/functions/fetch)
+- [Next.js 15 업그레이드 가이드: fetch requests](https://nextjs.org/docs/app/guides/upgrading/version-15#fetch-requests)
+- [Next.js: cookies](https://nextjs.org/docs/app/api-reference/functions/cookies#good-to-know)
+- [Next.js: connection](https://nextjs.org/docs/app/api-reference/functions/connection)
+- [Next.js v16.3.4: patch-fetch.ts](https://github.com/vercel/next.js/blob/v16.3.4/packages/next/src/server/lib/patch-fetch.ts#L805-L1036)
+- [Next.js: How revalidation works](https://nextjs.org/docs/app/guides/how-revalidation-works#the-revalidation-model)
+- [Next.js: revalidatePath](https://nextjs.org/docs/app/api-reference/functions/revalidatePath)

@@ -1,0 +1,109 @@
+---
+title: "서버에서 부르는 API에 사용자 쿠키를 넘길지 정하기"
+description: "Next.js 서버 코드의 fetch에는 브라우저가 보낸 쿠키가 저절로 실리지 않는다. 현재 요청의 인증 정보를 이어받는 기본값과, 익명 요청을 따로 표시하는 auth: \"omit\" 옵션을 나눈 방식을 정리했다."
+publishedAt: "2026-10-29"
+tags: ["Next.js", "인증"]
+published: true
+---
+
+서버 컴포넌트나 Server Action에서 백엔드 API를 부르면, 그 요청은 Next.js 서버가 새로 만들어 보내는 HTTP 요청이다. 브라우저가 보낸 쿠키는 Next.js 서버가 받은 요청에 들어 있을 뿐이고, 서버가 보내는 요청에는 코드가 옮겨 넣어야 실린다. Next.js 문서의 [`headers()` 예제](https://nextjs.org/docs/app/api-reference/functions/headers#using-the-authorization-header)도 받은 `Authorization` 헤더를 꺼내 `fetch` 옵션에 직접 넣는다.
+
+서버용 fetch 클라이언트를 만들면서 이 전달을 기본 동작으로 두고, 전달하지 않을 요청은 `auth: "omit"`으로 표시하게 했다. 아래 코드는 실제 코드를 단순화한 것이다.
+
+## 기본은 현재 요청의 인증 정보를 옮겨 싣는다
+
+```typescript
+import { cookies, headers } from "next/headers";
+
+interface ServerRequestInit extends RequestInit {
+  auth?: "inherit" | "omit";
+}
+
+const INHERITED_HEADERS = ["authorization", "x-request-id", "user-agent"];
+
+async function resolveHeaders(init?: ServerRequestInit): Promise<Headers> {
+  const merged = new Headers(init?.headers);
+
+  if (init?.auth === "omit") {
+    return merged;
+  }
+
+  try {
+    const [cookieStore, requestHeaders] = await Promise.all([
+      cookies(),
+      headers(),
+    ]);
+    const cookieHeader = cookieStore.toString();
+
+    if (cookieHeader && !merged.has("cookie")) {
+      merged.set("cookie", cookieHeader);
+    }
+
+    for (const name of INHERITED_HEADERS) {
+      const value = requestHeaders.get(name);
+
+      if (value && !merged.has(name)) {
+        merged.set(name, value);
+      }
+    }
+
+    return merged;
+  } catch (error) {
+    if (merged.has("cookie") || merged.has("authorization")) {
+      return merged;
+    }
+
+    throw new Error(
+      "No request context. Pass auth: 'omit' for anonymous requests or provide explicit headers.",
+      { cause: error },
+    );
+  }
+}
+```
+
+`auth`를 지정하지 않으면 `cookies()`와 `headers()`로 지금 처리 중인 요청을 읽어 쿠키와 `Authorization` 헤더를 옮겨 싣는다. 서버 컴포넌트에서 [`cookies()`로 읽는 값](https://nextjs.org/docs/app/api-reference/functions/cookies#understanding-cookie-behavior-in-server-components)은 브라우저가 요청 헤더로 보낸 쿠키다. 요청 추적용 ID와 user-agent도 함께 옮기지만, 들어온 헤더를 전부 복사하지는 않고 정해 둔 목록만 옮긴다.
+
+호출하는 쪽이 같은 이름의 헤더를 직접 넘기면 그 값이 우선한다. 이 우선순위는 access 토큰을 재발급받은 뒤 요청을 다시 보낼 때 쓰인다. 들어온 요청의 쿠키에는 만료된 토큰이 그대로 들어 있으므로, 재시도할 때는 새 토큰으로 바꾼 쿠키 헤더를 직접 넘긴다. 이어받은 쿠키가 우선했다면 재시도도 만료된 토큰으로 나갔을 것이다.
+
+<Image
+  src="/blog/anonymous-server-fetch/inherit-vs-omit.webp"
+  alt="브라우저 요청을 받은 프런트 서버가 기본 모드에서는 쿠키와 인증 헤더를 백엔드 요청으로 복사하고, omit에서는 자동 복사를 생략해 직접 지정한 인증 정보가 없으면 익명 요청이 된다."
+  width={1600}
+  height={800}
+/>
+
+## 이어받을 요청이 없으면 오류를 낸다
+
+`cookies()`와 `headers()`는 처리 중인 요청이 있어야 쓸 수 있다. 모듈 최상단이나 빌드 때 실행되는 `generateStaticParams`처럼 [요청 범위 밖에서 부르면 오류가 난다](https://nextjs.org/docs/messages/next-dynamic-api-wrong-context).
+
+위 코드는 이 오류를 잡더라도 익명 요청으로 바꿔 보내지 않는다. 호출하는 쪽이 쿠키나 `Authorization`을 직접 넘긴 경우에만 진행하고, 그렇지 않으면 원래 오류를 `cause`에 담은 새 오류를 던진다. 익명으로 조용히 보냈다면 보호된 API는 인증 실패로 응답했을 것이고, 원인은 요청을 읽지 못한 호출 위치에 있는데 증상은 로그인 문제처럼 보였을 것이다. 인증 정보를 확인할 수 없을 때 요청을 내보내지 않는다는 점은 [세션 가드의 fail-closed](/blog/fail-closed)와 같다.
+
+다만 이 `catch`에는 요청 범위 밖 오류만 걸리지 않는다. 페이지를 정적으로 생성하던 중에 `cookies()`나 `headers()`를 만나면, Next.js는 정적 생성을 그만두고 요청 시점 렌더링으로 넘어가려고 내부 오류를 던진다. 위 코드는 이 오류도 잡아서 다른 오류로 감싼다. [Next.js 문서](https://nextjs.org/docs/app/api-reference/functions/unstable_rethrow)는 이런 내부 오류를 잡지 말고 `catch` 첫머리에서 `unstable_rethrow`로 다시 던지라고 안내한다. 정적으로 생성될 수 있는 경로에서 이 클라이언트를 쓴다면 이 처리가 필요하다.
+
+## 익명으로 보낼 요청은 표시한다
+
+`auth: "omit"`을 넘기면 `cookies()`와 `headers()`를 읽지 않고, 호출하는 쪽이 넘긴 헤더만 보낸다. 자동으로 옮겨 싣는 일만 건너뛸 뿐 필요한 헤더를 직접 넣는 것은 막지 않는다.
+
+이 옵션은 초기 설정 흐름에서 쓴다. 서비스를 처음 설치하면 계정이 하나도 없어서, 로그인 화면을 보여 주기 전에 초기 설정이 끝났는지 백엔드에 묻고 끝나지 않았으면 첫 계정을 만드는 설정 화면으로 보낸다. 이 조회는 계정이 없을 때도 일어나므로 넘길 세션이 없고, 첫 계정을 만드는 요청도 로그인하기 전에 보낸다. 두 요청 모두 `auth: "omit"`으로 보낸다. 아래 코드의 함수 이름과 경로는 예시다.
+
+```typescript
+const setupStatusClient = createServerApiClient("auth", {
+  auth: "omit",
+});
+
+export async function getSetupStatus() {
+  return readSetupStatus(await setupStatusClient.json("/setup-status"));
+}
+```
+
+실제 코드는 이 클라이언트를 만들 때 재검증 캐시 정책도 함께 고정해 둔다. 익명으로 보내면 누가 로그인 화면을 열든 요청 헤더가 같아서, 이 조회에 붙인 재검증 캐시를 모든 방문자가 함께 쓴다. 캐시 키와 재검증 동작은 [서버 fetch의 캐시 정책](/blog/nextjs-server-fetch-cache-policy)에서 다뤘다.
+
+브라우저 fetch의 [`credentials: "omit"`](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials#omit)은 브라우저가 가진 쿠키 같은 자격 증명을 요청에 싣지 않고, 응답이 주는 자격 증명도 받아들이지 않는 옵션이다. 여기서의 `omit`은 Next.js 서버가 받은 요청의 인증 정보를 다음 요청으로 옮기지 않는다.
+
+## 참고 자료
+
+- [Next.js: headers — Using the Authorization header](https://nextjs.org/docs/app/api-reference/functions/headers#using-the-authorization-header)
+- [Next.js: cookies — Understanding Cookie Behavior in Server Components](https://nextjs.org/docs/app/api-reference/functions/cookies#understanding-cookie-behavior-in-server-components)
+- [Next.js: Request-time API was called outside request](https://nextjs.org/docs/messages/next-dynamic-api-wrong-context)
+- [Next.js: unstable_rethrow](https://nextjs.org/docs/app/api-reference/functions/unstable_rethrow)
+- [MDN: Request.credentials](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials#omit)
