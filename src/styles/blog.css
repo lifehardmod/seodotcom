@@ -117,6 +117,7 @@ body:has(.blog-surface) {
   font-weight: 650;
   line-height: 1.5;
   letter-spacing: -0.025em;
+  word-break: keep-all;
 }
 
 .blog-post-summary h2 svg {
@@ -132,6 +133,7 @@ body:has(.blog-surface) {
   color: var(--blog-muted);
   line-height: 1.85;
   max-width: 65ch;
+  word-break: keep-all;
 }
 
 .blog-post-tags {
