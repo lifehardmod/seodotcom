@@ -1,0 +1,23 @@
+Use case: infographic-diagram.
+Asset type: inline educational illustration in a Korean engineering blog, landscape exactly 2:1, readable at a display width of 720px.
+Primary request: show the actual order of account-status validation: a server status first passes a Zod enum schema; an out-of-enum value throws a validation error and never reaches the status access policy function. Valid enum values can reach that policy, whose outcomes are allow, redirect or forbidden. The supplied image is a STYLE REFERENCE ONLY, not an edit target.
+
+Style: restrained developer inspector screenshot aesthetic. True black outer canvas, flat neutral charcoal panel, fine gray dividers, crisp white Korean sans-serif labels, muted gray secondary text, subdued green for successful validation and a subdued red for validation error. No navy/blue background, no gradients, glow, texture, mascots, 3D, logos or watermarks. Use nearly all the canvas for the diagram: only a slim outer margin, no large black padding. Match the quiet visual language of the reference.
+Composition: a single inspector panel, small header "SESSION · VALIDATION", exactly three column headings:
+"입력 상태"    "Zod 상태 검증"    "다음 단계"
+Exactly two generously spaced trace rows. Thin right-pointing arrows connect stages within each row only.
+
+First row:
+"목록 밖 값" → "검증 오류" → "요청 종료"
+Use a subtle red outline for the error, and do NOT connect this row to the access policy function.
+
+Second row:
+An input block containing the four known values on two lines:
+"ACTIVE · TEMP"
+"INACTIVE · WITHDRAWN"
+then → "검증 통과" → "접근 정책 함수"
+Use a subtle green outline for successful validation. Under the last block, a smaller but legible label "허용 · 이동 · 차단".
+
+Small footer caption, verbatim:
+"목록 밖 값은 접근 정책 함수에 도달하지 않음"
+No timing numbers, no benchmarks, no HTTP status code, no suggestion that an unknown raw value reaches the policy default branch. The distinction between schema validation failure and policy rejection is essential. Keep all labels accurate and large enough to read at 720px.

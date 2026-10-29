@@ -1,0 +1,20 @@
+Use case: infographic-diagram.
+Asset type: inline explanatory image for a Korean developer blog, landscape exactly 2:1, legible at 720px width.
+Primary request: show ONLY the CURRENT requireUser() guard. Do not show a before/after comparison or historical behavior. The supplied image is a STYLE REFERENCE ONLY; replace the composition and content with this current flow.
+
+Style: restrained flat developer trace diagram on black, charcoal panel, hairline gray dividers, crisp white Korean sans-serif, restrained green on verified-user outcome. Match the reference's quiet style, with slim outer margins. No blue/navy background, gradients, glow, textures, 3D, icons, logos or watermark.
+
+Panel header, verbatim: "SESSION · CURRENT GUARD"
+Flow: one left-to-right graph with these exact stages and branches.
+Start node: "쿠키 확인"
+Two clearly labeled branches:
+- label "없음" → endpoint "/login"
+- label "있음" → node "현재 사용자 조회"
+From "현재 사용자 조회", exactly three branches:
+- label "사용자 확인" → endpoint "사용자 반환" (subtle green)
+- label "인증 없음·만료" → endpoint "/login" (neutral gray)
+- label "그 외 오류" → endpoint "요청 종료" (neutral gray)
+
+Do not allow any arrow directly from cookie presence to user return. Cookie presence always leads to the user lookup, never directly to authenticated success.
+A small footer, verbatim: "쿠키가 있는 경우에도 사용자 조회를 거침"
+The layout must make it clear that the cookie-absent branch ends early and the other three outcomes follow only AFTER the current-user lookup. Use large, readable labels. No HTTP status code numbers, benchmark numbers, old/initial implementation labels, or claims of final resource authorization.
