@@ -1,4 +1,4 @@
-import { Computer, ExternalLink, FileText } from "lucide-react";
+import { Computer, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 const HomeAbout = () => {
@@ -61,15 +61,6 @@ const HomeAbout = () => {
       <div className="flex flex-col gap-1">
         <p className="whitespace-normal break-normal">
           자세한 내용은{" "}
-          <Link
-            href="/resume"
-            prefetch={false}
-            className="font-semibold cursor-pointer inline-flex items-center gap-1 text-green-400 hover:text-green-700 transition-colors"
-          >
-            이력서
-            <FileText size={16} />
-          </Link>
-          와{" "}
           <Link
             href="/programming"
             prefetch={false}
